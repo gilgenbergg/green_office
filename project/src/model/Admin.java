@@ -31,16 +31,17 @@ public abstract class Admin extends User {
     }
 
     public void workOnClientRequst(ClientRequest clientRequest) {
-        ClientRequest.Type cReqType = clientRequest.getType();
-        if (cReqType == ClientRequest.Type.planned) {
-            Integer plantID = clientRequest.getPlantID();
-            Plant plant = plantsBase.findItemByPlantID(plantID);
-            Date nextDate = new Date("2019-03-04");
-            plantsBase.setDateOfNextVisit(plant, nextDate);
-            clientRequest.setStatus(ClientRequest.Status.inProgress);
-        }
-        else {
-            workOnFirstOneReq(clientRequest);
+        if (clientRequest.getStatus().equals(ClientRequest.Status.newOne)) {
+            ClientRequest.Type cReqType = clientRequest.getType();
+            if (cReqType == ClientRequest.Type.planned) {
+                Integer plantID = clientRequest.getPlantID();
+                Plant plant = plantsBase.findItemByPlantID(plantID);
+                Date nextDate = new Date("2019-03-04");
+                plantsBase.setDateOfNextVisit(plant, nextDate);
+                clientRequest.setStatus(ClientRequest.Status.inProgress);
+            } else {
+                workOnFirstOneReq(clientRequest);
+            }
         }
     }
 
@@ -51,7 +52,8 @@ public abstract class Admin extends User {
         Date nextInspection = null;
         Integer instructionID = null;
         List <Resource> resources = null;
-        Plant plant = new Plant (validID, type, lastInspection, nextInspection, instructionID,  resources);
+        Integer clientID = clientRequest.getClientID();
+        Plant plant = new Plant (validID, type, lastInspection, nextInspection, instructionID,  resources, clientID);
         plantsBase.add(plant);
         clientRequest.setStatus(ClientRequest.Status.inPurchase);
         boolean purchased = false;
@@ -71,12 +73,13 @@ public abstract class Admin extends User {
         //here landscaper approves purchase or not
         Landscaper checker = (Landscaper) users.findItemByUID(purchaseRequest.getLandscaperID());
         List<Resource> boughtByAdmin = testPurchase(clientRequest, alreadyBought);
-        checker.checkPurchaseRequest(purchaseRequest, boughtByAdmin);
+        checker.checkPurchaseRequest(purchaseRequest, boughtByAdmin, clientRequest);
         while (purchaseRequest.getStatus() != PurchaseRequest.Status.approved) {
             List<Resource> newPurchase = testSomeMoreStaff(plant.getPlantID(), boughtByAdmin);
             purchaseRequest.setStatus(PurchaseRequest.Status.inCheck);
-            checker.checkPurchaseRequest(purchaseRequest, newPurchase);
+            checker.checkPurchaseRequest(purchaseRequest, newPurchase, clientRequest);
         }
+        checker.makeGardening(clientRequest);
     }
 
     // набор для тестовой дозакупки

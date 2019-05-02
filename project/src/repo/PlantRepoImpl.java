@@ -28,7 +28,19 @@ public class PlantRepoImpl implements PlantRepository {
         List<Plant> filtered = new ArrayList<>();
         for (Plant item:
                 data) {
-            if (item.getType() == type) {
+            if (item.getType().equals(type)) {
+                filtered.add(item);
+            }
+        }
+        return filtered;
+    }
+
+    @Override
+    public List<Plant> filterPlantsByUserID(Integer userID) {
+        List<Plant> filtered = new ArrayList<>();
+        for (Plant item:
+                data) {
+            if (item.getOwnerID().equals(userID)) {
                 filtered.add(item);
             }
         }
@@ -53,7 +65,7 @@ public class PlantRepoImpl implements PlantRepository {
         for (int i=0; i<=4; i++) {
             Date prev = new Date(2018, 12, 8);
             Date next = new Date("2019-08-01");
-            Plant item = new Plant(i, "test", prev, next, 1, testResources);
+            Plant item = new Plant(i, "test", prev, next, 1, testResources, 1);
             plants.add(item);
         }
         return plants;

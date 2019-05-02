@@ -12,6 +12,7 @@ public class Plant {
     private Date nextInspection;
     private Integer instructionID;
     private List<Resource> resources;
+    private Integer ownerID;
 
     private PlantRepoImpl repo = new PlantRepoImpl();
 
@@ -20,13 +21,15 @@ public class Plant {
                  Date lastInspection,
                  Date nextInspection,
                  Integer instructionID,
-                 List<Resource> resources) {
+                 List<Resource> resources,
+                 Integer clientID) {
         this.plantID = plantID;
         this.type = type;
         this.lastInspection = lastInspection;
         this.nextInspection = nextInspection;
         this.instructionID = instructionID;
         this.resources = resources;
+        this.ownerID = clientID;
     }
 
     public Plant getPlantByID(Integer plantID) {
@@ -48,6 +51,10 @@ public class Plant {
 
     public String getType() {
         return this.type;
+    }
+
+    public Integer getOwnerID() {
+        return this.ownerID;
     }
 
     public void setType(String type) {

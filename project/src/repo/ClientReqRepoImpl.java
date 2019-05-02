@@ -3,6 +3,7 @@ package repo;
 import model.ClientRequest;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ClientReqRepoImpl implements ClientReqsRepository {
@@ -42,6 +43,39 @@ public class ClientReqRepoImpl implements ClientReqsRepository {
             }
         }
         return filtered;
+    }
+
+    public Integer getValidClientReqID() {
+        Integer validID;
+        List<Integer> allIDs = new ArrayList<>();
+        for (ClientRequest item:
+                data) {
+            allIDs.add(item.getcReqID());
+        }
+        if (allIDs.size() == 0) {
+            validID = 1;
+        }
+        else {
+            Integer prev = 0;
+            for (Integer id:
+                    allIDs) {
+                if (id < allIDs.size()) {
+                    if (id != prev + 1) {
+                        validID = prev + 1;
+                        prev = validID;
+                        allIDs.add(validID);
+                        allIDs.sort(Comparator.naturalOrder());
+                    }
+                    else if (id == prev + 1) {
+                        prev = id;
+                    }
+                }
+            }
+            validID = prev + 1;
+            allIDs.add(validID);
+            allIDs.sort(Comparator.naturalOrder());
+        }
+        return validID;
     }
 
     @Override

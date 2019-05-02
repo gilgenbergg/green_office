@@ -1,5 +1,6 @@
 package model;
 
+import repo.ClientReqRepoImpl;
 import repo.PlantRepoImpl;
 import repo.UserRepoImpl;
 
@@ -9,6 +10,7 @@ public abstract class Landscaper extends User {
 
     UserRepoImpl userRepo = new UserRepoImpl();
     PlantRepoImpl plantBase = new PlantRepoImpl();
+    ClientReqRepoImpl cReqsRepo = new ClientReqRepoImpl();
 
     public Landscaper landscaper;
 
@@ -30,12 +32,14 @@ public abstract class Landscaper extends User {
         return landscaper;
     }
 
-    public void checkPurchaseRequest(PurchaseRequest purchaseRequest, List<Resource> boughtResources){
+    public void checkPurchaseRequest(PurchaseRequest purchaseRequest, List<Resource> boughtResources,
+                                     ClientRequest clientRequest){
         boolean checkResult;
         if (purchaseRequest.getStatus() == PurchaseRequest.Status.inCheck) {
             checkResult = checkPurchase(purchaseRequest, boughtResources);
             if (checkResult) {
                 purchaseRequest.setStatus(PurchaseRequest.Status.approved);
+                clientRequest.setStatus(ClientRequest.Status.gardening);
             }
             else {
                 purchaseRequest.setStatus(PurchaseRequest.Status.inProgress);
@@ -52,5 +56,9 @@ public abstract class Landscaper extends User {
             }
         }
         return true;
+    }
+
+    public void makeGardening(ClientRequest clientRequest) {
+        clientRequest.setStatus(ClientRequest.Status.done);
     }
 }

@@ -3,7 +3,7 @@ package model;
 public class ClientRequest {
 
     public enum Status {
-        newOne, inPurchase, inProgress, done
+        newOne, inPurchase, inProgress, gardening, done
     }
 
     public enum Type {

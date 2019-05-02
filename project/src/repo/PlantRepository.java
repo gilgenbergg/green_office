@@ -8,6 +8,8 @@ public interface PlantRepository {
 
     Plant findItemByPlantID(Integer receivedPlantID);
 
+    List<Plant> filterPlantsByUserID(Integer clientID);
+
     List<Plant> filterPlantsByType(String type);
 
     boolean add(Plant item);
