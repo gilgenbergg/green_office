@@ -19,6 +19,10 @@ public class AuthRepoImpl implements AuthRepository {
         return found;
     }
 
+    public List<AuthData> allItems() {
+        return data;
+    }
+
     public String findLoginByUID(Integer receivedUID) {
         String found = null;
         for (int i=0; i<data.size(); i++) {

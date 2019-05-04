@@ -2,14 +2,15 @@ package model;
 
 import repo.PlantRepoImpl;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 public class Plant {
     private Integer plantID;
     private String type;
-    private Date lastInspection;
-    private Date nextInspection;
+    private String lastInspection;
+    private String nextInspection;
     private Integer instructionID;
     private List<Resource> resources;
     private Integer ownerID;
@@ -18,11 +19,11 @@ public class Plant {
 
     public Plant(Integer plantID,
                  String type,
-                 Date lastInspection,
-                 Date nextInspection,
+                 String lastInspection,
+                 String nextInspection,
                  Integer instructionID,
                  List<Resource> resources,
-                 Integer clientID) {
+                 Integer clientID) throws ParseException {
         this.plantID = plantID;
         this.type = type;
         this.lastInspection = lastInspection;
@@ -61,19 +62,19 @@ public class Plant {
         this.type = type;
     }
 
-    public Date getLastInspection() {
+    public String getLastInspection() {
         return lastInspection;
     }
 
-    public void setLastInspection(Date lastInspection) {
+    public void setLastInspection(String lastInspection) {
         this.lastInspection = lastInspection;
     }
 
-    public Date getNextInspection() {
+    public String getNextInspection() {
         return nextInspection;
     }
 
-    public void setNextInspection(Date nextInspection) {
+    public void setNextInspection(String nextInspection) {
         this.nextInspection = nextInspection;
     }
 

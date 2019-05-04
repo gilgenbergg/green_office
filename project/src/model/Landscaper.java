@@ -4,6 +4,7 @@ import repo.ClientReqRepoImpl;
 import repo.PlantRepoImpl;
 import repo.UserRepoImpl;
 
+import java.text.ParseException;
 import java.util.List;
 
 public abstract class Landscaper extends User {
@@ -14,7 +15,7 @@ public abstract class Landscaper extends User {
 
     public Landscaper landscaper;
 
-    public Landscaper(User user) {
+    public Landscaper(User user) throws ParseException {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
         this.landscaper = getLandscaper(user);
     }

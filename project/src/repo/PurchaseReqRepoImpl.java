@@ -1,6 +1,7 @@
 package repo;
 
 import model.PurchaseRequest;
+import model.Resource;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,6 +10,7 @@ import java.util.List;
 public class PurchaseReqRepoImpl implements PurchaseReqRepository {
 
     private List<PurchaseRequest> data = testBase();
+    private IDgenerator generator = new IDgenerator();
 
     public Integer getValidPurchaseID() {
         Integer validID;
@@ -17,29 +19,9 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
                 data) {
             allIDs.add(item.getpReqID());
         }
-        if (allIDs.size() == 0) {
-            validID = 1;
-        }
-        else {
-            Integer prev = 0;
-            for (Integer id:
-                    allIDs) {
-                if (id < allIDs.size()) {
-                    if (id != prev + 1) {
-                        validID = prev + 1;
-                        prev = validID;
-                        allIDs.add(validID);
-                        allIDs.sort(Comparator.naturalOrder());
-                    }
-                    else if (id == prev + 1) {
-                        prev = id;
-                    }
-                }
-            }
-            validID = prev + 1;
-            allIDs.add(validID);
-            allIDs.sort(Comparator.naturalOrder());
-        }
+        validID = generator.generateNewID(allIDs);
+        allIDs.add(validID);
+        allIDs.sort(Comparator.naturalOrder());
         return validID;
     }
 
@@ -83,6 +65,7 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
         Integer plantID;
         Integer landscaperID;
         Integer adminID;
+        List<Resource> alreadyBought;
         PurchaseRequest.Status status;
         PurchaseRequest pReq1 = new PurchaseRequest(
                 pReqID = 1,
@@ -90,7 +73,8 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
                 plantID = 1,
                 landscaperID = 2,
                 adminID = 1,
-                status = PurchaseRequest.Status.inProgress
+                status = PurchaseRequest.Status.inProgress,
+                alreadyBought = null
         );
         data.add(pReq1);
         PurchaseRequest pReq2 = new PurchaseRequest(
@@ -99,7 +83,8 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
                 plantID = 1,
                 landscaperID = 1,
                 adminID = 1,
-                status = PurchaseRequest.Status.approved
+                status = PurchaseRequest.Status.approved,
+                alreadyBought = null
         );
         data.add(pReq2);
         PurchaseRequest pReq3 = new PurchaseRequest(
@@ -108,7 +93,8 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
                 plantID = 3,
                 landscaperID = 2,
                 adminID = 1,
-                status = PurchaseRequest.Status.inCheck
+                status = PurchaseRequest.Status.inCheck,
+                alreadyBought = null
         );
         data.add(pReq3);
         PurchaseRequest pReq4 = new PurchaseRequest(
@@ -117,7 +103,8 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
                 plantID = 3,
                 landscaperID = 1,
                 adminID = 1,
-                status = PurchaseRequest.Status.inProgress
+                status = PurchaseRequest.Status.inProgress,
+                alreadyBought = null
         );
         data.add(pReq4);
         PurchaseRequest pReq5 = new PurchaseRequest(
@@ -126,7 +113,8 @@ public class PurchaseReqRepoImpl implements PurchaseReqRepository {
                 plantID = 1,
                 landscaperID = 2,
                 adminID = 1,
-                status = PurchaseRequest.Status.inProgress
+                status = PurchaseRequest.Status.inProgress,
+                alreadyBought = null
         );
         data.add(pReq5);
         return data;

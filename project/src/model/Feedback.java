@@ -12,7 +12,7 @@ public class Feedback {
         this.text = text;
     }
 
-    enum Type {
+    public enum Type {
         accepted, declined
     }
 

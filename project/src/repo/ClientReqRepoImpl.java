@@ -9,6 +9,7 @@ import java.util.List;
 public class ClientReqRepoImpl implements ClientReqsRepository {
 
     private List<ClientRequest> data = testBase();
+    private IDgenerator generator = new IDgenerator();
 
     @Override
     public ClientRequest findItemBycReqID(Integer receivedcReqID) {
@@ -52,29 +53,9 @@ public class ClientReqRepoImpl implements ClientReqsRepository {
                 data) {
             allIDs.add(item.getcReqID());
         }
-        if (allIDs.size() == 0) {
-            validID = 1;
-        }
-        else {
-            Integer prev = 0;
-            for (Integer id:
-                    allIDs) {
-                if (id < allIDs.size()) {
-                    if (id != prev + 1) {
-                        validID = prev + 1;
-                        prev = validID;
-                        allIDs.add(validID);
-                        allIDs.sort(Comparator.naturalOrder());
-                    }
-                    else if (id == prev + 1) {
-                        prev = id;
-                    }
-                }
-            }
-            validID = prev + 1;
-            allIDs.add(validID);
-            allIDs.sort(Comparator.naturalOrder());
-        }
+        validID = generator.generateNewID(allIDs);
+        allIDs.add(validID);
+        allIDs.sort(Comparator.naturalOrder());
         return validID;
     }
 

@@ -3,14 +3,18 @@ package repo;
 import model.Plant;
 import model.Resource;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 
 public class PlantRepoImpl implements PlantRepository {
 
     private List<Plant> data = testBase();
+    private IDgenerator generator = new IDgenerator();
+    private DateParser parser = new DateParser();
+    private ResourceRepoImpl resources = new ResourceRepoImpl();
+
+    public PlantRepoImpl() throws ParseException {
+    }
 
     @Override
     public Plant findItemByPlantID(Integer receivedPlantID) {
@@ -57,15 +61,20 @@ public class PlantRepoImpl implements PlantRepository {
         data.remove(item);
     }
 
-    private List<Plant> testBase() {
+
+
+    private List<Plant> testBase() throws ParseException {
         List<Plant> plants = new ArrayList<>();
         List<Resource> testResources = new ArrayList<>();
+        String prev = parser.parseDate("Jan 18 20:56 MSK 2019");
+        String next = parser.parseDate("Feb 01 20:56 MSK 2019");
         Resource res = new Resource(1, "testResource", 1);
+        resources.add(res);
         testResources.add(res);
-        for (int i=0; i<=4; i++) {
-            Date prev = new Date(2018, 12, 8);
-            Date next = new Date("2019-08-01");
-            Plant item = new Plant(i, "test", prev, next, 1, testResources, 1);
+        Plant first = new Plant(1, "test", prev, next, 1, testResources, 1);
+        plants.add(first);
+        for (int i=2; i<=5; i++) {
+            Plant item = new Plant(i, "test", prev, next, 1, testResources, 2);
             plants.add(item);
         }
         return plants;
@@ -87,33 +96,13 @@ public class PlantRepoImpl implements PlantRepository {
              data) {
             allIDs.add(item.getPlantID());
         }
-        if (allIDs.size() == 0) {
-            validID = 1;
-        }
-        else {
-            Integer prev = 0;
-            for (Integer id:
-                 allIDs) {
-                if (id < allIDs.size()) {
-                    if (id != prev + 1) {
-                        validID = prev + 1;
-                        prev = validID;
-                        allIDs.add(validID);
-                        allIDs.sort(Comparator.naturalOrder());
-                    }
-                    else if (id == prev + 1) {
-                        prev = id;
-                    }
-                }
-            }
-            validID = prev + 1;
-            allIDs.add(validID);
-            allIDs.sort(Comparator.naturalOrder());
-        }
+        validID = generator.generateNewID(allIDs);
+        allIDs.add(validID);
+        allIDs.sort(Comparator.naturalOrder());
         return validID;
     }
 
-    public void setDateOfNextVisit(Plant plant, Date nextInspection) {
+    public void setDateOfNextVisit(Plant plant, String nextInspection) {
         plant.setNextInspection(nextInspection);
     }
 }

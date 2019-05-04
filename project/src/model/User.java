@@ -62,7 +62,7 @@ public class User {
         this.secondName = secondName;
     }
 
-    public boolean signIn (User user, String receivedLogin, String receivedPassword) throws AuthenticationException {
+    public boolean signIn (User user, String receivedLogin, String receivedPassword) {
         Integer baseUID = user.getUID();
         login = authrepo.findLoginByUID(baseUID);
         password = authrepo.findPasswordByUID(baseUID);

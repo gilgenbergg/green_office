@@ -1,13 +1,22 @@
 package repo;
 
+import model.Admin;
+import model.Client;
 import model.User;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepoImpl implements UserRepo {
 
     private List<User> data = testUsers();
+    private PlantRepoImpl plantsBase = new PlantRepoImpl();
+    private List<Client> allClients = allClients();
+    private List<Admin> allAdmins = allAdmins();
+
+    public UserRepoImpl() throws ParseException {
+    }
 
     static List<User> testUsers() {
         Integer uID;
@@ -61,6 +70,61 @@ public class UserRepoImpl implements UserRepo {
         for (int i=0; i<data.size(); i++) {
             if (data.get(i).getUID().equals(receivedUID)) {
                 found = data.get(i);
+            }
+        }
+        return found;
+    }
+
+    public List<User> filterByRole(User.Role role) {
+        List<User> filtered = new ArrayList<>();
+        for (User item:
+             data) {
+            if (item.getRole().equals(role)) {
+                filtered.add(item);
+            }
+        }
+        return filtered;
+    }
+
+    public List<Client> allClients() throws ParseException {
+        List<User> usersThatAreClients = filterByRole(User.Role.client);
+        List<Client> clients = new ArrayList<>();
+        for (User item:
+                usersThatAreClients) {
+            Client client = new Client(plantsBase.filterPlantsByUserID(item.getUID()), item);
+            clients.add(client);
+        }
+        return clients;
+    }
+
+    public List<Admin> allAdmins() throws ParseException {
+        List<User> usersThatAreAdmins = filterByRole(User.Role.admin);
+        List<Admin> admins = new ArrayList<>();
+        for (User item:
+                usersThatAreAdmins) {
+            Admin admin = new Admin(item.getUID(), item);
+            admins.add(admin);
+        }
+        return admins;
+    }
+
+    public Client getClientByUserID(Integer uID) throws ParseException {
+        Client found = null;
+        for (Client item:
+                allClients) {
+            if (item.getUID().equals(uID)) {
+                found = item;
+            }
+        }
+        return found;
+    }
+
+    public Admin getAdminByUserID(Integer uID) throws ParseException {
+        Admin found = null;
+        for (Admin item:
+                allAdmins) {
+            if (item.getUID().equals(uID)) {
+                found = item;
             }
         }
         return found;

@@ -2,20 +2,21 @@ package model;
 
 import repo.ClientReqRepoImpl;
 import repo.PlantRepoImpl;
+import repo.UserRepoImpl;
 
+import java.text.ParseException;
 import java.util.List;
 
-public abstract class Client extends User {
+public class Client extends User {
 
-    private List<Plant> plants;
-    private Integer clientID;
-    private ClientReqRepoImpl clientsReqsBase;
-    private PlantRepoImpl plantsBase;
+    private List<Plant> clientPlants;
+    private ClientReqRepoImpl clientsReqsBase = new ClientReqRepoImpl();
+    private PlantRepoImpl plantsBase = new PlantRepoImpl();
+    private UserRepoImpl users = new UserRepoImpl();
 
-    public Client(Integer clientID, List<Plant> plants, User user) {
+    public Client(List<Plant> plants, User user) throws ParseException {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
-        this.clientID = clientID;
-        this.plants = plants;
+        this.clientPlants = plantsBase.filterPlantsByUserID(user.getUID());
     }
 
     @Override
@@ -23,12 +24,12 @@ public abstract class Client extends User {
         return Role.client;
     }
 
-    public User getUser() {
+    public Client getClient() {
         return this;
     }
 
     public List<Plant> clientPlants (Integer clientID) {
-        List<Plant> clientPlants = plantsBase.filterPlantsByUserID(clientID);
+        this.clientPlants = plantsBase.filterPlantsByUserID(clientID);
         return clientPlants;
     }
 
@@ -38,20 +39,20 @@ public abstract class Client extends User {
         if (type.equals(ClientRequest.Type.firstOne)) {
             Integer cReqID = clientsReqsBase.getValidClientReqID();
             plantID = plantsBase.getValidPlantID();
-            cReq = new ClientRequest(cReqID, plantID, clientID, null, null,
+            cReq = new ClientRequest(cReqID, plantID, getClient().getUID(), null, null,
                     ClientRequest.Status.newOne, type);
         }
         else if (type.equals(ClientRequest.Type.planned)) {
             Integer cReqID = clientsReqsBase.getValidClientReqID();
             Plant plant = plantsBase.findItemByPlantID(plantID);
-            cReq = new ClientRequest(cReqID, plantID, clientID, null, null,
+            cReq = new ClientRequest(cReqID, plantID, getClient().getUID(), null, null,
                     ClientRequest.Status.newOne, type);
         }
         return cReq;
     }
 
     //opinion true if client accepts landscaper`s work or false if not (will come somehow outside)
-    public void makeFeedback(ClientRequest clientRequest, boolean opinion) {
+    public Feedback makeFeedback(ClientRequest clientRequest, boolean opinion) {
         Feedback feedback = null;
         if (clientRequest.getStatus().equals(ClientRequest.Status.done)) {
             if (opinion) {
@@ -66,5 +67,6 @@ public abstract class Client extends User {
                 clientRequest.setType(ClientRequest.Type.planned);
             }
         }
+    return feedback;
     }
 }
