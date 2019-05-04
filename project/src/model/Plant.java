@@ -15,7 +15,7 @@ public class Plant {
     private List<Resource> resources;
     private Integer ownerID;
 
-    private PlantRepoImpl repo = new PlantRepoImpl();
+//    private PlantRepoImpl repo = new PlantRepoImpl();
 
     public Plant(Integer plantID,
                  String type,
@@ -33,13 +33,8 @@ public class Plant {
         this.ownerID = clientID;
     }
 
-    public Plant getPlantByID(Integer plantID) {
-        return repo.findItemByPlantID(plantID);
-    }
-
-    private List<Plant> getAllPlants() {
-        List<Plant> allPlants = repo.allPlants();
-        return allPlants;
+    public Plant getPlant(Integer plantID) {
+        return this;
     }
 
     public Integer getPlantID() {
@@ -86,7 +81,7 @@ public class Plant {
         this.instructionID = instructionID;
     }
 
-    public List<Resource> getResources(Integer plantID) {
-        return repo.findResourcesByPlantID(this.plantID);
+    public List<Resource> getResources() {
+        return resources;
     }
 }

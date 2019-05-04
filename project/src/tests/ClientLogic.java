@@ -22,7 +22,7 @@ public class ClientLogic {
         Integer UID = 2;
         Client client = users.getClientByUserID(UID);
         List<Plant> plants = client.clientPlants(client.getUID());
-        Integer expected = 1;
+        Integer expected = 3;
         Integer res = plants.size();
         assertEquals(expected, res);
     }
@@ -91,6 +91,12 @@ public class ClientLogic {
     public void allPlants() {
         List<Plant> allPlants = plantsBase.allPlants();
         System.out.println(allPlants);
+    }
+
+    @Test
+    public void allClients() throws ParseException {
+        List<Client> allClients = users.allClients();
+        System.out.println(allClients);
     }
 
 }

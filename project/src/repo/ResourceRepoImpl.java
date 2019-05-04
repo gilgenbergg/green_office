@@ -1,13 +1,18 @@
 package repo;
 
+import model.Plant;
 import model.Resource;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResourceRepoImpl implements ResourceRepository {
 
     private List<Resource> data = testBase();
+
+    public ResourceRepoImpl() throws ParseException {
+    }
 
     @Override
     public boolean add(Resource item) {
@@ -19,16 +24,12 @@ public class ResourceRepoImpl implements ResourceRepository {
         data.remove(item);
     }
 
-    public List<Resource> findResourcesByPlantID(Integer plantID) {
+    /*public List<Resource> findResourcesByPlantID(Integer plantID) {
         List<Resource> plantResources = new ArrayList<>();
-        for (Resource item:
-                data) {
-            if (item.getPlantID().equals(plantID)) {
-                plantResources.add(item);
-            }
-        }
-        return plantResources;
+        Plant item = plants.findItemByPlantID(plantID);
+        return item.getResources();
     }
+    */
 
     public Resource getItemByID (Integer resourceID) {
         Resource found = null;
@@ -43,12 +44,12 @@ public class ResourceRepoImpl implements ResourceRepository {
 
     private List<Resource> testBase() {
         List<Resource> resources = new ArrayList<>();
-        Resource res = new Resource(1, "testResource", 1);
-        resources.add(res);
-        for (int i=0; i<=4; i++) {
-            Resource item = new Resource(i, "Lopatka", 1);
-            resources.add(item);
-        }
+        Resource res1 = new Resource(1, "testResource1");
+        Resource res2 = new Resource(2, "testResource2");
+        Resource res3 = new Resource(3, "testResource3");
+        resources.add(res1);
+        resources.add(res2);
+        resources.add(res3);
         return resources;
     }
 }

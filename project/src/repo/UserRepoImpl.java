@@ -1,6 +1,7 @@
 package repo;
 
 import model.Admin;
+import model.AuthData;
 import model.Client;
 import model.User;
 
@@ -10,21 +11,21 @@ import java.util.List;
 
 public class UserRepoImpl implements UserRepo {
 
-    private List<User> data = testUsers();
     private PlantRepoImpl plantsBase = new PlantRepoImpl();
-    private List<Client> allClients = allClients();
-    private List<Admin> allAdmins = allAdmins();
+    //private List<Client> allClients = allClients();
+    //private List<Admin> allAdmins = allAdmins();
+
+    private List<User> data = testUsers();
 
     public UserRepoImpl() throws ParseException {
     }
 
-    static List<User> testUsers() {
+    public List<User> testUsers() {
         Integer uID;
         User.Role role;
         String firstName;
         String secondName;
-        String login;
-        String password;
+        AuthData authData;
         ArrayList<User> allUsers = new ArrayList<>();
         User user1 = new User(
                 uID = 1,
@@ -110,6 +111,7 @@ public class UserRepoImpl implements UserRepo {
 
     public Client getClientByUserID(Integer uID) throws ParseException {
         Client found = null;
+        List<Client> allClients = allClients();
         for (Client item:
                 allClients) {
             if (item.getUID().equals(uID)) {
@@ -121,6 +123,7 @@ public class UserRepoImpl implements UserRepo {
 
     public Admin getAdminByUserID(Integer uID) throws ParseException {
         Admin found = null;
+        List<Admin> allAdmins = allAdmins();
         for (Admin item:
                 allAdmins) {
             if (item.getUID().equals(uID)) {

@@ -13,11 +13,8 @@ public abstract class Landscaper extends User {
     PlantRepoImpl plantBase = new PlantRepoImpl();
     ClientReqRepoImpl cReqsRepo = new ClientReqRepoImpl();
 
-    public Landscaper landscaper;
-
     public Landscaper(User user) throws ParseException {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
-        this.landscaper = getLandscaper(user);
     }
 
     @Override
@@ -30,7 +27,7 @@ public abstract class Landscaper extends User {
     }
 
     public Landscaper getLandscaper(User user) {
-        return landscaper;
+        return this;
     }
 
     public void checkPurchaseRequest(PurchaseRequest purchaseRequest, List<Resource> boughtResources,
@@ -41,6 +38,7 @@ public abstract class Landscaper extends User {
             if (checkResult) {
                 purchaseRequest.setStatus(PurchaseRequest.Status.approved);
                 clientRequest.setStatus(ClientRequest.Status.gardening);
+                makeGardening(clientRequest);
             }
             else {
                 purchaseRequest.setStatus(PurchaseRequest.Status.inProgress);
@@ -49,7 +47,8 @@ public abstract class Landscaper extends User {
     }
 
     private boolean checkPurchase(PurchaseRequest purchaseRequest, List<Resource> boughtResources) {
-        List<Resource> neededResources = plantBase.findResourcesByPlantID(purchaseRequest.getPlantID());
+        Plant plant = plantBase.findItemByPlantID(purchaseRequest.getPlantID());
+        List<Resource> neededResources = plant.getResources();
         for (Resource item:
              neededResources) {
             if (!boughtResources.contains(item)) {
@@ -59,7 +58,7 @@ public abstract class Landscaper extends User {
         return true;
     }
 
-    public void makeGardening(ClientRequest clientRequest) {
+    private void makeGardening(ClientRequest clientRequest) {
         clientRequest.setStatus(ClientRequest.Status.done);
     }
 }

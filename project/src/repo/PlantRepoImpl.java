@@ -7,11 +7,10 @@ import java.text.ParseException;
 import java.util.*;
 
 public class PlantRepoImpl implements PlantRepository {
-
-    private List<Plant> data = testBase();
+    //private DateParser parser = new DateParser();
     private IDgenerator generator = new IDgenerator();
-    private DateParser parser = new DateParser();
     private ResourceRepoImpl resources = new ResourceRepoImpl();
+    private List<Plant> data = testBase();
 
     public PlantRepoImpl() throws ParseException {
     }
@@ -51,6 +50,11 @@ public class PlantRepoImpl implements PlantRepository {
         return filtered;
     }
 
+    private List<Resource> findResources(Integer plantID) throws ParseException {
+        Plant plant = findItemByPlantID(plantID);
+        return plant.getResources();
+    }
+
     @Override
     public boolean add(Plant item) {
         return data.add(item);
@@ -61,32 +65,26 @@ public class PlantRepoImpl implements PlantRepository {
         data.remove(item);
     }
 
-
-
     private List<Plant> testBase() throws ParseException {
         List<Plant> plants = new ArrayList<>();
         List<Resource> testResources = new ArrayList<>();
-        String prev = parser.parseDate("Jan 18 20:56 MSK 2019");
-        String next = parser.parseDate("Feb 01 20:56 MSK 2019");
-        Resource res = new Resource(1, "testResource", 1);
-        resources.add(res);
+        //String prev = parser.parseDate("Jan 18 20:56 MSK 2019");
+        //String next = parser.parseDate("Feb 01 20:56 MSK 2019");
+        String prev = "2009-06-18";
+        String next = "2009-07-18";
+        Resource res = resources.getItemByID(1);
         testResources.add(res);
-        Plant first = new Plant(1, "test", prev, next, 1, testResources, 1);
+        Plant first = new Plant(1, "test", prev, next, 1, testResources, 2);
         plants.add(first);
-        for (int i=2; i<=5; i++) {
-            Plant item = new Plant(i, "test", prev, next, 1, testResources, 2);
-            plants.add(item);
-        }
+        Plant second = new Plant(2, "test", prev, next, 1, testResources, 2);
+        plants.add(second);
+        Plant third = new Plant(3, "test", prev, next, 1, testResources, 2);
+        plants.add(third);
         return plants;
     }
 
     public List<Plant> allPlants() {
         return data;
-    }
-
-    public List<Resource> findResourcesByPlantID(Integer plantID) {
-        ResourceRepoImpl resourceRepo = new ResourceRepoImpl();
-        return resourceRepo.findResourcesByPlantID(plantID);
     }
 
     public Integer getValidPlantID() {

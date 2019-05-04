@@ -10,5 +10,5 @@ public interface ResourceRepository {
 
     void remove(Resource item);
 
-    List<Resource> findResourcesByPlantID(Integer plantID);
+    //List<Resource> findResourcesByPlantID(Integer plantID);
 }

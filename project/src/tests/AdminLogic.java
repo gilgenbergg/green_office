@@ -110,7 +110,7 @@ public class AdminLogic {
     @Test
     public void GetValidPlantIDTest() {
         Integer res = plantsBase.getValidPlantID();
-        Integer expected = 6;
+        Integer expected = 4;
         assertEquals(res, expected);
     }
 }
