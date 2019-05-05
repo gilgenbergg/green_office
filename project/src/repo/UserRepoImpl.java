@@ -1,11 +1,7 @@
 package repo;
 
-import model.Admin;
-import model.AuthData;
-import model.Client;
-import model.User;
+import model.*;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +13,7 @@ public class UserRepoImpl implements UserRepo {
 
     private List<User> data = testUsers();
 
-    public UserRepoImpl() throws ParseException {
+    public UserRepoImpl() {
     }
 
     public List<User> testUsers() {
@@ -87,7 +83,7 @@ public class UserRepoImpl implements UserRepo {
         return filtered;
     }
 
-    public List<Client> allClients() throws ParseException {
+    public List<Client> allClients() {
         List<User> usersThatAreClients = filterByRole(User.Role.client);
         List<Client> clients = new ArrayList<>();
         for (User item:
@@ -98,7 +94,7 @@ public class UserRepoImpl implements UserRepo {
         return clients;
     }
 
-    public List<Admin> allAdmins() throws ParseException {
+    public List<Admin> allAdmins() {
         List<User> usersThatAreAdmins = filterByRole(User.Role.admin);
         List<Admin> admins = new ArrayList<>();
         for (User item:
@@ -109,25 +105,51 @@ public class UserRepoImpl implements UserRepo {
         return admins;
     }
 
-    public Client getClientByUserID(Integer uID) throws ParseException {
+    public List<Landscaper> allLandscapers() {
+        List<User> usersThatAreLandscapers = filterByRole(User.Role.landscaper);
+        List<Landscaper> landscapers = new ArrayList<>();
+        for (User item:
+                usersThatAreLandscapers) {
+            Landscaper landscaper = new Landscaper(item);
+            landscapers.add(landscaper);
+        }
+        return landscapers;
+    }
+
+    public Client getClientByUserID(Integer uID) {
         Client found = null;
         List<Client> allClients = allClients();
         for (Client item:
                 allClients) {
             if (item.getUID().equals(uID)) {
                 found = item;
+                break;
             }
         }
         return found;
     }
 
-    public Admin getAdminByUserID(Integer uID) throws ParseException {
+    public Admin getAdminByUserID(Integer uID) {
         Admin found = null;
         List<Admin> allAdmins = allAdmins();
         for (Admin item:
                 allAdmins) {
             if (item.getUID().equals(uID)) {
                 found = item;
+                break;
+            }
+        }
+        return found;
+    }
+
+    public Landscaper getLandscaperByUserID(Integer uID) {
+        Landscaper found = null;
+        List<Landscaper> allLandcapers = allLandscapers();
+        for (Landscaper item:
+                allLandcapers) {
+            if (item.getUID().equals(uID)) {
+                found = item;
+                break;
             }
         }
         return found;

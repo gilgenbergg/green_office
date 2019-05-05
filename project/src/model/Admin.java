@@ -2,10 +2,6 @@ package model;
 
 import repo.*;
 
-import java.text.ChoiceFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Admin extends User {
@@ -16,7 +12,7 @@ public class Admin extends User {
     private UserRepoImpl users = new UserRepoImpl();
     private ResourceRepoImpl resources = new ResourceRepoImpl();
 
-    public Admin(Integer adminID, User user) throws ParseException {
+    public Admin(Integer adminID, User user) {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
         this.adminID = adminID;
     }
@@ -30,8 +26,8 @@ public class Admin extends User {
         return this;
     }
 
-    public void workOnClientRequst(ClientRequest clientRequest) throws ParseException {
-        if (clientRequest.getStatus().equals(ClientRequest.Status.newOne)) {
+    public void workOnClientRequst(ClientRequest clientRequest) {
+        while (clientRequest.getStatus().equals(ClientRequest.Status.newOne)) {
             ClientRequest.Type cReqType = clientRequest.getType();
             if (cReqType == ClientRequest.Type.planned) {
                 Integer plantID = clientRequest.getPlantID();
@@ -39,6 +35,7 @@ public class Admin extends User {
                 String nextDate = addNextDate();
                 plantsBase.setDateOfNextVisit(plant, nextDate);
                 clientRequest.setStatus(ClientRequest.Status.inProgress);
+                //checker.makeGardening(clientRequest);
             } else {
                 workOnFirstOneReq(clientRequest);
             }
@@ -51,7 +48,7 @@ public class Admin extends User {
         return nextDate;
     }
 
-    public void workOnFirstOneReq(ClientRequest clientRequest) throws ParseException {
+    public void workOnFirstOneReq(ClientRequest clientRequest) {
         Integer validID = generatePlantID();
         String type = null;
         String lastInspection = null;
@@ -62,7 +59,7 @@ public class Admin extends User {
         Plant plant = new Plant (validID, type, lastInspection, nextInspection, instructionID,  resources, clientID);
         plantsBase.add(plant);
         clientRequest.setStatus(ClientRequest.Status.inPurchase);
-        boolean purchased = false;
+        clientRequest.setAdminID(this.adminID);
         List<Resource> alreadyBought = null;
         while (clientRequest.getStatus() == ClientRequest.Status.inPurchase) {
             PurchaseRequest pReq = makePurchaseRequest(plant, clientRequest, alreadyBought);
@@ -72,7 +69,7 @@ public class Admin extends User {
         }
     }
 
-    private PurchaseRequest makePurchaseRequest(Plant plant, ClientRequest clientRequest, List<Resource> alreadyBought) {
+    public PurchaseRequest makePurchaseRequest(Plant plant, ClientRequest clientRequest, List<Resource> alreadyBought) {
         PurchaseRequest purchaseRequest = new PurchaseRequest(generatePreqID(), clientRequest.getcReqID(),
                 clientRequest.getPlantID(), clientRequest.getLandscaperID(), adminID, PurchaseRequest.Status.inProgress,
                 alreadyBought);
@@ -86,10 +83,11 @@ public class Admin extends User {
             alreadyBought = purchaseRequest.getAlreadyBought();
             List<Resource> newPurchase = testSomeMoreStaff();
             purchaseRequest.setStatus(PurchaseRequest.Status.inCheck);
-            checker.checkPurchaseRequest(purchaseRequest, newPurchase, clientRequest);
+            //checker.checkPurchaseRequest(purchaseRequest, newPurchase, clientRequest);
         }
-        return purchaseRequest;
+        clientRequest.setStatus(ClientRequest.Status.inProgress);
         //checker.makeGardening(clientRequest);
+        return purchaseRequest;
     }
 
     // набор для тестовой дозакупки

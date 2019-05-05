@@ -7,7 +7,6 @@ import repo.PurchaseReqRepoImpl;
 import repo.ResourceRepoImpl;
 import repo.UserRepoImpl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +19,10 @@ public class AdminLogic {
     private UserRepoImpl users = new UserRepoImpl();
     private ResourceRepoImpl resources = new ResourceRepoImpl();
 
-    public AdminLogic() throws ParseException {}
+    public AdminLogic() {}
 
     @Test
-    public void WorkOnFirstPReqStage1Test() throws ParseException {
+    public void WorkOnFirstPReqStage1Test(){
         Integer UID = 1;
         Integer plantID = 7;
         Client client = users.getClientByUserID(UID);
@@ -36,7 +35,7 @@ public class AdminLogic {
     }
 
     @Test
-    public void WorkOnFirstPReqStage2Test() throws ParseException {
+    public void WorkOnFirstPReqStage2Test(){
         Integer UID = 1;
         Integer plantID = 7;
         Client client = users.getClientByUserID(UID);
@@ -74,7 +73,7 @@ public class AdminLogic {
 
     //with a first try
     /*@Test
-    public void MakePReqTest1() throws ParseException {
+    public void MakePReqTest1(){
         PurchaseRequest purchaseRequest = new PurchaseRequest(generatePreqID(), clientRequest.getcReqID(),
                 clientRequest.getPlantID(), clientRequest.getLandscaperID(), adminID, PurchaseRequest.Status.inProgress);
         purchaseRequest.setStatus(PurchaseRequest.Status.inCheck);
@@ -82,13 +81,13 @@ public class AdminLogic {
 
     //needs to buy more staff
     @Test
-    public void MakePReqTest2() throws ParseException {
+    public void MakePReqTest2() {
 
     }
     */
 
     @Test
-    public void WorkOnPlannedCReqTest() throws ParseException {
+    public void WorkOnPlannedCReqTest(){
         Integer UID = 1;
         Integer plantID = 2;
         Client client = users.getClientByUserID(UID);

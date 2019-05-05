@@ -5,7 +5,6 @@ import org.junit.Test;
 import repo.PlantRepoImpl;
 import repo.UserRepoImpl;
 
-import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -15,10 +14,10 @@ public class ClientLogic {
     private UserRepoImpl users = new UserRepoImpl();
     private PlantRepoImpl plantsBase = new PlantRepoImpl();
 
-    public ClientLogic() throws ParseException {}
+    public ClientLogic() {}
 
     @Test
-    public void ClientPlantsAmountTest() throws ParseException {
+    public void ClientPlantsAmountTest() {
         Integer UID = 2;
         Client client = users.getClientByUserID(UID);
         List<Plant> plants = client.clientPlants(client.getUID());
@@ -30,7 +29,7 @@ public class ClientLogic {
     //createClientReq method tests
 
     @Test
-    public void CReqCreatedTest() throws ParseException {
+    public void CReqCreatedTest() {
         Integer UID = 2;
         Integer plantID = 2;
         Client client = users.getClientByUserID(UID);
@@ -41,7 +40,7 @@ public class ClientLogic {
     }
 
     @Test
-    public void FirstCReqPlantNullTest() throws ParseException {
+    public void FirstCReqPlantNullTest() {
         Integer UID = 2;
         Integer plantID = 7;
         Client client = users.getClientByUserID(UID);
@@ -52,7 +51,7 @@ public class ClientLogic {
     }
 
     @Test
-    public void PlannedCReqPlantNotNullTest() throws ParseException {
+    public void PlannedCReqPlantNotNullTest() {
         Integer UID = 2;
         Client client = users.getClientByUserID(UID);
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.planned, 2);
@@ -64,10 +63,11 @@ public class ClientLogic {
     //makeFeedback method tests
 
     @Test
-    public void PositiveFeedbackTest() throws ParseException {
+    public void PositiveFeedbackTest() {
         Integer UID = 2;
         Client client = users.getClientByUserID(UID);
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.planned, 2);
+        cReq.setStatus(ClientRequest.Status.done);
         Feedback feedback = client.makeFeedback(cReq, true);
         Feedback.Type res = feedback.getType();
         Feedback.Type expected = Feedback.Type.accepted;
@@ -76,10 +76,11 @@ public class ClientLogic {
     }
 
     @Test
-    public void NegativeFeedbackTest() throws ParseException {
+    public void NegativeFeedbackTest() {
         Integer UID = 2;
         Client client = users.getClientByUserID(UID);
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.planned, 2);
+        cReq.setStatus(ClientRequest.Status.done);
         Feedback feedback = client.makeFeedback(cReq, false);
         Feedback.Type res = feedback.getType();
         Feedback.Type expected = Feedback.Type.declined;
@@ -94,7 +95,7 @@ public class ClientLogic {
     }
 
     @Test
-    public void allClients() throws ParseException {
+    public void allClients() {
         List<Client> allClients = users.allClients();
         System.out.println(allClients);
     }

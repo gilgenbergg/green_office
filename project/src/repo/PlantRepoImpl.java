@@ -3,7 +3,6 @@ package repo;
 import model.Plant;
 import model.Resource;
 
-import java.text.ParseException;
 import java.util.*;
 
 public class PlantRepoImpl implements PlantRepository {
@@ -12,7 +11,7 @@ public class PlantRepoImpl implements PlantRepository {
     private ResourceRepoImpl resources = new ResourceRepoImpl();
     private List<Plant> data = testBase();
 
-    public PlantRepoImpl() throws ParseException {
+    public PlantRepoImpl() {
     }
 
     @Override
@@ -50,7 +49,7 @@ public class PlantRepoImpl implements PlantRepository {
         return filtered;
     }
 
-    private List<Resource> findResources(Integer plantID) throws ParseException {
+    private List<Resource> findResources(Integer plantID) {
         Plant plant = findItemByPlantID(plantID);
         return plant.getResources();
     }
@@ -65,7 +64,7 @@ public class PlantRepoImpl implements PlantRepository {
         data.remove(item);
     }
 
-    private List<Plant> testBase() throws ParseException {
+    private List<Plant> testBase() {
         List<Plant> plants = new ArrayList<>();
         List<Resource> testResources = new ArrayList<>();
         //String prev = parser.parseDate("Jan 18 20:56 MSK 2019");

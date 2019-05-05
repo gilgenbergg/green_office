@@ -4,7 +4,6 @@ import repo.ClientReqRepoImpl;
 import repo.PlantRepoImpl;
 import repo.UserRepoImpl;
 
-import java.text.ParseException;
 import java.util.List;
 
 public class Client extends User {
@@ -14,7 +13,7 @@ public class Client extends User {
     private PlantRepoImpl plantsBase = new PlantRepoImpl();
     private UserRepoImpl users = new UserRepoImpl();
 
-    public Client(List<Plant> plants, User user) throws ParseException {
+    public Client(List<Plant> plants, User user) {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
         this.clientPlants = plantsBase.filterPlantsByUserID(user.getUID());
     }
@@ -53,7 +52,7 @@ public class Client extends User {
 
     //opinion true if client accepts landscaper`s work or false if not (will come somehow outside)
     public Feedback makeFeedback(ClientRequest clientRequest, boolean opinion) {
-        Feedback feedback = null;
+        Feedback feedback = new Feedback(clientRequest.getcReqID(), Feedback.Type.none, "");
         if (clientRequest.getStatus().equals(ClientRequest.Status.done)) {
             if (opinion) {
             feedback.setType(Feedback.Type.accepted);
@@ -63,9 +62,12 @@ public class Client extends User {
                 feedback.setText("I am not satisfied. Needs some more work to do here!");
                 feedback.setType(Feedback.Type.declined);
                 clientRequest.setStatus(ClientRequest.Status.inProgress);
-                clientRequest.setStatus(ClientRequest.Status.newOne);
-                clientRequest.setType(ClientRequest.Type.planned);
             }
+        }
+        else {
+            feedback.setText("Work is not finished, can`t be accepted!");
+            feedback.setType(Feedback.Type.none);
+            clientRequest.setStatus(ClientRequest.Status.inProgress);
         }
     return feedback;
     }

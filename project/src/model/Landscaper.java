@@ -1,19 +1,17 @@
 package model;
 
-import repo.ClientReqRepoImpl;
 import repo.PlantRepoImpl;
 import repo.UserRepoImpl;
 
-import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Landscaper extends User {
+public class Landscaper extends User {
 
-    UserRepoImpl userRepo = new UserRepoImpl();
-    PlantRepoImpl plantBase = new PlantRepoImpl();
-    ClientReqRepoImpl cReqsRepo = new ClientReqRepoImpl();
+    private UserRepoImpl userRepo = new UserRepoImpl();
+    private PlantRepoImpl plantBase = new PlantRepoImpl();
 
-    public Landscaper(User user) throws ParseException {
+    public Landscaper(User user) {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
     }
 
@@ -46,19 +44,30 @@ public abstract class Landscaper extends User {
         }
     }
 
-    private boolean checkPurchase(PurchaseRequest purchaseRequest, List<Resource> boughtResources) {
+    public boolean checkPurchase(PurchaseRequest purchaseRequest, List<Resource> boughtResources) {
         Plant plant = plantBase.findItemByPlantID(purchaseRequest.getPlantID());
         List<Resource> neededResources = plant.getResources();
+        List<Integer> ids = new ArrayList<>();
         for (Resource item:
              neededResources) {
-            if (!boughtResources.contains(item)) {
+            ids.add(item.getresourceID());
+        }
+        for (Resource item:
+             boughtResources) {
+            if (!ids.contains(item.getresourceID())) {
                return false;
             }
         }
         return true;
     }
 
-    private void makeGardening(ClientRequest clientRequest) {
-        clientRequest.setStatus(ClientRequest.Status.done);
+    public void makeGardening(ClientRequest clientRequest) {
+        if (clientRequest.getStatus().equals(ClientRequest.Status.gardening)) {
+            clientRequest.setLandscaperID(this.getUID());
+            clientRequest.setStatus(ClientRequest.Status.done);
+        }
+        else {
+            clientRequest.setStatus(ClientRequest.Status.newOne);
+        }
     }
 }

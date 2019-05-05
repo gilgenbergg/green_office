@@ -1,9 +1,5 @@
 package model;
 
-import repo.PlantRepoImpl;
-
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 public class Plant {
@@ -23,7 +19,7 @@ public class Plant {
                  String nextInspection,
                  Integer instructionID,
                  List<Resource> resources,
-                 Integer clientID) throws ParseException {
+                 Integer clientID) {
         this.plantID = plantID;
         this.type = type;
         this.lastInspection = lastInspection;

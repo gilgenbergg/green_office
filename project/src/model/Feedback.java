@@ -13,7 +13,7 @@ public class Feedback {
     }
 
     public enum Type {
-        accepted, declined
+        accepted, declined, none
     }
 
     public Type getType() {

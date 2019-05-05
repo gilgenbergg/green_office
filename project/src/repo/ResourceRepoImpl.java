@@ -11,7 +11,7 @@ public class ResourceRepoImpl implements ResourceRepository {
 
     private List<Resource> data = testBase();
 
-    public ResourceRepoImpl() throws ParseException {
+    public ResourceRepoImpl() {
     }
 
     @Override
