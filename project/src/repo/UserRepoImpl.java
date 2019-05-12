@@ -7,14 +7,15 @@ import java.util.List;
 
 public class UserRepoImpl implements UserRepo {
 
-    private PlantRepoImpl plantsBase = new PlantRepoImpl();
-    //private List<Client> allClients = allClients();
-    //private List<Admin> allAdmins = allAdmins();
+    private static final UserRepoImpl USERS_REPO = new UserRepoImpl();
+    private UserRepoImpl() {}
+    public static UserRepoImpl getInstance() {
+        return USERS_REPO;
+    }
+
+    private PlantRepoImpl plantsBase = PlantRepoImpl.getInstance();
 
     private List<User> data = testUsers();
-
-    public UserRepoImpl() {
-    }
 
     public List<User> testUsers() {
         Integer uID;

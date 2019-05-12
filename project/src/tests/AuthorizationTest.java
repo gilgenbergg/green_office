@@ -13,8 +13,8 @@ import static org.junit.Assert.*;
 
 public class AuthorizationTest {
 
-    private AuthRepoImpl authrepo = new AuthRepoImpl();
-    private UserRepoImpl userRepo = new UserRepoImpl();
+    private AuthRepoImpl authrepo = AuthRepoImpl.getInstance();
+    private UserRepoImpl userRepo = UserRepoImpl.getInstance();
 
     public AuthorizationTest() throws ParseException {}
 

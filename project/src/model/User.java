@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private AuthRepoImpl authrepo = new AuthRepoImpl();
+    private AuthRepoImpl authrepo = AuthRepoImpl.getInstance();
 
     private Integer uID;
     private Role role;

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Landscaper extends User {
 
-    private UserRepoImpl userRepo = new UserRepoImpl();
-    private PlantRepoImpl plantBase = new PlantRepoImpl();
+    private UserRepoImpl userRepo = UserRepoImpl.getInstance();
+    private PlantRepoImpl plantBase = PlantRepoImpl.getInstance();
 
     public Landscaper(User user) {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());

@@ -11,8 +11,8 @@ import static org.junit.Assert.*;
 
 public class ClientLogic {
 
-    private UserRepoImpl users = new UserRepoImpl();
-    private PlantRepoImpl plantsBase = new PlantRepoImpl();
+    private UserRepoImpl users = UserRepoImpl.getInstance();
+    private PlantRepoImpl plantsBase = PlantRepoImpl.getInstance();
 
     public ClientLogic() {}
 
@@ -21,7 +21,7 @@ public class ClientLogic {
         Integer UID = 2;
         Client client = users.getClientByUserID(UID);
         List<Plant> plants = client.clientPlants(client.getUID());
-        Integer expected = 3;
+        Integer expected = 7;
         Integer res = plants.size();
         assertEquals(expected, res);
     }

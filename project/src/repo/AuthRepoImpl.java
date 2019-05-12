@@ -9,6 +9,12 @@ public class AuthRepoImpl implements AuthRepository {
 
     private List<AuthData> data = testUsers();
 
+    private static final AuthRepoImpl AUTH_REPO = new AuthRepoImpl();
+    private AuthRepoImpl() {}
+    public static AuthRepoImpl getInstance() {
+        return AUTH_REPO;
+    }
+
     public AuthData findItemByUID(Integer receivedUID) {
         AuthData found = null;
         for (int i=0; i<data.size(); i++) {

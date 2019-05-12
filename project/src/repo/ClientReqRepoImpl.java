@@ -8,6 +8,12 @@ import java.util.List;
 
 public class ClientReqRepoImpl implements ClientReqsRepository {
 
+    private static final ClientReqRepoImpl CREQ_REPO = new ClientReqRepoImpl();
+    private ClientReqRepoImpl() {}
+    public static ClientReqRepoImpl getInstance() {
+        return CREQ_REPO;
+    }
+
     private List<ClientRequest> data = testBase();
     private IDgenerator generator = new IDgenerator();
 

@@ -6,13 +6,16 @@ import model.Resource;
 import java.util.*;
 
 public class PlantRepoImpl implements PlantRepository {
-    //private DateParser parser = new DateParser();
-    private IDgenerator generator = new IDgenerator();
-    private ResourceRepoImpl resources = new ResourceRepoImpl();
-    private List<Plant> data = testBase();
 
-    public PlantRepoImpl() {
+    private static final PlantRepoImpl PLANTS_REPO = new PlantRepoImpl();
+    private PlantRepoImpl() {}
+    public static PlantRepoImpl getInstance() {
+        return PLANTS_REPO;
     }
+
+    private IDgenerator generator = new IDgenerator();
+    private ResourceRepoImpl resources = ResourceRepoImpl.getInstance();
+    private List<Plant> data = testBase();
 
     @Override
     public Plant findItemByPlantID(Integer receivedPlantID) {

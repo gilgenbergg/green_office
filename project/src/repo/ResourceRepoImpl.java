@@ -3,16 +3,18 @@ package repo;
 import model.Plant;
 import model.Resource;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResourceRepoImpl implements ResourceRepository {
 
-    private List<Resource> data = testBase();
-
-    public ResourceRepoImpl() {
+    private static final ResourceRepoImpl RESOURCES_REPO = new ResourceRepoImpl();
+    private ResourceRepoImpl() {}
+    public static ResourceRepoImpl getInstance() {
+        return RESOURCES_REPO;
     }
+
+    private List<Resource> data = testBase();
 
     @Override
     public boolean add(Resource item) {

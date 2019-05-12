@@ -14,41 +14,46 @@ import static org.junit.Assert.*;
 
 public class AdminLogic {
 
-    private PlantRepoImpl plantsBase = new PlantRepoImpl();
-    private PurchaseReqRepoImpl purchasesBase = new PurchaseReqRepoImpl();
-    private UserRepoImpl users = new UserRepoImpl();
-    private ResourceRepoImpl resources = new ResourceRepoImpl();
+    private PlantRepoImpl plantsBase = PlantRepoImpl.getInstance();
+    private PurchaseReqRepoImpl purchasesBase = PurchaseReqRepoImpl.getInstance();
+    private UserRepoImpl users = UserRepoImpl.getInstance();
+    private ResourceRepoImpl resources = ResourceRepoImpl.getInstance();
 
     public AdminLogic() {}
 
     @Test
     public void WorkOnFirstPReqStage1Test(){
-        Integer UID = 1;
-        Integer plantID = 7;
-        Client client = users.getClientByUserID(UID);
-        ClientRequest cReq = client.createClientReq(ClientRequest.Type.firstOne, plantID);
-        Admin admin = users.getAdminByUserID(UID);
+        Integer adminID = 1;
+        Integer landscaperID = 3;
+        Integer clientID = 2;
+        Admin admin = users.getAdminByUserID(adminID);
+        Client client = users.getClientByUserID(clientID);
+        ClientRequest cReq = client.createClientReq(ClientRequest.Type.firstOne, null);
+        cReq.setLandscaperID(landscaperID);
+        ClientRequest.Status expected = ClientRequest.Status.done;
+        admin.workOnClientRequst(cReq);
+
         ClientRequest.Status res = cReq.getStatus();
-        ClientRequest.Status expected = ClientRequest.Status.newOne;
-        //admin.workOnFirstOneReq(cReq);
         assertEquals(res, expected);
     }
 
     @Test
     public void WorkOnFirstPReqStage2Test(){
-        Integer UID = 1;
-        Integer plantID = 7;
-        Client client = users.getClientByUserID(UID);
+        Integer clientID = 2;
+        Integer adminID = 1;
+        Integer landscaperID = 3;
+        Integer plantID = 1;
+        Client client = users.getClientByUserID(clientID);
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.firstOne, plantID);
-        Admin admin = users.getAdminByUserID(UID);
+        cReq.setLandscaperID(landscaperID);
+        Admin admin = users.getAdminByUserID(adminID);
         admin.workOnFirstOneReq(cReq);
         ClientRequest.Status res = cReq.getStatus();
-        ClientRequest.Status expected = ClientRequest.Status.inProgress;
+        ClientRequest.Status expected = ClientRequest.Status.done;
         assertEquals(res, expected);
     }
 
     // набор для тестовой дозакупки
-
     List<Resource> testSomeMoreStaff(Integer plantID, List<Resource> alreadyBought) {
         Resource res1 = resources.getItemByID(1);
         Resource res3 = resources.getItemByID(3);
@@ -71,31 +76,20 @@ public class AdminLogic {
         return alreadyBought;
     }
 
-    //with a first try
-    /*@Test
-    public void MakePReqTest1(){
-        PurchaseRequest purchaseRequest = new PurchaseRequest(generatePreqID(), clientRequest.getcReqID(),
-                clientRequest.getPlantID(), clientRequest.getLandscaperID(), adminID, PurchaseRequest.Status.inProgress);
-        purchaseRequest.setStatus(PurchaseRequest.Status.inCheck);
-    }
-
-    //needs to buy more staff
-    @Test
-    public void MakePReqTest2() {
-
-    }
-    */
-
     @Test
     public void WorkOnPlannedCReqTest(){
-        Integer UID = 1;
+        Integer UID = 2;
+        Integer landscaperID = 3;
+        Integer adminID = 1;
         Integer plantID = 2;
         Client client = users.getClientByUserID(UID);
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.planned, plantID);
-        Admin admin = users.getAdminByUserID(UID);
+        Admin admin = users.getAdminByUserID(adminID);
+        cReq.setLandscaperID(landscaperID);
+        cReq.setAdminID(adminID);
         admin.workOnClientRequst(cReq);
         ClientRequest.Status res = cReq.getStatus();
-        ClientRequest.Status expected = ClientRequest.Status.inProgress;
+        ClientRequest.Status expected = ClientRequest.Status.done;
         assertEquals(res, expected);
     }
 

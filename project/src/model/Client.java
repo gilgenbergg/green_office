@@ -9,9 +9,9 @@ import java.util.List;
 public class Client extends User {
 
     private List<Plant> clientPlants;
-    private ClientReqRepoImpl clientsReqsBase = new ClientReqRepoImpl();
-    private PlantRepoImpl plantsBase = new PlantRepoImpl();
-    private UserRepoImpl users = new UserRepoImpl();
+    private ClientReqRepoImpl clientsReqsBase = ClientReqRepoImpl.getInstance();
+    private PlantRepoImpl plantsBase = PlantRepoImpl.getInstance();
+    private UserRepoImpl users = UserRepoImpl.getInstance();
 
     public Client(List<Plant> plants, User user) {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());

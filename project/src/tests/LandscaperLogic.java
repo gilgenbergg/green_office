@@ -13,9 +13,9 @@ import static org.junit.Assert.*;
 
 public class LandscaperLogic {
 
-    private UserRepoImpl users = new UserRepoImpl();
-    private PurchaseReqRepoImpl purchases = new PurchaseReqRepoImpl();
-    private ResourceRepoImpl resources = new ResourceRepoImpl();
+    private UserRepoImpl users = UserRepoImpl.getInstance();
+    private PurchaseReqRepoImpl purchases = PurchaseReqRepoImpl.getInstance();
+    private ResourceRepoImpl resources = ResourceRepoImpl.getInstance();
 
     public LandscaperLogic() {}
 
@@ -98,7 +98,7 @@ public class LandscaperLogic {
 
         checker.checkPurchaseRequest(pReq, madePurchase, cReq);
 
-        PurchaseRequest.Status expected = PurchaseRequest.Status.inProgress;
+        PurchaseRequest.Status expected = PurchaseRequest.Status.approved;
         PurchaseRequest.Status res = pReq.getStatus();
         assertEquals(expected, res);
     }

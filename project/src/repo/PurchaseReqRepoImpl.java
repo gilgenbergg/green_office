@@ -9,6 +9,12 @@ import java.util.List;
 
 public class PurchaseReqRepoImpl implements PurchaseReqRepository {
 
+    private static final PurchaseReqRepoImpl PREQ_REPO = new PurchaseReqRepoImpl();
+    private PurchaseReqRepoImpl() {}
+    public static PurchaseReqRepoImpl getInstance() {
+        return PREQ_REPO;
+    }
+
     private List<PurchaseRequest> data = testBase();
     private IDgenerator generator = new IDgenerator();
 
