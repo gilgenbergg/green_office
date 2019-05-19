@@ -45,13 +45,13 @@ public class UserRepoImpl implements UserRepo {
         User user4 = new User(
                 uID = 4,
                 firstName = "Arina",
-                secondName = "Kalinina",
+                secondName = "Fox",
                 role = User.Role.client
         );
         User user5 = new User(
                 uID = 5,
-                firstName = "Lusien",
-                secondName = "Kornilova",
+                firstName = "Test",
+                secondName = "TestTest",
                 role = User.Role.client
         );
         allUsers.add(user1);
