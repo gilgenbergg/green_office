@@ -14,22 +14,21 @@ public class PurchaseRequest {
     private Integer adminID;
     private Integer landscaperID;
     private Status status;
-    private List<Resource> alreadyBought;
+    //private List<Resource> alreadyBought;
 
     public PurchaseRequest(Integer pReqID,
                          Integer cReqID,
                          Integer plantID,
                          Integer landscaperID,
                          Integer adminID,
-                         Status status,
-                           List<Resource> alreadyBought) {
+                         Status status) {
         this.pReqID = pReqID;
         this.cReqID = cReqID;
         this.plantID = plantID;
         this.landscaperID = landscaperID;
         this.adminID = adminID;
         this.status = status;
-        this.alreadyBought = alreadyBought;
+        //this.alreadyBought = alreadyBought;
     }
 
     public Integer getcReqID() {
@@ -56,9 +55,9 @@ public class PurchaseRequest {
         return status;
     }
 
-    public List<Resource> getAlreadyBought() {
-        return alreadyBought;
-    }
+    //public List<Resource> getAlreadyBought() {
+    //    return alreadyBought;
+    //}
 
     public void setcReqID(Integer cReqID) {
         this.cReqID = cReqID;

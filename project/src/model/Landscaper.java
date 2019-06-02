@@ -1,17 +1,20 @@
 package model;
 
-import repo.PlantRepoImpl;
-import repo.UserRepoImpl;
+import data.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Landscaper extends User {
 
-    private UserRepoImpl userRepo = UserRepoImpl.getInstance();
-    private PlantRepoImpl plantBase = PlantRepoImpl.getInstance();
+    private UsersMapper userRepo = new UsersMapper();
+    private PlantsMapper plantBase = new PlantsMapper();
+    private PReqsMapper pReqsMapper = new PReqsMapper();
+    private CReqsMapper cReqsMapper = new CReqsMapper();
+    private ResourcesMapper resourcesMapper = new ResourcesMapper();
 
-    public Landscaper(User user) {
+    public Landscaper(User user) throws SQLException, ClassNotFoundException {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
     }
 
@@ -20,7 +23,7 @@ public class Landscaper extends User {
         return Role.landscaper;
     }
 
-    public User getUser(Integer userID) {
+    public User getUser(Integer userID) throws SQLException {
         return userRepo.findItemByUID(userID);
     }
 
@@ -28,46 +31,44 @@ public class Landscaper extends User {
         return this;
     }
 
-    public void checkPurchaseRequest(PurchaseRequest purchaseRequest, List<Resource> boughtResources,
-                                     ClientRequest clientRequest){
+    public void checkPurchaseRequest(Integer pReqID, List<Resource> boughtResources,
+                                     ClientRequest clientRequest) throws SQLException {
         boolean checkResult;
+        PurchaseRequest purchaseRequest = pReqsMapper.findItemByID(pReqID);
         if (purchaseRequest.getStatus() == PurchaseRequest.Status.inCheck) {
             checkResult = checkPurchase(purchaseRequest, boughtResources);
             if (checkResult) {
-                purchaseRequest.setStatus(PurchaseRequest.Status.approved);
-                clientRequest.setStatus(ClientRequest.Status.gardening);
-                makeGardening(clientRequest);
+                pReqsMapper.updateStatus(pReqID, PurchaseRequest.Status.approved);
             }
             else {
-                purchaseRequest.setStatus(PurchaseRequest.Status.inProgress);
+                pReqsMapper.updateStatus(pReqID, PurchaseRequest.Status.inProgress);
             }
         }
     }
 
-    public boolean checkPurchase(PurchaseRequest purchaseRequest, List<Resource> boughtResources) {
+    public boolean checkPurchase(PurchaseRequest purchaseRequest, List<Resource> boughtResources) throws SQLException {
         Plant plant = plantBase.findItemByPlantID(purchaseRequest.getPlantID());
-        List<Resource> neededResources = plant.getResources();
+        List<Resource> neededResources = resourcesMapper.findResourcesByPlantID(purchaseRequest.getPlantID());
         List<Integer> ids = new ArrayList<>();
         for (Resource item:
-             neededResources) {
+             boughtResources) {
             ids.add(item.getresourceID());
         }
         for (Resource item:
-             boughtResources) {
+                neededResources) {
             if (!ids.contains(item.getresourceID())) {
-               return false;
+                return false;
             }
         }
         return true;
     }
 
-    public void makeGardening(ClientRequest clientRequest) {
+    public void makeGardening(ClientRequest clientRequest) throws SQLException {
         if (clientRequest.getStatus().equals(ClientRequest.Status.gardening)) {
-            clientRequest.setLandscaperID(this.getUID());
-            clientRequest.setStatus(ClientRequest.Status.done);
-        }
+            cReqsMapper.updateLandscaperID(clientRequest.getcReqID(), this.getUID());
+            cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.done);}
         else {
-            clientRequest.setStatus(ClientRequest.Status.newOne);
+            cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.newOne);
         }
     }
 }

@@ -1,18 +1,20 @@
 package model;
 
-import repo.*;
+import data.*;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class Admin extends User {
 
     private Integer adminID;
-    private PlantRepoImpl plantsBase = PlantRepoImpl.getInstance();
-    private PurchaseReqRepoImpl purchasesBase = PurchaseReqRepoImpl.getInstance();
-    private UserRepoImpl users = UserRepoImpl.getInstance();
-    private ResourceRepoImpl resources = ResourceRepoImpl.getInstance();
+    private PlantsMapper plantsBase = new PlantsMapper();
+    private PReqsMapper purchasesBase = new PReqsMapper();
+    private UsersMapper users = new UsersMapper();
+    private ResourcesMapper resources = new ResourcesMapper();
+    private CReqsMapper cReqsMapper = new CReqsMapper();
 
-    public Admin(Integer adminID, User user) {
+    public Admin(Integer adminID, User user) throws SQLException, ClassNotFoundException {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
         this.adminID = adminID;
     }
@@ -22,19 +24,20 @@ public class Admin extends User {
         return Role.admin;
     }
 
-    public void workOnClientRequst(ClientRequest clientRequest) {
-        while (clientRequest.getStatus().equals(ClientRequest.Status.newOne)) {
+    public void workOnClientRequest(ClientRequest clientRequest, String plantType) throws SQLException, ClassNotFoundException {
+        while (cReqsMapper.findItemByID(clientRequest.getcReqID()).getStatus().equals(ClientRequest.Status.newOne)) {
             ClientRequest.Type cReqType = clientRequest.getType();
             if (cReqType == ClientRequest.Type.planned) {
-                Landscaper gardener = users.getLandscaperByUserID(clientRequest.getLandscaperID());
-                Integer plantID = clientRequest.getPlantID();
+                Integer assignedLandscaper = 3;
+                Landscaper gardener = users.getLandscaperByUserID(assignedLandscaper);
+                Integer plantID = cReqsMapper.findItemByID(clientRequest.getcReqID()).getPlantID();
                 Plant plant = plantsBase.findItemByPlantID(plantID);
                 String nextDate = addNextDate();
-                plantsBase.setDateOfNextVisit(plant, nextDate);
-                clientRequest.setStatus(ClientRequest.Status.gardening);
-                gardener.makeGardening(clientRequest);
+                plantsBase.setDateOfNextVisit(plant.getPlantID(), nextDate);
+                cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.gardening);
+                gardener.makeGardening(cReqsMapper.findItemByID(clientRequest.getcReqID()));
             } else {
-                workOnFirstOneReq(clientRequest);
+                workOnFirstOneReq(clientRequest, plantType);
             }
         }
     }
@@ -46,62 +49,60 @@ public class Admin extends User {
         return nextDate;
     }
 
-    private List<Resource> testResources() {
+    private List<Resource> testResources() throws SQLException {
         List<Resource> testResources = new ArrayList<Resource>();
-        Resource resource = resources.getItemByID(2);
+        Resource resource = resources.getResourceByID(2);;
         testResources.add(resource);
         return testResources;
     }
 
-    public void workOnFirstOneReq(ClientRequest clientRequest) {
-        Integer validID = generatePlantID();
-        String type = null;
-        String lastInspection = null;
-        String nextInspection = null;
-        Integer instructionID = null;
-        List <Resource> resources = testResources();
-        Integer clientID = clientRequest.getClientID();
-        Plant plant = new Plant (validID, type, lastInspection, nextInspection, instructionID,  resources, clientID);
-        plantsBase.add(plant);
-        clientRequest.setStatus(ClientRequest.Status.inPurchase);
-        clientRequest.setAdminID(this.adminID);
+    public void workOnFirstOneReq(ClientRequest clientRequest, String plantType) throws SQLException, ClassNotFoundException {
+        Plant plant = new Plant(null, plantType, null, null, null, null,
+                clientRequest.getClientID());
+        plant = plantsBase.addNewPlant(plant);
+        cReqsMapper.updatePlant(plant.getPlantID(), cReqsMapper.findItemByID(clientRequest.getcReqID()));
+        cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.inPurchase);
+        cReqsMapper.updateAdminID(clientRequest.getcReqID(), this.adminID);
         List<Resource> alreadyBought = new ArrayList<>();
-        while (clientRequest.getStatus() == ClientRequest.Status.inPurchase) {
-            PurchaseRequest pReq = makePurchaseRequest(plant, clientRequest, alreadyBought);
-            //if (pReq.getStatus().equals(PurchaseRequest.Status.approved)) {
-             //   clientRequest.setStatus(ClientRequest.Status.inProgress);
-            //}
+        clientRequest = cReqsMapper.findItemByID(clientRequest.getcReqID());
+        while (cReqsMapper.findItemByID(clientRequest.getcReqID()).getStatus() != ClientRequest.Status.done) {
+            PurchaseRequest pReq = makePurchaseRequest(plant, cReqsMapper.findItemByID(clientRequest.getcReqID()), alreadyBought);
         }
     }
 
-    public PurchaseRequest makePurchaseRequest(Plant plant, ClientRequest clientRequest, List<Resource> alreadyBought) {
-        PurchaseRequest purchaseRequest = new PurchaseRequest(generatePreqID(), clientRequest.getcReqID(),
-                clientRequest.getPlantID(), clientRequest.getLandscaperID(), adminID, PurchaseRequest.Status.inProgress,
-                alreadyBought);
-        Landscaper checker = users.getLandscaperByUserID(clientRequest.getLandscaperID());
+    public PurchaseRequest makePurchaseRequest(Plant plant, ClientRequest clientRequest, List<Resource> alreadyBought) throws SQLException, ClassNotFoundException {
+        PurchaseRequest purchaseStart = new PurchaseRequest(null, clientRequest.getcReqID(),
+                plant.getPlantID(), null, adminID, null);
+        Integer pReqID = purchasesBase.addPReq(purchaseStart);
+        //let`s for now we have just one landscaper
+        Integer assignedLandscaper = 3;
+        Landscaper checker = users.getLandscaperByUserID(assignedLandscaper);
+        purchasesBase.updateLandscaperID(pReqID, assignedLandscaper);
         List<Resource> boughtByAdmin = testPurchase(clientRequest, alreadyBought);
         //here landscaper approves purchase or not
-        purchaseRequest.setStatus(PurchaseRequest.Status.inCheck);
-        checker.checkPurchaseRequest(purchaseRequest, boughtByAdmin, clientRequest);
-        while (purchaseRequest.getStatus() != PurchaseRequest.Status.approved) {
-            alreadyBought = purchaseRequest.getAlreadyBought();
-            List<Resource> newPurchase = buySomeMoreStaff(alreadyBought);
-            purchaseRequest.setStatus(PurchaseRequest.Status.inCheck);
-            checker.checkPurchaseRequest(purchaseRequest, newPurchase, clientRequest);
+        purchasesBase.updateStatus(pReqID, PurchaseRequest.Status.inCheck);
+        PurchaseRequest purchaseReq = purchasesBase.findItemByID(pReqID);
+        checker.checkPurchaseRequest(pReqID, boughtByAdmin, clientRequest);
+        while (purchasesBase.findItemByID(pReqID).getStatus() != PurchaseRequest.Status.approved) {
+            List<Resource> previouslyBought = alreadyBought;
+            List<Resource> newPurchase = buySomeMoreStaff(previouslyBought);
+            purchasesBase.updateStatus(pReqID, PurchaseRequest.Status.inCheck);
+            checker.checkPurchaseRequest(pReqID, newPurchase, clientRequest);
         }
-        //sth below is already done by landscaper while gardening
-        //clientRequest.setStatus(ClientRequest.Status.inProgress);
-        //checker.makeGardening(clientRequest);
-        return purchaseRequest;
+        cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.gardening);
+        checker.makeGardening(cReqsMapper.findItemByID(clientRequest.getcReqID()));
+        purchaseReq = purchasesBase.findItemByID(pReqID);
+        return purchaseReq;
     }
 
     // набор для тестовой дозакупки
+    // get from UI
 
-    List<Resource> buySomeMoreStaff(List<Resource> alreadyBought) {
-        Resource res1 = resources.getItemByID(1);
-        Resource res3 = resources.getItemByID(3);
-        Resource res4 = resources.getItemByID(4);
-        Resource res5 = resources.getItemByID(5);
+    List<Resource> buySomeMoreStaff(List<Resource> alreadyBought) throws SQLException {
+        Resource res1 = resources.getResourceByID(1);
+        Resource res3 = resources.getResourceByID(3);
+        Resource res4 = resources.getResourceByID(4);
+        Resource res5 = resources.getResourceByID(5);
         alreadyBought.add(res1);
         alreadyBought.add(res3);
         alreadyBought.add(res4);
@@ -109,21 +110,14 @@ public class Admin extends User {
         return alreadyBought;
     }
 
-    List<Resource> testPurchase(ClientRequest clientRequest, List<Resource> alreadyBought) {
+    List<Resource> testPurchase(ClientRequest clientRequest, List<Resource> alreadyBought) throws SQLException {
         Integer plantID = clientRequest.getPlantID();
         //toPurchase = resources.findResourcesByPlantID(plantID);
-        Resource res1 = resources.getItemByID(2);
+        Resource res1 = resources.getResourceByID(2);
         alreadyBought.add(res1);
         return alreadyBought;
     }
 
-    private Integer generatePreqID() {
-        return purchasesBase.getValidPurchaseID();
-    }
-
-    public Integer generatePlantID() {
-        return plantsBase.getValidPlantID();
-    }
 }
 
 

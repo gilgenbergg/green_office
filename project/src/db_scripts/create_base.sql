@@ -10,25 +10,7 @@ CREATE TABLE user_info(
   first_name VARCHAR(30),
   second_name VARCHAR(30),
   auth_data_id INTEGER NOT NULL,
-  FOREIGN KEY (auth_data_id) REFERENCES auth_data
-);
-
-CREATE TABLE admin(
-  admin_id SERIAL PRIMARY KEY,
-  user_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES user_info
-);
-
-CREATE TABLE client(
-  client_id SERIAL PRIMARY KEY,
-  user_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES user_info
-);
-
-CREATE TABLE landscaper(
-  client_id SERIAL PRIMARY KEY,
-  user_id INTEGER,
-  FOREIGN KEY (user_id) REFERENCES user_info
+  FOREIGN KEY (auth_data_id) REFERENCES auth_data ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE instruction(
@@ -43,7 +25,7 @@ CREATE TABLE plant(
     last_inspection VARCHAR(10),
     next_inspection VARCHAR(10),
     instruction_id INTEGER,
-    FOREIGN KEY (client_id) REFERENCES client,
+    FOREIGN KEY (client_id) REFERENCES user_info,
     FOREIGN KEY (instruction_id) REFERENCES instruction
 );
 
@@ -63,9 +45,9 @@ CREATE TABLE creq(
     client_id INTEGER,
     landscaper_id INTEGER,
     FOREIGN KEY (plant_id) REFERENCES plant,
-    FOREIGN KEY (admin_id) REFERENCES admin,
-    FOREIGN KEY (client_id) REFERENCES client,
-    FOREIGN KEY (landscaper_id) REFERENCES landscaper
+    FOREIGN KEY (admin_id) REFERENCES user_info,
+    FOREIGN KEY (client_id) REFERENCES user_info,
+    FOREIGN KEY (landscaper_id) REFERENCES user_info
 );
 
 CREATE TABLE preq(
@@ -77,9 +59,9 @@ CREATE TABLE preq(
     landscaper_id INTEGER,
     creq_id INTEGER,
     FOREIGN KEY (plant_id) REFERENCES plant,
-    FOREIGN KEY (admin_id) REFERENCES admin,
-    FOREIGN KEY (client_id) REFERENCES client,
-    FOREIGN KEY (landscaper_id) REFERENCES landscaper,
+    FOREIGN KEY (admin_id) REFERENCES user_info,
+    FOREIGN KEY (client_id) REFERENCES user_info,
+    FOREIGN KEY (landscaper_id) REFERENCES user_info,
     FOREIGN KEY (creq_id) REFERENCES creq
 );
 
@@ -90,8 +72,9 @@ CREATE TABLE feedback(
     text VARCHAR(80),
     creq_id INTEGER,
     FOREIGN KEY (creq_id) REFERENCES creq
-)
+);
 
 
-
+SELECT from auth_data where login='test';
+SELECT * FROM auth_data;
 

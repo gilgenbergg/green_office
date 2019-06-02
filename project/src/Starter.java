@@ -1,9 +1,7 @@
-import data.AuthMapper;
-import data.DBinit;
-import model.AuthData;
+import data.*;
+import model.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Starter {
 
@@ -12,13 +10,11 @@ public class Starter {
         System.out.println("Call to connect from main app is made...");
 
         AuthMapper authMapper = new AuthMapper();
-        //AuthData found = authMapper.findItemByUID(1);
-        //System.out.println(found.getLogin());
-
-        //ArrayList<AuthData> allItems = authMapper.allItems();
-        //System.out.println(allItems);
-
-        // TODO: fix removal on database configuration level
-        //authMapper.removeByLogin("test");
+        CReqsMapper cReqs = new CReqsMapper();
+        InstructionsMapper instructionsMapper = new InstructionsMapper();
+        PlantsMapper plantsBase = new PlantsMapper();
+        PReqsMapper pReqs = new PReqsMapper();
+        ResourcesMapper resourcesMapper = new ResourcesMapper();
+        UsersMapper users = new UsersMapper();
     }
 }

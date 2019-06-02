@@ -8,6 +8,17 @@ import java.util.*;
 public class AuthMapper extends DBinit{
 
     private static Set<AuthData> cash = new HashSet<>();
+    private Connection connection;
+    //private static final AuthMapper AUTH_TABLE = new AuthMapper();
+
+    public AuthMapper() throws SQLException, ClassNotFoundException {
+        super();
+        connection = DBinit.getInstance().getConnInst();
+    }
+
+    //public static AuthMapper getInstance() {
+    //    return AUTH_TABLE;
+    //}
 
     public ArrayList<AuthData> allItems() throws SQLException {
         ResultSet rs = null;
@@ -31,11 +42,11 @@ public class AuthMapper extends DBinit{
         String login = item.getLogin();
         String password = item.getPassword();
         ResultSet rs = null;
-        String select = "INSERT INTO auth_data (login, password) VALUES ('"+login+"', '"+password+"');";
-        PreparedStatement insertion = connection.prepareStatement(select, Statement.RETURN_GENERATED_KEYS);
+        String request = "INSERT INTO auth_data (login, password) VALUES (?, ?);";
+        PreparedStatement insertion = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         insertion.setString(1, login);
         insertion.setString(2, password);
-        insertion.execute();
+        insertion.executeUpdate();
         rs = insertion.getGeneratedKeys();
         if (rs.next()) {
             Integer id = rs.getInt(1);
@@ -78,7 +89,7 @@ public class AuthMapper extends DBinit{
         }
         //if in cash item wasn`t found, searching in database
         ResultSet rs = null;
-        String select = "SELECT * FROM auth_data WHERE login='"+login+"'";
+        String select = "SELECT * FROM auth_data WHERE login='" + login + "'";
         PreparedStatement searchByID = connection.prepareStatement(select);
         rs = searchByID.executeQuery();
         if (!rs.next())
@@ -89,14 +100,4 @@ public class AuthMapper extends DBinit{
         cash.add(newItem);
         return newItem;
     }
-
-    public void removeByLogin(String login) throws SQLException {
-        AuthData toDelete = findItemByLogin(login);
-        Integer id = toDelete.getUID();
-        String script = "DELETE FROM auth_data WHERE auth_data_id = '"+id+"'";
-        PreparedStatement removal = connection.prepareStatement(script);
-        boolean rs = removal.execute();
-        cash.remove(toDelete);
-    }
-
 }

@@ -1,13 +1,25 @@
 package model;
 
+import data.AuthMapper;
 import repo.AuthRepoImpl;
 
 import javax.naming.AuthenticationException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private AuthRepoImpl authrepo = AuthRepoImpl.getInstance();
+    private static AuthMapper authMapper;
+
+    static {
+        try {
+            authMapper = new AuthMapper();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     private Integer uID;
     private Role role;
@@ -26,6 +38,18 @@ public class User {
        this.password = password;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public enum Role {
         admin, landscaper, client
     }
@@ -38,6 +62,22 @@ public class User {
         return role;
     }
 
+    public Role parseRole(String roleFromBase) {
+        Role parsedRole = null;
+        switch (roleFromBase) {
+            case "client":
+                parsedRole = User.Role.client;
+                break;
+            case "admin":
+                parsedRole = User.Role.admin;
+                break;
+            case "landscaper":
+                parsedRole = User.Role.landscaper;
+                break;
+        }
+        return parsedRole;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -46,12 +86,16 @@ public class User {
         return secondName;
     }
 
-    public String getLogin() {
-        return authrepo.findLoginByUID(this.uID);
+    public String getLogin() throws SQLException {
+        return authMapper.findItemByUID(this.uID).getLogin();
     }
 
-    public String getPassword() {
-        return authrepo.findPasswordByUID(this.uID);
+    public void setuID(Integer uID) {
+        this.uID = uID;
+    }
+
+    public String getPassword() throws SQLException {
+        return authMapper.findItemByUID(this.uID).getPassword();
     }
 
     public void setFirstName (String firstName) {
@@ -62,10 +106,10 @@ public class User {
         this.secondName = secondName;
     }
 
-    public boolean signIn (User user, String receivedLogin, String receivedPassword) {
+    public boolean signIn (User user, String receivedLogin, String receivedPassword) throws SQLException {
         Integer baseUID = user.getUID();
-        login = authrepo.findLoginByUID(baseUID);
-        password = authrepo.findPasswordByUID(baseUID);
+        login = authMapper.findItemByUID(baseUID).getLogin();
+        password = authMapper.findItemByUID(baseUID).getPassword();
         return correctLogin(login, password, receivedLogin, receivedPassword);
     }
 
