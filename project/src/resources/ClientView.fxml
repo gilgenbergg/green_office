@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ClientViewController">
+  <children>
+    <Label fx:id="viewLabel" layoutX="258.0" layoutY="14.0" text="Client " />
+    <TextField fx:id="uidField" layoutX="300.0" layoutY="14.0" prefWidth="42.0" />
+    <Label fx:id="plantsLabel" layoutX="70.0" layoutY="56.0" text="Your plants:">
+      <labelFor>
+        <ListView fx:id="plantsList" layoutX="21.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" />
+      </labelFor>
+    </Label>
+    <fx:reference source="plantsList" />
+    <Label fx:id="requestsLabel" layoutX="426.0" layoutY="56.0" text="Your Requests:">
+      <labelFor>
+        <ListView fx:id="requestsList" layoutX="376.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" />
+      </labelFor>
+    </Label>
+    <fx:reference source="requestsList" />
+    <Button fx:id="newCReqButton" layoutX="426.0" layoutY="329.0" mnemonicParsing="false" onMouseClicked="#newCReqOnClicked" text="New Request" />
+  </children>
+</AnchorPane>

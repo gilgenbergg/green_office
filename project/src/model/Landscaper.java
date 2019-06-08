@@ -15,7 +15,7 @@ public class Landscaper extends User {
     private ResourcesMapper resourcesMapper = new ResourcesMapper();
 
     public Landscaper(User user) throws SQLException, ClassNotFoundException {
-        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
+        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole(), user.getAuthDataID());
     }
 
     @Override
@@ -65,8 +65,13 @@ public class Landscaper extends User {
 
     public void makeGardening(ClientRequest clientRequest) throws SQLException {
         if (clientRequest.getStatus().equals(ClientRequest.Status.gardening)) {
-            cReqsMapper.updateLandscaperID(clientRequest.getcReqID(), this.getUID());
-            cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.done);}
+            //cReqsMapper.updateLandscaperID(clientRequest.getcReqID(), this.getUID());
+            cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.done);
+            Plant plant = plantBase.findItemByPlantID(cReqsMapper.findItemByID(clientRequest.getcReqID()).getPlantID());
+            //getting from landscapers ui
+            plantBase.setDateOfLastVisit(plant.getPlantID(), "today");
+            plantBase.setDateOfNextVisit(plant.getPlantID(), "someday");
+        }
         else {
             cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.newOne);
         }

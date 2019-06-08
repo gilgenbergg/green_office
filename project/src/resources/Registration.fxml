@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.RegistrationController">
+  <children>
+    <Label fx:id="mainLabel" layoutX="252.0" layoutY="21.0" text="Registration" />
+    <Label fx:id="toFillLabel" layoutX="29.0" layoutY="53.0" text="Please, fiil the fields below:" />
+    <Label fx:id="firstNameLabel" layoutX="29.0" layoutY="85.0" text="First Name" />
+    <Label fx:id="secondNameLabel" layoutX="29.0" layoutY="125.0" text="Second Name" />
+    <Label fx:id="loginLabel" layoutX="29.0" layoutY="167.0" text="Username" />
+    <Label fx:id="passwordLabel" layoutX="29.0" layoutY="209.0" text="Create Password" />
+    <Label fx:id="roleLabel" layoutX="29.0" layoutY="250.0" text="You are:" />
+    <RadioButton fx:id="isClientRadio" layoutX="207.0" layoutY="251.0" mnemonicParsing="false" text="Client" />
+    <RadioButton fx:id="isAdminRadio" layoutX="207.0" layoutY="288.0" mnemonicParsing="false" text="Admin" />
+    <RadioButton fx:id="isLandscaperRadio" layoutX="207.0" layoutY="327.0" mnemonicParsing="false" text="Landscaper" />
+    <Button fx:id="registerButton" layoutX="443.0" layoutY="351.0" mnemonicParsing="false" text="Register" />
+    <TextField fx:id="firstNameField" layoutX="200.0" layoutY="74.0" prefWidth="200.0" />
+    <TextField fx:id="secondNameField" layoutX="200.0" layoutY="116.0" prefWidth="200.0" />
+    <TextField fx:id="loginField" layoutX="200.0" layoutY="158.0" prefWidth="200.0" />
+    <TextField fx:id="passwordField" layoutX="200.0" layoutY="200.0" prefWidth="200.0" />
+  </children>
+</AnchorPane>

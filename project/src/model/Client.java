@@ -14,7 +14,7 @@ public class Client extends User {
     private UsersMapper users = new UsersMapper();
 
     public Client(List<Plant> plants, User user) throws SQLException, ClassNotFoundException {
-        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
+        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole(), user.getAuthDataID());
         List<Plant> clientPlants = plantsBase.filterPlantsByUserID(user.getUID());
     }
 

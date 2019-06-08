@@ -47,7 +47,7 @@ public class UsersMapper extends DBinit {
         rs = statement.executeQuery();
 
         while (rs.next()) {
-            item = new User(null, null, null, null);
+            item = new User(null, null, null, null, null);
             item.setuID(rs.getInt("user_id"));
             item.setFirstName("firstName");
             item.setSecondName("secondName");
@@ -94,7 +94,30 @@ public class UsersMapper extends DBinit {
         String secondName = rs.getString("second_name");
         String roleFromBase = rs.getString("role");
         Role role = parseRole(roleFromBase);
-        User newUserItem = new User(receivedUID, firstName, secondName, role);
+        Integer authDataID = rs.getInt("auth_data_id");
+        User newUserItem = new User(receivedUID, firstName, secondName, role, authDataID);
+        cash.add(newUserItem);
+        return newUserItem;
+    }
+
+    public User findItemByAuthID(Integer receivedAuthID) throws SQLException {
+        for (User item : cash) {
+            if (item.getAuthDataID().equals(receivedAuthID))
+                return item;
+        }
+        //if in cash item wasn`t found, searching in database
+        ResultSet rs = null;
+        String select = "SELECT * FROM user_info WHERE auth_data_id='"+receivedAuthID+"'";
+        PreparedStatement searchByID = connection.prepareStatement(select);
+        rs = searchByID.executeQuery();
+        if (!rs.next())
+            return null;
+        String firstName = rs.getString("first_name");
+        String secondName = rs.getString("second_name");
+        String roleFromBase = rs.getString("role");
+        Integer userID = rs.getInt("user_id");
+        Role role = parseRole(roleFromBase);
+        User newUserItem = new User(userID, firstName, secondName, role, receivedAuthID);
         cash.add(newUserItem);
         return newUserItem;
     }

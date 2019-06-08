@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.GardeningController">
+  <children>
+    <Label fx:id="viewLabel" layoutX="131.0" layoutY="14.0" text="Gardening of client`s request " />
+    <TextField fx:id="cReqID" layoutX="327.0" layoutY="11.0" prefWidth="49.0" />
+    <Label fx:id="lastInspectionLabel" layoutX="55.0" layoutY="67.0" text="Date of gardening:" />
+    <Label fx:id="nextInspectionLabel" layoutX="55.0" layoutY="119.0" text="Next inspection will be: " />
+    <TextField fx:id="lastInspectionField" layoutX="241.0" layoutY="64.0" prefWidth="200.0" />
+    <TextField fx:id="nextInspectionField" layoutX="241.0" layoutY="119.0" prefWidth="200.0" />
+    <Button fx:id="doneGardeningButton" layoutX="253.0" layoutY="190.0" mnemonicParsing="false" onMouseClicked="#doneButtonOnClicked" text="Done!" />
+  </children>
+</AnchorPane>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.NewPurchaseController">
+  <children>
+    <Label fx:id="viewLabel" layoutX="241.0" layoutY="20.0" text="New Purchase" />
+    <Label fx:id="assignedCReqLabel" layoutX="40.0" layoutY="61.0" text="Assigned clientrequest:" />
+    <Label fx:id="plantIDLabel" layoutX="40.0" layoutY="93.0" text="Plant ID:" />
+    <Label fx:id="landscaperIDLabel" layoutX="40.0" layoutY="131.0" text="Assigned landscaper:" />
+    <Label fx:id="boughtListLabel" layoutX="40.0" layoutY="200.0" text="Alreadybought resources:" />
+    <TextField fx:id="cReqIDField" layoutX="241.0" layoutY="58.0" prefWidth="56.0" />
+    <TextField fx:id="plantIDField" layoutX="241.0" layoutY="90.0" prefWidth="56.0" />
+    <TextField fx:id="landscaperIDField" layoutX="241.0" layoutY="125.0" prefWidth="56.0" />
+    <ListView fx:id="alreadyBoughtList" layoutX="40.0" layoutY="227.0" prefHeight="97.0" prefWidth="200.0" />
+    <Label fx:id="statusLabel" layoutX="40.0" layoutY="169.0" text="Status:" />
+    <RadioButton fx:id="isInProgressRadio" layoutX="244.0" layoutY="169.0" mnemonicParsing="false" text="InProgress" />
+    <RadioButton fx:id="isInCheckRadio" layoutX="375.0" layoutY="169.0" mnemonicParsing="false" text="InCheck" />
+    <RadioButton fx:id="isDoneRadio" layoutX="494.0" layoutY="169.0" mnemonicParsing="false" text="Done" />
+    <Button id="addNewPReqButton" fx:id="newPReqButton" layoutX="463.0" layoutY="348.0" mnemonicParsing="false" onMouseClicked="#newPReqButtonOnClicked" text="Done!" />
+    <Button id="addResource" fx:id="buyResourceButton" layoutX="324.0" layoutY="265.0" mnemonicParsing="false" onMouseClicked="#buyResourceOnClicked" text="Buy Resource with ID" />
+    <TextField fx:id="toAssignResourceID" layoutX="500.0" layoutY="265.0" prefWidth="74.0" />
+  </children>
+</AnchorPane>

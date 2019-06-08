@@ -15,7 +15,7 @@ public class Admin extends User {
     private CReqsMapper cReqsMapper = new CReqsMapper();
 
     public Admin(Integer adminID, User user) throws SQLException, ClassNotFoundException {
-        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
+        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole(), user.getAuthDataID());
         this.adminID = adminID;
     }
 
@@ -32,8 +32,8 @@ public class Admin extends User {
                 Landscaper gardener = users.getLandscaperByUserID(assignedLandscaper);
                 Integer plantID = cReqsMapper.findItemByID(clientRequest.getcReqID()).getPlantID();
                 Plant plant = plantsBase.findItemByPlantID(plantID);
-                String nextDate = addNextDate();
-                plantsBase.setDateOfNextVisit(plant.getPlantID(), nextDate);
+                //String nextDate = addNextDate();
+                //plantsBase.setDateOfNextVisit(plant.getPlantID(), nextDate);
                 cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.gardening);
                 gardener.makeGardening(cReqsMapper.findItemByID(clientRequest.getcReqID()));
             } else {
@@ -90,6 +90,7 @@ public class Admin extends User {
             checker.checkPurchaseRequest(pReqID, newPurchase, clientRequest);
         }
         cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.gardening);
+        cReqsMapper.updateLandscaperID(clientRequest.getcReqID(), assignedLandscaper);
         checker.makeGardening(cReqsMapper.findItemByID(clientRequest.getcReqID()));
         purchaseReq = purchasesBase.findItemByID(pReqID);
         return purchaseReq;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.CheckPurchaseController">
+  <children>
+    <Label fx:id="viewLabel" layoutX="170.0" layoutY="18.0" text="Checking purchase request " />
+    <TextField id="pReqID" fx:id="pReqIDField" layoutX="353.0" layoutY="15.0" prefWidth="62.0" />
+    <Label fx:id="plantIDLabel" layoutX="46.0" layoutY="53.0" text="Plant ID:" />
+    <TextField fx:id="plantIDField" layoutX="109.0" layoutY="50.0" prefWidth="56.0" />
+    <Label fx:id="alreadyBoughtLabel" layoutX="46.0" layoutY="90.0" text="Already bought staff:" />
+    <Label fx:id="requiredResLabel" layoutX="404.0" layoutY="90.0" text="Required resources:" />
+    <ListView fx:id="alreadyBoughtList" layoutX="17.0" layoutY="122.0" prefHeight="200.0" prefWidth="200.0" />
+    <ListView fx:id="requiredResourcesList" layoutX="384.0" layoutY="122.0" prefHeight="200.0" prefWidth="200.0" />
+    <Button fx:id="approvedPurchase" layoutX="415.0" layoutY="347.0" mnemonicParsing="false" onMouseClicked="#approvedOnClicked" text="Purchase is correct!" />
+    <Button fx:id="nonApprovedPurchase" layoutX="17.0" layoutY="347.0" mnemonicParsing="false" onMouseClicked="#nonApprovedOnClicked" text="Needs additional purchase" />
+  </children>
+</AnchorPane>

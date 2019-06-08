@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.AuthController">
+  <children>
+    <Label fx:id="welcomeMsg" layoutX="204.0" layoutY="14.0" text="Welcome to GreenOffice!" />
+    <Label fx:id="loginLabel" layoutX="164.0" layoutY="127.0" text="Login">
+      <labelFor>
+        <TextField fx:id="loginField" layoutX="238.0" layoutY="124.0" prefWidth="200.0" />
+      </labelFor>
+    </Label>
+    <Label fx:id="passwordLabel" disable="false" layoutX="164.0" layoutY="153.0" text="Password">
+      <labelFor>
+        <PasswordField fx:id="passwordField" layoutX="238.0" layoutY="153.0" prefWidth="200.0" />
+      </labelFor>
+    </Label>
+    <fx:reference source="loginField" />
+    <fx:reference source="passwordField" />
+    <Button fx:id="signInButton" layoutX="280.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#signInClicked" text="Sign in" />
+    <Label fx:id="registerMsg" labelFor="$registerMsg" layoutX="164.0" layoutY="317.0" text="Don`t have an account?" />
+    <Button fx:id="registerButton" layoutX="347.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#registerClicked" text="Register!" />
+    <Label id="errorMsg" fx:id="errorMsg" layoutX="296.0" layoutY="240.0" text="" textFill="RED" />
+  </children>
+</AnchorPane>

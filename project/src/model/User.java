@@ -1,12 +1,8 @@
 package model;
 
 import data.AuthMapper;
-import repo.AuthRepoImpl;
 
-import javax.naming.AuthenticationException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class User {
     private static AuthMapper authMapper;
@@ -27,15 +23,25 @@ public class User {
     private String secondName;
     private String login;
     private String password;
+    private Integer authDataID;
 
 
-    public User(Integer uID, String firstName, String secondName, Role role) {
+    public User(Integer uID, String firstName, String secondName, Role role, Integer authDataID) {
        this.uID = uID;
        this.role = role;
        this.firstName = firstName;
        this.secondName = secondName;
-       this.login = login;
-       this.password = password;
+       this.authDataID = authDataID;
+    }
+
+    public User(Integer uID, String firstName, String secondName, Role role, Integer authDataID, String login, String password) {
+        this.uID = uID;
+        this.role = role;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.login = login;
+        this.password = password;
+        this.authDataID = authDataID;
     }
 
     public void setRole(Role role) {
@@ -98,6 +104,14 @@ public class User {
         return authMapper.findItemByUID(this.uID).getPassword();
     }
 
+    public Integer getAuthDataID() {
+        return authDataID;
+    }
+
+    public void setAuthDataID(Integer authDataID) {
+        this.authDataID = authDataID;
+    }
+
     public void setFirstName (String firstName) {
         this.firstName = firstName;
     }
@@ -116,47 +130,5 @@ public class User {
     private boolean correctLogin(String loginInBase, String passwordInBase, String receivedLogin, String receivedPassword) {
         return ((loginInBase.equals(receivedLogin)) && (passwordInBase.equals(receivedPassword)));
     }
-
-    private List<User> testUsers() {
-        ArrayList<User> allUsers = new ArrayList<>();
-        User user1 = new User(
-          uID = 1,
-          firstName = "Svetlana",
-          secondName = "Sagadeeva",
-          role = Role.admin
-        );
-        User user2 = new User(
-                uID = 2,
-                firstName = "Svetlana",
-                secondName = "Sagadeeva",
-                role = Role.client
-        );
-        User user3 = new User(
-                uID = 3,
-                firstName = "Svetlana",
-                secondName = "Sagadeeva",
-                role = Role.landscaper
-        );
-        User user4 = new User(
-                uID = 4,
-                firstName = "Arina",
-                secondName = "Kalinina",
-                role = Role.client
-        );
-        User user5 = new User(
-                uID = 5,
-                firstName = "Lusien",
-                secondName = "Kornilova",
-                role = Role.client
-        );
-        allUsers.add(user1);
-        allUsers.add(user2);
-        allUsers.add(user3);
-        allUsers.add(user4);
-        allUsers.add(user5);
-
-        return allUsers;
-    }
-
 }
 
