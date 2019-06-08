@@ -10,9 +10,7 @@ public class User {
     static {
         try {
             authMapper = new AuthMapper();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -93,7 +91,8 @@ public class User {
     }
 
     public String getLogin() throws SQLException {
-        return authMapper.findItemByUID(this.uID).getLogin();
+        //return authMapper.findItemByUID(this.uID).getLogin();
+        return login;
     }
 
     public void setuID(Integer uID) {
@@ -101,7 +100,8 @@ public class User {
     }
 
     public String getPassword() throws SQLException {
-        return authMapper.findItemByUID(this.uID).getPassword();
+        //return authMapper.findItemByUID(this.uID).getPassword();
+        return password;
     }
 
     public Integer getAuthDataID() {

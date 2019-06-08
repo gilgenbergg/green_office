@@ -236,9 +236,12 @@ public class UsersMapper extends DBinit {
         }
         String firstName = item.getFirstName();
         String secondName = item.getSecondName();
-        Integer authDataID = rs.getInt(1);
+        Integer authDataID = null;
+        while (rs.next()) {
+            authDataID = rs.getInt(1);
+        }
 
-        String request = "INSERT INTO user_info (role, firstName, secondName, auth_data_id) " + "VALUES (?, ?, ?, ?)";
+        String request = "INSERT INTO user_info (role, first_name, second_name, auth_data_id) " + "VALUES (?, ?, ?, ?)";
         PreparedStatement res = connection.prepareStatement(request);
         res.setString(1, parsedForDbRole);
         res.setString(2, firstName);

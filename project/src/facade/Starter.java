@@ -1,20 +1,15 @@
 package facade;
 
-import com.sun.net.httpserver.HttpServer;
-import data.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Admin;
 import model.Client;
 import model.Landscaper;
-import web.RootHandler;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.sql.SQLException;
 
 public class Starter extends Application {
@@ -30,14 +25,6 @@ public class Starter extends Application {
         }
     }
 
-    AuthMapper authMapper = new AuthMapper();
-    CReqsMapper cReqs = new CReqsMapper();
-    InstructionsMapper instructionsMapper = new InstructionsMapper();
-    PlantsMapper plantsBase = new PlantsMapper();
-    PReqsMapper pReqs = new PReqsMapper();
-    ResourcesMapper resourcesMapper = new ResourcesMapper();
-    UsersMapper users = new UsersMapper();
-
     static {
         try {
             facade = new FacadeImpl();
@@ -50,7 +37,7 @@ public class Starter extends Application {
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        int PORT = 27015;
+        /*int PORT = 27015;
 
         DBinit.initConection();
         System.out.println("Call to connect from main app is made...");
@@ -60,37 +47,79 @@ public class Starter extends Application {
         myServer.createContext("/", new RootHandler());
         myServer.setExecutor(null);
         myServer.start();
+        */
         launch(args);
  }
-
-    public static void showClientView(Client clientByUserID) {
-    }
-
-    public static void showAdminView(Admin adminByUserID) {
-    }
-
-    public static void showLandscaperView(Landscaper landscaperByUserID) {
-    }
-
-    public static void showResgisteView() {
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         stage.setTitle("Green Office");
-        Parent root = FXMLLoader.load(getClass().getResource("AuthView.fxml"));
-        stage.setScene(new Scene(root, 300, 275));
+        //Parent root = FXMLLoader.load(getClass().getResource("AuthView.fxml"));
+        //stage.setScene(new Scene(root, 300, 275));
+        showAuthView();
         stage.show();
     }
 
-    public static void showSignInView() {
+    public static void showAuthView() {
         try {
-            String fxmlFile = "/fxml/SignIn.fxml";
+            String fxmlFile = "/resources/AuthView.fxml";
             FXMLLoader loader = new FXMLLoader();
             AnchorPane root = null;
             root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
-            Scene scene = new Scene(root, 384, 275);
+            Scene scene = new Scene(root, 580, 435);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showRegisterView() {
+        try {
+            String fxmlFile = "/resources/RegistrationView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(root, 600, 480);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showClientView(Client clientByUserID) {
+        try {
+            String fxmlFile = "/resources/ClientView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(root, 600, 900);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showAdminView(Admin adminByUserID) {
+        try {
+            String fxmlFile = "/resources/AdminView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(root, 600, 900);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showLandscaperView(Landscaper landscaperByUserID) {
+        try {
+            String fxmlFile = "/resources/LandscaperView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(root, 600, 900);
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();

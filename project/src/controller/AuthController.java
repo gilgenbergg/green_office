@@ -46,30 +46,31 @@ public class AuthController {
             return;
         }
         AuthData searched = authMapper.findItemByLogin(loginField.getText());
+        if (!searched.getPassword().equals(passwordField.getText())) {
+            errorMsg.setText("Incorrect input, try again.");
+            return;
+        }
         try{
-            if (!searched.getPassword().equals(passwordField.getText())) {
-                errorMsg.setText("Incorrect input, try again.");
-            }
-            Integer authDataID = searched.getUID();
-            User user = users.findItemByAuthID(authDataID);
-            if (user.getRole() == User.Role.client) {
-                Starter.showClientView(users.getClientByUserID(user.getUID()));
-            }
-            else if (user.getRole() == User.Role.admin) {
-                Starter.showAdminView(users.getAdminByUserID(user.getUID()));
-            }
-            else if (user.getRole() == User.Role.landscaper) {
-                Starter.showLandscaperView(users.getLandscaperByUserID(user.getUID()));
-            }
-            else {
-                errorMsg.setText("error in finding authData");
-            }
+                Integer authDataID = searched.getUID();
+                User user = users.findItemByAuthID(authDataID);
+                if (user.getRole() == User.Role.client) {
+                    Starter.showClientView(users.getClientByUserID(user.getUID()));
+                }
+                else if (user.getRole() == User.Role.admin) {
+                    Starter.showAdminView(users.getAdminByUserID(user.getUID()));
+                }
+                else if (user.getRole() == User.Role.landscaper) {
+                    Starter.showLandscaperView(users.getLandscaperByUserID(user.getUID()));
+                }
+                else {
+                    errorMsg.setText("error in finding authData");
+                }
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
     }
 
     public void registerClicked(MouseEvent mouseEvent) {
-        Starter.showResgisteView();
+        Starter.showRegisterView();
     }
 }
