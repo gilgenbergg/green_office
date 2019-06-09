@@ -1,10 +1,11 @@
 package data;
 
-import model.*;
+import model.ClientRequest;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CReqsMapper extends DBinit {
@@ -17,14 +18,12 @@ public class CReqsMapper extends DBinit {
         connection = getConnInst();
     }
 
-    private ArrayList<ClientRequest> filterByStatus(ClientRequest.Status status) throws SQLException {
+    public ArrayList<ClientRequest> filterByStatus(ClientRequest.Status status) throws SQLException {
         ResultSet rs = null;
         String st = status.toString();
-        String select = "SELECT * FROM creq WHERE status='"+st+"'";
-        PreparedStatement searchByID = connection.prepareStatement(select);
-        rs = searchByID.executeQuery();
-        if (!rs.next())
-            return null;
+        String select = "SELECT * FROM creq WHERE status='"+st+"';";
+        PreparedStatement filter = connection.prepareStatement(select);
+        rs = filter.executeQuery();
         ArrayList<ClientRequest> filtered = new ArrayList<>();
         ClientRequest item = null;
         while (rs.next()) {
@@ -50,14 +49,12 @@ public class CReqsMapper extends DBinit {
         return filtered;
     }
 
-    private ArrayList<ClientRequest> filterByType(ClientRequest.Type type) throws SQLException {
+    public ArrayList<ClientRequest> filterByType(ClientRequest.Type type) throws SQLException {
         ResultSet rs = null;
         String tp = type.toString();
-        String select = "SELECT * FROM creq WHERE type='"+tp+"'";
-        PreparedStatement searchByID = connection.prepareStatement(select);
-        rs = searchByID.executeQuery();
-        if (!rs.next())
-            return null;
+        String select = "SELECT * FROM creq WHERE type='"+tp+"';";
+        PreparedStatement st = connection.prepareStatement(select);
+        rs = st.executeQuery();
         ArrayList<ClientRequest> filtered = new ArrayList<>();
         ClientRequest item = null;
         while (rs.next()) {
@@ -94,7 +91,7 @@ public class CReqsMapper extends DBinit {
         //getting from Client
         ClientRequest.Type type = item.getType();
 
-        String request = "INSERT INTO cReq (client_id, type, status) " + "VALUES (?, ?, ?)";
+        String request = "INSERT INTO cReq (client_id, type, status) " + "VALUES (?, ?, ?);";
         PreparedStatement res = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         res.setInt(1, clientID);
         res.setString(2, type.toString());
@@ -176,6 +173,34 @@ public class CReqsMapper extends DBinit {
         return allCReqs;
     }
 
+    public List<ClientRequest> filterByUID(Integer uid) throws SQLException {
+        ResultSet rs = null;
+        ArrayList<ClientRequest> filtered = new ArrayList<>();
+        String select = "SELECT * FROM creq WHERE client_id='"+uid+"'";
+        PreparedStatement filter = connection.prepareStatement(select);
+        rs = filter.executeQuery();
+        while (rs.next()) {
+            ClientRequest item = new ClientRequest(null, null, null, null, null, null, null);
+            item.setcReqID(rs.getInt("creq_id"));
+            String stringStatus = rs.getString("status");
+            ClientRequest.Status parsedStatus = parseStatusFromDB(stringStatus);
+            item.setStatus(parsedStatus);
+            String stringType = rs.getString("type");
+            ClientRequest.Type parsedType = parseTypeFromDB(stringType);
+            item.setType(parsedType);
+            Integer adminID = rs.getInt("admin_id");
+            item.setAdminID(adminID);
+            Integer clientID = rs.getInt("client_id");
+            item.setClientID(clientID);
+            Integer landscaperID = rs.getInt("landscaper_id");
+            item.setLandscaperID(landscaperID);
+            Integer plantID = rs.getInt("plant_id");
+            item.setPlantID(plantID);
+            filtered.add(item);
+        }
+        return filtered;
+    }
+
     public ClientRequest findItemByID(Integer cReqID) throws SQLException {
         //searching in cash
         for (ClientRequest item : cash) {
@@ -208,7 +233,7 @@ public class CReqsMapper extends DBinit {
         return item;
     }
 
-    private ClientRequest.Status parseStatusFromDB(String statusFromDB) {
+    public ClientRequest.Status parseStatusFromDB(String statusFromDB) {
         ClientRequest.Status parsedStatus = null;
         switch (statusFromDB) {
             case "newOne":
@@ -230,7 +255,7 @@ public class CReqsMapper extends DBinit {
         return parsedStatus;
     }
 
-    private ClientRequest.Type parseTypeFromDB(String typeFromDB) {
+    public ClientRequest.Type parseTypeFromDB(String typeFromDB) {
         ClientRequest.Type parsedType = null;
         switch (typeFromDB) {
             case "firstOne":

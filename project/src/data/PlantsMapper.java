@@ -29,25 +29,6 @@ public class PlantsMapper extends DBinit {
         connection = DBinit.getInstance().getConnInst();
     }
 
-    public List<Plant> filterPlantsByUserID(Integer uid) throws SQLException {
-        ResultSet rs = null;
-        ArrayList<Plant> filtered = new ArrayList<>();
-        String select = "SELECT * FROM plant WHERE client_id='"+uid+"'";
-        PreparedStatement filter = connection.prepareStatement(select);
-        rs = filter.executeQuery();
-        while (rs.next()) {
-            Plant item = new Plant(null, null, null, null, null, null, null);
-            item.setPlantID(rs.getInt("plant_id"));
-            item.setType(rs.getString("type"));
-            item.setLastInspection("last_inspection");
-            item.setNextInspection("nextInspection");
-            item.setInstructionID(rs.getInt("instruction_id"));
-            item.setClientID(rs.getInt("client_id"));
-            filtered.add(item);
-        }
-        return filtered;
-    }
-
     public Plant findItemByPlantID(Integer receivedPlantID) throws SQLException {
         for (Plant item : cash) {
             if (item.getPlantID().equals(receivedPlantID))
@@ -140,6 +121,25 @@ public class PlantsMapper extends DBinit {
         update.setInt(2, plantID);
         update.executeUpdate();
         return true;
+    }
+
+    public List<Plant> filterPlantsByUserID(Integer uid) throws SQLException {
+        ResultSet rs = null;
+        ArrayList<Plant> filtered = new ArrayList<>();
+        String select = "SELECT * FROM plant WHERE client_id='"+uid+"'";
+        PreparedStatement filter = connection.prepareStatement(select);
+        rs = filter.executeQuery();
+        while (rs.next()) {
+            Plant item = new Plant(null, null, null, null, null, null, null);
+            item.setPlantID(rs.getInt("plant_id"));
+            item.setType(rs.getString("type"));
+            item.setLastInspection(rs.getString("last_inspection"));
+            item.setNextInspection(rs.getString("next_inspection"));
+            item.setInstructionID(rs.getInt("instruction_id"));
+            item.setClientID(rs.getInt("client_id"));
+            filtered.add(item);
+        }
+        return filtered;
     }
 
 }
