@@ -65,15 +65,15 @@ public class Landscaper extends User {
 
     public void makeGardening(ClientRequest clientRequest) throws SQLException {
         if (clientRequest.getStatus().equals(ClientRequest.Status.gardening)) {
-            //cReqsMapper.updateLandscaperID(clientRequest.getcReqID(), this.getUID());
-            cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.done);
-            Plant plant = plantBase.findItemByPlantID(cReqsMapper.findItemByID(clientRequest.getcReqID()).getPlantID());
+            //cReqsMapper.updateLandscaperID(clientRequest.getCReqID(), this.getUID());
+            cReqsMapper.updateStatus(clientRequest.getCReqID(), ClientRequest.Status.done);
+            Plant plant = plantBase.findItemByPlantID(cReqsMapper.findItemByID(clientRequest.getCReqID()).getPlantID());
             //getting from landscapers ui
             plantBase.setDateOfLastVisit(plant.getPlantID(), "today");
             plantBase.setDateOfNextVisit(plant.getPlantID(), "someday");
         }
         else {
-            cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.newOne);
+            cReqsMapper.updateStatus(clientRequest.getCReqID(), ClientRequest.Status.newOne);
         }
     }
 }

@@ -37,7 +37,7 @@ public class Client extends User {
 
     //opinion true if client accepts landscaper`s work or false if not (will come somehow outside)
     public Feedback makeFeedback(ClientRequest clientRequest, boolean opinion) throws SQLException, ClassNotFoundException {
-        Feedback feedback = new Feedback(clientRequest.getcReqID(), Feedback.Type.none, "");
+        Feedback feedback = new Feedback(clientRequest.getCReqID(), Feedback.Type.none, "");
         if (clientRequest.getStatus().equals(ClientRequest.Status.done)) {
             if (opinion) {
             feedback.setType(Feedback.Type.accepted);
@@ -47,7 +47,7 @@ public class Client extends User {
                 feedback.setText("I am not satisfied. Needs some more work to do here!");
                 feedback.setType(Feedback.Type.declined);
                 //clientRequest.setStatus(ClientRequest.Status.inProgress);
-                Integer plantID = clientsReqsBase.findItemByID(clientRequest.getcReqID()).getPlantID();
+                Integer plantID = clientsReqsBase.findItemByID(clientRequest.getCReqID()).getPlantID();
                 ClientRequest cReq = this.createClientReq(ClientRequest.Type.planned, plantID);
             }
         }
@@ -55,7 +55,7 @@ public class Client extends User {
             feedback.setText("Work is not finished, can`t be accepted!");
             feedback.setType(Feedback.Type.none);
             //clientRequest.setStatus(ClientRequest.Status.inProgress);
-            Integer plantID = clientsReqsBase.findItemByID(clientRequest.getcReqID()).getPlantID();
+            Integer plantID = clientsReqsBase.findItemByID(clientRequest.getCReqID()).getPlantID();
             ClientRequest cReq = this.createClientReq(ClientRequest.Type.planned, plantID);
         }
     return feedback;

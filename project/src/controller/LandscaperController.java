@@ -2,6 +2,8 @@ package controller;
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import model.Landscaper;
+import model.User;
 
 public class LandscaperController {
     public Label viewLabel;
@@ -21,9 +23,15 @@ public class LandscaperController {
     public TableColumn PREQS_statusIDCol;
     public Button checkPurchaseButton;
 
+    User user;
+
     public void gardeningButtonOnClicked(MouseEvent mouseEvent) {
     }
 
     public void checkPurchaseButtonOnClicked(MouseEvent mouseEvent) {
+    }
+
+    public void setData(Landscaper landscaperByUserID) {
+        user = landscaperByUserID;
     }
 }

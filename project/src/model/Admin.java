@@ -25,17 +25,17 @@ public class Admin extends User {
     }
 
     public void workOnClientRequest(ClientRequest clientRequest, String plantType) throws SQLException, ClassNotFoundException {
-        while (cReqsMapper.findItemByID(clientRequest.getcReqID()).getStatus().equals(ClientRequest.Status.newOne)) {
+        while (cReqsMapper.findItemByID(clientRequest.getCReqID()).getStatus().equals(ClientRequest.Status.newOne)) {
             ClientRequest.Type cReqType = clientRequest.getType();
             if (cReqType == ClientRequest.Type.planned) {
                 Integer assignedLandscaper = 3;
                 Landscaper gardener = users.getLandscaperByUserID(assignedLandscaper);
-                Integer plantID = cReqsMapper.findItemByID(clientRequest.getcReqID()).getPlantID();
+                Integer plantID = cReqsMapper.findItemByID(clientRequest.getCReqID()).getPlantID();
                 Plant plant = plantsBase.findItemByPlantID(plantID);
                 //String nextDate = addNextDate();
                 //plantsBase.setDateOfNextVisit(plant.getPlantID(), nextDate);
-                cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.gardening);
-                gardener.makeGardening(cReqsMapper.findItemByID(clientRequest.getcReqID()));
+                cReqsMapper.updateStatus(clientRequest.getCReqID(), ClientRequest.Status.gardening);
+                gardener.makeGardening(cReqsMapper.findItemByID(clientRequest.getCReqID()));
             } else {
                 workOnFirstOneReq(clientRequest, plantType);
             }
@@ -60,18 +60,18 @@ public class Admin extends User {
         Plant plant = new Plant(null, plantType, null, null, null, null,
                 clientRequest.getClientID());
         plant = plantsBase.addNewPlant(plant);
-        cReqsMapper.updatePlant(plant.getPlantID(), cReqsMapper.findItemByID(clientRequest.getcReqID()));
-        cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.inPurchase);
-        cReqsMapper.updateAdminID(clientRequest.getcReqID(), this.adminID);
+        cReqsMapper.updatePlant(plant.getPlantID(), cReqsMapper.findItemByID(clientRequest.getCReqID()));
+        cReqsMapper.updateStatus(clientRequest.getCReqID(), ClientRequest.Status.inPurchase);
+        cReqsMapper.updateAdminID(clientRequest.getCReqID(), this.adminID);
         List<Resource> alreadyBought = new ArrayList<>();
-        clientRequest = cReqsMapper.findItemByID(clientRequest.getcReqID());
-        while (cReqsMapper.findItemByID(clientRequest.getcReqID()).getStatus() != ClientRequest.Status.done) {
-            PurchaseRequest pReq = makePurchaseRequest(plant, cReqsMapper.findItemByID(clientRequest.getcReqID()), alreadyBought);
+        clientRequest = cReqsMapper.findItemByID(clientRequest.getCReqID());
+        while (cReqsMapper.findItemByID(clientRequest.getCReqID()).getStatus() != ClientRequest.Status.done) {
+            PurchaseRequest pReq = makePurchaseRequest(plant, cReqsMapper.findItemByID(clientRequest.getCReqID()), alreadyBought);
         }
     }
 
     public PurchaseRequest makePurchaseRequest(Plant plant, ClientRequest clientRequest, List<Resource> alreadyBought) throws SQLException, ClassNotFoundException {
-        PurchaseRequest purchaseStart = new PurchaseRequest(null, clientRequest.getcReqID(),
+        PurchaseRequest purchaseStart = new PurchaseRequest(null, clientRequest.getCReqID(),
                 plant.getPlantID(), null, adminID, null);
         Integer pReqID = purchasesBase.addPReq(purchaseStart);
         //let`s for now we have just one landscaper
@@ -89,9 +89,9 @@ public class Admin extends User {
             purchasesBase.updateStatus(pReqID, PurchaseRequest.Status.inCheck);
             checker.checkPurchaseRequest(pReqID, newPurchase, clientRequest);
         }
-        cReqsMapper.updateStatus(clientRequest.getcReqID(), ClientRequest.Status.gardening);
-        cReqsMapper.updateLandscaperID(clientRequest.getcReqID(), assignedLandscaper);
-        checker.makeGardening(cReqsMapper.findItemByID(clientRequest.getcReqID()));
+        cReqsMapper.updateStatus(clientRequest.getCReqID(), ClientRequest.Status.gardening);
+        cReqsMapper.updateLandscaperID(clientRequest.getCReqID(), assignedLandscaper);
+        checker.makeGardening(cReqsMapper.findItemByID(clientRequest.getCReqID()));
         purchaseReq = purchasesBase.findItemByID(pReqID);
         return purchaseReq;
     }

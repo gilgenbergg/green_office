@@ -1,7 +1,5 @@
 package model;
 
-import java.util.List;
-
 public class PurchaseRequest {
 
     public enum Status {
@@ -31,12 +29,12 @@ public class PurchaseRequest {
         //this.alreadyBought = alreadyBought;
     }
 
-    public Integer getcReqID() {
+    public Integer getCReqID() {
         return cReqID;
     }
 
-    public Integer getpReqID() {
-        return cReqID;
+    public Integer getPReqID() {
+        return pReqID;
     }
 
     public Integer getPlantID() {
@@ -59,11 +57,11 @@ public class PurchaseRequest {
     //    return alreadyBought;
     //}
 
-    public void setcReqID(Integer cReqID) {
+    public void setCReqID(Integer cReqID) {
         this.cReqID = cReqID;
     }
 
-    public void setpReqID(Integer pReqID) {
+    public void setPReqID(Integer pReqID) {
         this.pReqID = pReqID;
     }
 

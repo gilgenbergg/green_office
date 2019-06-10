@@ -6,6 +6,7 @@ import model.PurchaseRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PReqsMapper extends DBinit {
@@ -22,14 +23,14 @@ public class PReqsMapper extends DBinit {
         ResultSet rs = null;
         PurchaseRequest item = null;
         ArrayList<PurchaseRequest> allPReqs = new ArrayList<>();
-        String select = "SELECT * FROM creq;";
+        String select = "SELECT * FROM preq;";
         PreparedStatement statement = connection.prepareStatement(select);
         rs = statement.executeQuery();
 
         while (rs.next()) {
             item = new PurchaseRequest(null, null, null, null, null,
                     null);
-            item.setpReqID(rs.getInt("creq_id"));
+            item.setPReqID(rs.getInt("preq_id"));
             String status = rs.getString("status");
             PurchaseRequest.Status parsedStatus = parseStatusFromDB(status);
             item.setStatus(parsedStatus);
@@ -38,13 +39,13 @@ public class PReqsMapper extends DBinit {
             Integer landscaperID = rs.getInt("landscaper_id");
             item.setLandscaperID(landscaperID);
             Integer creqID = rs.getInt("creq_id");
-            item.setcReqID(creqID);
+            item.setCReqID(creqID);
             allPReqs.add(item);
         }
         return allPReqs;
     }
 
-    private PurchaseRequest.Status parseStatusFromDB(String statusFromDB) {
+    public PurchaseRequest.Status parseStatusFromDB(String statusFromDB) {
         PurchaseRequest.Status parsedStatus = null;
         switch (statusFromDB) {
             case "inProgress":
@@ -63,7 +64,7 @@ public class PReqsMapper extends DBinit {
     public PurchaseRequest findItemByID(Integer pReqID) throws SQLException {
         //searching in cash
         for (PurchaseRequest item : cash) {
-            if (item.getcReqID().equals(pReqID))
+            if (item.getCReqID().equals(pReqID))
                 return item;
         }
         ResultSet rs = null;
@@ -73,7 +74,7 @@ public class PReqsMapper extends DBinit {
         PurchaseRequest item = new PurchaseRequest(null, null, null, null,
                 null, null);
         while (rs.next()) {
-            item.setpReqID(rs.getInt("pReq_id"));
+            item.setPReqID(rs.getInt("pReq_id"));
             String status = rs.getString("status");
             PurchaseRequest.Status parsedStatus = parseStatusFromDB(status);
             item.setStatus(parsedStatus);
@@ -100,7 +101,7 @@ public class PReqsMapper extends DBinit {
         while (rs.next()) {
             item = new PurchaseRequest(null, null, null, null, null,
                     null);
-            item.setpReqID(rs.getInt("creq_id"));
+            item.setPReqID(rs.getInt("preq_id"));
             String statusFromDB = rs.getString("status");
             PurchaseRequest.Status parsedStatus = parseStatusFromDB(statusFromDB);
             item.setStatus(parsedStatus);
@@ -109,7 +110,7 @@ public class PReqsMapper extends DBinit {
             Integer landscaperID = rs.getInt("landscaper_id");
             item.setLandscaperID(landscaperID);
             Integer creqID = rs.getInt("creq_id");
-            item.setcReqID(creqID);
+            item.setCReqID(creqID);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
 
@@ -128,7 +129,7 @@ public class PReqsMapper extends DBinit {
         PurchaseRequest.Status status = PurchaseRequest.Status.inProgress;
         Integer adminID = item.getAdminID();
         Integer plantID = item.getPlantID();
-        Integer cReqID = item.getcReqID();
+        Integer cReqID = item.getCReqID();
         String request = "INSERT INTO pReq (status, plant_id, admin_id, creq_id) " + "VALUES (?, ?, ?, ?)";
         PreparedStatement res = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         res.setString(1, status.toString());
@@ -140,7 +141,7 @@ public class PReqsMapper extends DBinit {
         Integer id = null;
         while (rs.next()) {
             id = rs.getInt(1);
-            item.setpReqID(id);
+            item.setPReqID(id);
         }
         return id;
     }
@@ -171,5 +172,33 @@ public class PReqsMapper extends DBinit {
         update.setInt(2, pReqID);
         update.executeUpdate();
         return true;
+    }
+
+    public List<PurchaseRequest> filterByUserID(Integer uid) throws SQLException {
+        ResultSet rs = null;
+        PurchaseRequest item = null;
+        List<PurchaseRequest> allPReqs = new ArrayList<>();
+        String select = "SELECT * FROM preq WHERE admin_id='"+uid+"';";
+        PreparedStatement statement = connection.prepareStatement(select);
+        rs = statement.executeQuery();
+
+        while (rs.next()) {
+            item = new PurchaseRequest(null, null, null, null, null,
+                    null);
+            item.setPReqID(rs.getInt("preq_id"));
+            String status = rs.getString("status");
+            PurchaseRequest.Status parsedStatus = parseStatusFromDB(status);
+            item.setStatus(parsedStatus);
+            Integer plantID = rs.getInt("plant_id");
+            item.setPlantID(plantID);
+            Integer adminID = rs.getInt("admin_id");
+            item.setAdminID(adminID);
+            Integer landscaperID = rs.getInt("landscaper_id");
+            item.setLandscaperID(landscaperID);
+            Integer creqID = rs.getInt("creq_id");
+            item.setCReqID(creqID);
+            allPReqs.add(item);
+        }
+        return allPReqs;
     }
 }

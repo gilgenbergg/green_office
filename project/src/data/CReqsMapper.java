@@ -29,7 +29,7 @@ public class CReqsMapper extends DBinit {
         while (rs.next()) {
             item = new ClientRequest(null, null, null, null, null,
                     null, null);
-            item.setcReqID(rs.getInt("creq_id"));
+            item.setCReqID(rs.getInt("creq_id"));
             String stringStatus = rs.getString("status");
             ClientRequest.Status parsedStatus = parseStatusFromDB(stringStatus);
             item.setStatus(parsedStatus);
@@ -60,7 +60,7 @@ public class CReqsMapper extends DBinit {
         while (rs.next()) {
             item = new ClientRequest(null, null, null, null, null,
                     null, null);
-            item.setcReqID(rs.getInt("creq_id"));
+            item.setCReqID(rs.getInt("creq_id"));
             String stringStatus = rs.getString("status");
             ClientRequest.Status parsedStatus = parseStatusFromDB(stringStatus);
             item.setStatus(parsedStatus);
@@ -90,18 +90,19 @@ public class CReqsMapper extends DBinit {
         ClientRequest.Status status = ClientRequest.Status.newOne;
         //getting from Client
         ClientRequest.Type type = item.getType();
-
-        String request = "INSERT INTO cReq (client_id, type, status) " + "VALUES (?, ?, ?);";
+        int defaultAdmin = 1;
+        String request = "INSERT INTO cReq (client_id, type, status, admin_id) " + "VALUES (?, ?, ?, ?);";
         PreparedStatement res = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         res.setInt(1, clientID);
         res.setString(2, type.toString());
         res.setString(3, status.toString());
+        res.setInt(4, defaultAdmin);
         res.executeUpdate();
         rs = res.getGeneratedKeys();
         Integer id = null;
         while (rs.next()) {
             id = rs.getInt(1);
-            item.setcReqID(id);
+            item.setCReqID(id);
         }
         return findItemByID(id);
     }
@@ -134,7 +135,7 @@ public class CReqsMapper extends DBinit {
     }
 
     public boolean updateLandscaperID(Integer cReqID, Integer landscaperID) throws SQLException {
-        String request = "UPDATE cReq SET admin_id=? WHERE creq_id = ?;";
+        String request = "UPDATE cReq SET landscaper_id=? WHERE creq_id = ?;";
         PreparedStatement update = connection.prepareStatement(request);
         update.setInt(1, landscaperID);
         update.setInt(2, cReqID);
@@ -153,7 +154,7 @@ public class CReqsMapper extends DBinit {
         while (rs.next()) {
             item = new ClientRequest(null, null, null, null, null,
                     null, null);
-            item.setcReqID(rs.getInt("creq_id"));
+            item.setCReqID(rs.getInt("creq_id"));
             String status = rs.getString("status");
             ClientRequest.Status parsedStatus = parseStatusFromDB(status);
             item.setStatus(parsedStatus);
@@ -175,18 +176,21 @@ public class CReqsMapper extends DBinit {
 
     public List<ClientRequest> filterByUID(Integer uid) throws SQLException {
         ResultSet rs = null;
-        ArrayList<ClientRequest> filtered = new ArrayList<>();
-        String select = "SELECT * FROM creq WHERE client_id='"+uid+"'";
-        PreparedStatement filter = connection.prepareStatement(select);
-        rs = filter.executeQuery();
+        ClientRequest item = null;
+        List<ClientRequest> allCReqs = new ArrayList<>();
+        String select = "SELECT * FROM creq WHERE client_id='"+uid+"';";
+        PreparedStatement statement = connection.prepareStatement(select);
+        rs = statement.executeQuery();
+
         while (rs.next()) {
-            ClientRequest item = new ClientRequest(null, null, null, null, null, null, null);
-            item.setcReqID(rs.getInt("creq_id"));
-            String stringStatus = rs.getString("status");
-            ClientRequest.Status parsedStatus = parseStatusFromDB(stringStatus);
+            item = new ClientRequest(null, null, null, null, null,
+                    null, null);
+            item.setCReqID(rs.getInt("creq_id"));
+            String status = rs.getString("status");
+            ClientRequest.Status parsedStatus = parseStatusFromDB(status);
             item.setStatus(parsedStatus);
-            String stringType = rs.getString("type");
-            ClientRequest.Type parsedType = parseTypeFromDB(stringType);
+            String type = rs.getString("type");
+            ClientRequest.Type parsedType = parseTypeFromDB(type);
             item.setType(parsedType);
             Integer adminID = rs.getInt("admin_id");
             item.setAdminID(adminID);
@@ -196,15 +200,46 @@ public class CReqsMapper extends DBinit {
             item.setLandscaperID(landscaperID);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
-            filtered.add(item);
+            allCReqs.add(item);
         }
-        return filtered;
+        return allCReqs;
+    }
+
+    public List<ClientRequest> filterByAdminID(Integer uid) throws SQLException {
+        ResultSet rs = null;
+        ClientRequest item = null;
+        List<ClientRequest> allCReqs = new ArrayList<>();
+        String select = "SELECT * FROM creq WHERE admin_id='"+uid+"';";
+        PreparedStatement statement = connection.prepareStatement(select);
+        rs = statement.executeQuery();
+
+        while (rs.next()) {
+            item = new ClientRequest(null, null, null, null, null,
+                    null, null);
+            item.setCReqID(rs.getInt("creq_id"));
+            String status = rs.getString("status");
+            ClientRequest.Status parsedStatus = parseStatusFromDB(status);
+            item.setStatus(parsedStatus);
+            String type = rs.getString("type");
+            ClientRequest.Type parsedType = parseTypeFromDB(type);
+            item.setType(parsedType);
+            Integer adminID = rs.getInt("admin_id");
+            item.setAdminID(adminID);
+            Integer clientID = rs.getInt("client_id");
+            item.setClientID(clientID);
+            Integer landscaperID = rs.getInt("landscaper_id");
+            item.setLandscaperID(landscaperID);
+            Integer plantID = rs.getInt("plant_id");
+            item.setPlantID(plantID);
+            allCReqs.add(item);
+        }
+        return allCReqs;
     }
 
     public ClientRequest findItemByID(Integer cReqID) throws SQLException {
         //searching in cash
         for (ClientRequest item : cash) {
-            if (item.getcReqID().equals(cReqID))
+            if (item.getCReqID().equals(cReqID))
                 return item;
         }
         ResultSet rs = null;
@@ -214,7 +249,7 @@ public class CReqsMapper extends DBinit {
         PreparedStatement filter = connection.prepareStatement(select);
         rs = filter.executeQuery();
         while (rs.next()) {
-            item.setcReqID(rs.getInt("cReq_id"));
+            item.setCReqID(rs.getInt("cReq_id"));
             String status = rs.getString("status");
             ClientRequest.Status parsedStatus = parseStatusFromDB(status);
             item.setStatus(parsedStatus);
@@ -272,7 +307,7 @@ public class CReqsMapper extends DBinit {
         String request = "UPDATE cReq SET plant_id=? WHERE creq_id = ?;";
         PreparedStatement update = connection.prepareStatement(request);
         update.setInt(1, plantID);
-        update.setInt(2, itemByID.getcReqID());
+        update.setInt(2, itemByID.getCReqID());
         update.executeUpdate();
         return true;
     }

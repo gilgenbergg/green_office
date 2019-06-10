@@ -34,7 +34,7 @@ public class ClientRequest {
         this.creqType = type;
     }
 
-    public Integer getcReqID() {
+    public Integer getCReqID() {
         return cReqID;
     }
 
@@ -62,7 +62,7 @@ public class ClientRequest {
         return status;
     }
 
-    public void setcReqID(Integer cReqID) {
+    public void setCReqID(Integer cReqID) {
         this.cReqID = cReqID;
     }
 

@@ -56,10 +56,10 @@ public class AuthController {
                 if (user.getRole() == User.Role.client) {
                     Starter.showClientView(users.getClientByUserID(user.getUID()));
                 }
-                else if (user.getRole() == User.Role.admin) {
+                if (user.getRole() == User.Role.admin) {
                     Starter.showAdminView(users.getAdminByUserID(user.getUID()));
                 }
-                else if (user.getRole() == User.Role.landscaper) {
+                if (user.getRole() == User.Role.landscaper) {
                     Starter.showLandscaperView(users.getLandscaperByUserID(user.getUID()));
                 }
                 else {

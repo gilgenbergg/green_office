@@ -29,25 +29,25 @@ public class BP extends DBinit {
         Landscaper landscaper = users.getLandscaperByUserID(landscaperID);
 
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.firstOne, clientID);
-        cReqs.updateAdminID(cReq.getcReqID(), adminID);
-        cReqs.updateLandscaperID(cReq.getcReqID(), landscaperID);
-        ClientRequest.Status expectedStatus = cReqs.findItemByID(cReq.getcReqID()).getStatus();
+        cReqs.updateAdminID(cReq.getCReqID(), adminID);
+        cReqs.updateLandscaperID(cReq.getCReqID(), landscaperID);
+        ClientRequest.Status expectedStatus = cReqs.findItemByID(cReq.getCReqID()).getStatus();
         // 1 //
         assertEquals(expectedStatus, ClientRequest.Status.newOne);
 
         // 2 //
         String plantType = "georgin";
         admin.workOnClientRequest(cReq, plantType);
-        ClientRequest.Status res1 = cReqs.findItemByID(cReq.getcReqID()).getStatus();
+        ClientRequest.Status res1 = cReqs.findItemByID(cReq.getCReqID()).getStatus();
         ClientRequest.Status exp1 = ClientRequest.Status.done;
         assertEquals(res1, exp1);
 
         // 3 (positive feedback) //
-        Feedback feedback = client.makeFeedback(cReqs.findItemByID(cReq.getcReqID()), true);
+        Feedback feedback = client.makeFeedback(cReqs.findItemByID(cReq.getCReqID()), true);
         Feedback.Type res = feedback.getType();
         Feedback.Type expected = Feedback.Type.accepted;
         assertEquals(expected, res);
-        assertEquals(cReqs.findItemByID(cReq.getcReqID()).getStatus(), ClientRequest.Status.done);
+        assertEquals(cReqs.findItemByID(cReq.getCReqID()).getStatus(), ClientRequest.Status.done);
     }
 
     @Test
@@ -63,20 +63,20 @@ public class BP extends DBinit {
         Plant plant = plantsBase.findItemByPlantID(plantID);
 
         ClientRequest cReq = client.createClientReq(ClientRequest.Type.planned, plantID);
-        cReqs.updateAdminID(cReq.getcReqID(), adminID);
-        cReqs.updateLandscaperID(cReq.getcReqID(), landscaperID);
+        cReqs.updateAdminID(cReq.getCReqID(), adminID);
+        cReqs.updateLandscaperID(cReq.getCReqID(), landscaperID);
 
         // 1 //
-        assertEquals(cReqs.findItemByID(cReq.getcReqID()).getStatus(), ClientRequest.Status.newOne);
+        assertEquals(cReqs.findItemByID(cReq.getCReqID()).getStatus(), ClientRequest.Status.newOne);
 
         // 2 //
         String plantType = plantsBase.findItemByPlantID(1).getType();
-        cReqs.updatePlant(1,cReqs.findItemByID(cReq.getcReqID()));
+        cReqs.updatePlant(1,cReqs.findItemByID(cReq.getCReqID()));
         admin.workOnClientRequest(cReq, plantType);
-        assertEquals(cReqs.findItemByID(cReq.getcReqID()).getStatus(), ClientRequest.Status.done);
+        assertEquals(cReqs.findItemByID(cReq.getCReqID()).getStatus(), ClientRequest.Status.done);
 
         // 3 (negative feedback) //
-        Feedback feedback = client.makeFeedback(cReqs.findItemByID(cReq.getcReqID()), false);
+        Feedback feedback = client.makeFeedback(cReqs.findItemByID(cReq.getCReqID()), false);
         Feedback.Type res = feedback.getType();
         Feedback.Type expected = Feedback.Type.declined;
         assertEquals(res, expected);

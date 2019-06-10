@@ -4,8 +4,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import controller.ClientViewController;
-import controller.NewCReqController;
+import controller.*;
 import data.CReqsMapper;
 import data.DBinit;
 import javafx.application.Application;
@@ -13,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.Admin;
-import model.Client;
-import model.ClientRequest;
-import model.Landscaper;
+import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -26,6 +22,8 @@ import java.net.InetSocketAddress;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static service.ConcurrentPlants.checkPlant;
 
 
 public class Starter extends Application {
@@ -61,16 +59,15 @@ public class Starter extends Application {
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        //checking if concurrent company works with a specific plant
+        //checking if there is a specific plant in the plants shop catalogue
 
-        /*System.out.println("Checking info from external resource>>");
-        System.out.println("Does NONGreenOffice work with camomiles?");
+        System.out.println("Checking info from external resource>>");
+        System.out.println("Does the GreenShop have camomiles?");
         System.out.println(checkPlant("camomile"));
-        System.out.println("Does NONGreenOffice work with indonesian hunt planter?");
+        System.out.println("Does the GreenShop have indonesian hunt planter?");
         System.out.println(checkPlant("indonesian hunt planter"));
-        System.out.println("Does NONGreenOffice work with cactuses?");
+        System.out.println("Does the GreenShop have cactuses?");
         System.out.println(checkPlant("cactus"));
-        */
 
         //for schecking REST API service which provides the information about plants GreenOffice works with
         int PORT = 27015;
@@ -104,7 +101,7 @@ public class Starter extends Application {
             JSONArray data = new JSONArray();
             for (ClientRequest creq : newCreqs) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", creq.getcReqID());
+                jsonObject.put("id", creq.getCReqID());
                 jsonObject.put("status", creq.getStatus());
                 jsonObject.put("clientID", creq.getClientID());
                 data.add(jsonObject);
@@ -181,6 +178,8 @@ public class Starter extends Application {
                 FXMLLoader loader = new FXMLLoader();
                 AnchorPane root = null;
                 root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+                AdminController avc = loader.getController();
+                avc.setData(adminByUserID);
                 Scene scene = new Scene(root, 600, 640);
                 stage.setScene(scene);
             } catch (IOException e) {
@@ -194,10 +193,68 @@ public class Starter extends Application {
                 FXMLLoader loader = new FXMLLoader();
                 AnchorPane root = null;
                 root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+                LandscaperController lvc = loader.getController();
+                lvc.setData(landscaperByUserID);
                 Scene scene = new Scene(root, 600, 640);
                 stage.setScene(scene);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+    public static void showGardeningView(ClientRequest cReq) {
+        try {
+            String fxmlFile = "/resources/GardeningView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(root, 600, 640);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void CheckPurchaseView(PurchaseRequest pReq) {
+        try {
+            String fxmlFile = "/resources/CheckPurchaseView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(root, 600, 640);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void CReqEditorView(Integer cReqID) {
+        try {
+            String fxmlFile = "/resources/CReqEditorView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            ClientReqEditorController crec = loader.getController();
+            crec.setData(cReqID);
+            Scene scene = new Scene(root, 600, 640);
+            stage.setScene(scene);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void NewPurchaseView(Integer adminID) {
+        try {
+            String fxmlFile = "/resources/NewPurchaseView.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+            NewPurchaseController npc = loader.getController();
+            npc.setData(adminID);
+            Scene scene = new Scene(root, 600, 640);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

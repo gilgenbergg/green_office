@@ -11,18 +11,19 @@
     <TextField fx:id="cReqIDField" layoutX="205.0" layoutY="19.0" prefWidth="45.0" />
     <Label fx:id="viewLabel" layoutX="257.0" layoutY="22.0" text="Client Request Editor" />
     <Label fx:id="typeLabel" layoutX="43.0" layoutY="63.0" text="Type:" />
-    <RadioButton fx:id="isPlannedRadio" layoutX="148.0" layoutY="64.0" mnemonicParsing="false" text="planned" />
-    <RadioButton fx:id="isFirstRadio" layoutX="310.0" layoutY="64.0" mnemonicParsing="false" text="first" />
+    <RadioButton fx:id="isPlannedRadio" layoutX="148.0" layoutY="64.0" mnemonicParsing="false" onMouseClicked="#isPlannedClicked" text="planned" />
+    <RadioButton fx:id="isFirstRadio" layoutX="310.0" layoutY="64.0" mnemonicParsing="false" onMouseClicked="#isFirstClicked" text="firstOne" />
     <Label fx:id="plantIDLabel" layoutX="43.0" layoutY="114.0" text="Plant ID:" />
     <TextField fx:id="plantIDField" layoutX="148.0" layoutY="114.0" prefWidth="74.0" />
     <Label fx:id="landscaperIDLabel" layoutX="43.0" layoutY="169.0" text="Landscaper ID:" />
     <TextField fx:id="landscaperIDField" layoutX="148.0" layoutY="163.0" prefWidth="71.0" />
     <Label fx:id="statusLabel" layoutX="43.0" layoutY="213.0" text="Status:" />
-    <RadioButton fx:id="isNewOneRadio" layoutX="155.0" layoutY="214.0" mnemonicParsing="false" text="newOne" />
-    <RadioButton fx:id="isInPurchaseRadio" layoutX="310.0" layoutY="214.0" mnemonicParsing="false" text="inPurchase" />
-    <RadioButton fx:id="isInProgressRadio" layoutX="232.0" layoutY="267.0" mnemonicParsing="false" text="inProgress" />
-    <RadioButton fx:id="isGardeningRadio" layoutX="155.0" layoutY="322.0" mnemonicParsing="false" text="gardening" />
-    <RadioButton id="isDoneradio" fx:id="isDoneRadio" layoutX="306.0" layoutY="323.0" mnemonicParsing="false" text="done" />
+    <RadioButton fx:id="isNewOneRadio" layoutX="155.0" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#isNewOneClicked" text="newOne" />
+    <RadioButton fx:id="isInPurchaseRadio" layoutX="310.0" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#isInPurchaseClicked" text="inPurchase" />
+    <RadioButton fx:id="isInProgressRadio" layoutX="232.0" layoutY="267.0" mnemonicParsing="false" onMouseClicked="#isInProgressClicked" text="inProgress" />
+    <RadioButton fx:id="isGardeningRadio" layoutX="155.0" layoutY="322.0" mnemonicParsing="false" onMouseClicked="#isGardeningClicked" text="gardening" />
+    <RadioButton id="isDoneradio" fx:id="isDoneRadio" layoutX="306.0" layoutY="323.0" mnemonicParsing="false" onMouseClicked="#isDoneClicked" text="done" />
     <Button fx:id="finishEditionButton" layoutX="479.0" layoutY="342.0" mnemonicParsing="false" onMouseClicked="#finishEditionClicked" text="Done!" />
+    <Label fx:id="errorMsg" layoutX="390.0" layoutY="184.0" prefWidth="200.0" text="" textFill="RED" />
   </children>
 </AnchorPane>
