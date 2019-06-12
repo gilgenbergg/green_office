@@ -66,6 +66,7 @@ public class AuthController {
                     errorMsg.setText("error in finding authData");
                 }
         } catch (Exception e) {
+            System.out.println(errorMsg);
             errorMsg.setText(e.getMessage());
         }
     }

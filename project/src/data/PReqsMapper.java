@@ -222,4 +222,33 @@ public class PReqsMapper extends DBinit {
         }
         return allPReqs;
     }
+
+    public List<PurchaseRequest> filterByLandscaperID(Integer uid) throws SQLException {
+        ResultSet rs = null;
+        PurchaseRequest item = null;
+        List<PurchaseRequest> allPReqs = new ArrayList<>();
+        String select = "SELECT * FROM preq WHERE landscaper_id='"+uid+"';";
+        PreparedStatement statement = connection.prepareStatement(select);
+        rs = statement.executeQuery();
+
+        while (rs.next()) {
+            item = new PurchaseRequest(null, null, null, null, null, null,
+                    null);
+            item.setPReqID(rs.getInt("preq_id"));
+            String status = rs.getString("status");
+            PurchaseRequest.Status parsedStatus = parseStatusFromDB(status);
+            item.setStatus(parsedStatus);
+            Integer plantID = rs.getInt("plant_id");
+            item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            Integer adminID = rs.getInt("admin_id");
+            item.setAdminID(adminID);
+            Integer landscaperID = rs.getInt("landscaper_id");
+            item.setLandscaperID(landscaperID);
+            Integer creqID = rs.getInt("creq_id");
+            item.setCReqID(creqID);
+            allPReqs.add(item);
+        }
+        return allPReqs;
+    }
 }

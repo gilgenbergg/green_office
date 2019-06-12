@@ -87,4 +87,17 @@ public class ResourcesMapper extends DBinit {
         }
         return newResource;
     }
+
+    public ArrayList<String> getTypesByPlantID(Integer plantID) throws SQLException {
+        ResultSet rs = null;
+        ArrayList<String> filtered = new ArrayList<>();
+        String select = "SELECT * FROM resource WHERE plant_id='"+plantID+"'";
+        PreparedStatement filter = connection.prepareStatement(select);
+        rs = filter.executeQuery();
+        while (rs.next()) {
+            String item = rs.getString("type");
+            filtered.add(item);
+        }
+        return filtered;
+    }
 }

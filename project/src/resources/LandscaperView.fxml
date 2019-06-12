@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="631.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.LandscaperController">
+  <children>
+    <Label fx:id="viewLabel" layoutX="207.0" layoutY="26.0" text="Landscaper " />
+    <TextField fx:id="uidField" layoutX="287.0" layoutY="23.0" prefWidth="38.0" />
+    <Label fx:id="cReqsLabel" layoutX="35.0" layoutY="66.0" text="Client requests you are assigned to:">
+      <labelFor>
+        <TableView fx:id="cReqsTable" layoutX="16.0" layoutY="90.0" prefHeight="127.0" prefWidth="388.0">
+          <columns>
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="85.0" text="RequestID" fx:id="CREQS_reqIDCol" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="144.0" text="Plant" fx:id="CREQS_plantCol" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="62.0" text="Type" fx:id="CREQS_typeCol" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="96.0" text="Status" fx:id="CREQS_statusCol" />
+          </columns>
+        </TableView>
+      </labelFor>
+    </Label>
+    <fx:reference source="cReqsTable" />
+    <Button fx:id="gardeningButton" layoutX="429.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#gardeningButtonOnClicked" prefWidth="181.0" text="Open the GardenMaster" />
+    <Label fx:id="pReqsLabel" layoutX="35.0" layoutY="227.0" text="Purchase requests you are assigned to:">
+      <labelFor>
+        <TableView fx:id="pReqsTable" layoutX="26.0" layoutY="253.0" prefHeight="109.0" prefWidth="388.0">
+          <columns>
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="84.0" text="RequestID" fx:id="PREQS_reqIDCol" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="105.0" text="ClientReqID" fx:id="PREQS_cReqIDCol" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="104.0" text="Plant" fx:id="PREQS_plantCol" />
+            <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="98.0" text="Status" fx:id="PREQS_statusCol" />
+          </columns>
+        </TableView>
+      </labelFor>
+    </Label>
+    <fx:reference source="pReqsTable" />
+    <Button fx:id="checkPurchaseButton" layoutX="462.0" layoutY="330.0" mnemonicParsing="false" onMouseClicked="#checkPurchaseButtonOnClicked" text="CheckMaster" />
+    <Button fx:id="signOutButton" layoutX="14.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#signOutButtonOnClicked" text="Sign out" />
+    <Label fx:id="firstNameLabel" layoutX="346.0" layoutY="18.0" prefWidth="227.0" text="Label" />
+    <Label fx:id="secondNameLabel" layoutX="346.0" layoutY="36.0" prefWidth="213.0" text="Label" />
+    <Label fx:id="gardeningLabel" layoutX="447.0" layoutY="96.0" text="Request to garden:" />
+    <TextField fx:id="creqToGarden" layoutX="485.0" layoutY="121.0" prefWidth="50.0" />
+    <Label fx:id="checkPurchaseLabel" layoutX="453.0" layoutY="268.0" text="Purchase to check:" />
+    <TextField id="preqToCheck" fx:id="preqToCheckField" layoutX="485.0" layoutY="297.0" prefWidth="50.0" />
+    <Label fx:id="errorMsg" layoutX="200.0" layoutY="240.0" prefWidth="200.0" text="" textFill="RED" />
+  </children>
+</AnchorPane>

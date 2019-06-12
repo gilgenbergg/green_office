@@ -270,6 +270,46 @@ public class CReqsMapper extends DBinit {
         return allCReqs;
     }
 
+    public List<ClientRequest> filterByLandscaperID(Integer uid) throws SQLException {
+        ResultSet rs = null;
+        ClientRequest item = null;
+        Integer plantID = 0;
+        String plantName = "---";
+        List<ClientRequest> allCReqs = new ArrayList<>();
+        String select = "SELECT * FROM creq WHERE landscaper_id='"+uid+"';";
+        PreparedStatement statement = connection.prepareStatement(select);
+        rs = statement.executeQuery();
+
+        while (rs.next()) {
+            item = new ClientRequest(null, null, null, null, null, null,
+                    null, null);
+            item.setCReqID(rs.getInt("creq_id"));
+            String status = rs.getString("status");
+            ClientRequest.Status parsedStatus = parseStatusFromDB(status);
+            item.setStatus(parsedStatus);
+            String type = rs.getString("type");
+            ClientRequest.Type parsedType = parseTypeFromDB(type);
+            item.setType(parsedType);
+            Integer adminID = rs.getInt("admin_id");
+            item.setAdminID(adminID);
+            Integer clientID = rs.getInt("client_id");
+            item.setClientID(clientID);
+            Integer landscaperID = rs.getInt("landscaper_id");
+            item.setLandscaperID(landscaperID);
+            if (rs.getInt("plant_id") != 0) {
+                plantID = rs.getInt("plant_id");
+                item.setPlantID(plantID);
+                item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            }
+            else {
+                item.setPlantID(plantID);
+                item.setPlantName(plantName);
+            }
+            allCReqs.add(item);
+        }
+        return allCReqs;
+    }
+
     public ClientRequest findItemByID(Integer cReqID) throws SQLException {
         //searching in cash
         for (ClientRequest item : cash) {

@@ -49,8 +49,8 @@ public class UsersMapper extends DBinit {
         while (rs.next()) {
             item = new User(null, null, null, null, null);
             item.setuID(rs.getInt("user_id"));
-            item.setFirstName("firstName");
-            item.setSecondName("secondName");
+            item.setFirstName(rs.getString("first_name"));
+            item.setSecondName(rs.getString("second_name"));
             String roleFromBase = rs.getString("role");
             item.setRole(parseRole(roleFromBase));
             AuthData authData = authMapper.findItemByUID(rs.getInt("auth_data_id"));

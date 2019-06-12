@@ -20,6 +20,8 @@ import java.sql.SQLException;
 public class ClientViewController {
 
     public Button signOutButton;
+    public Label firstNameLabel;
+    public Label secondNameLabel;
     private Facade facade = Starter.facade;
     User user;
     private PlantsMapper plantsBase = new PlantsMapper();
@@ -53,6 +55,8 @@ public class ClientViewController {
         user = clientByUserID;
         try {
             uidField.setText(user.getUID().toString());
+            firstNameLabel.setText(user.getFirstName());
+            secondNameLabel.setText(user.getSecondName());
             ObservableList<Plant> plants = FXCollections.observableArrayList(plantsBase.filterPlantsByUserID(user.getUID()));
             PLANTS_typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
             PLANTS_plantIDCol.setCellValueFactory(new PropertyValueFactory<> ("plantID"));

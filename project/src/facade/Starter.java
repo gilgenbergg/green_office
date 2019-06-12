@@ -197,35 +197,39 @@ public class Starter extends Application {
                 root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
                 LandscaperController lvc = loader.getController();
                 lvc.setData(landscaperByUserID);
-                Scene scene = new Scene(root, 600, 640);
+                Scene scene = new Scene(root, 665, 550);
                 stage.setScene(scene);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-    public static void showGardeningView(ClientRequest cReq) {
+    public static void showGardeningView(Integer cReqID) {
         try {
             String fxmlFile = "/resources/GardeningView.fxml";
             FXMLLoader loader = new FXMLLoader();
             AnchorPane root = null;
             root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
-            Scene scene = new Scene(root, 600, 640);
+            GardeningController gc = loader.getController();
+            gc.setData(cReqID);
+            Scene scene = new Scene(root, 600, 500);
             stage.setScene(scene);
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void CheckPurchaseView(PurchaseRequest pReq) {
+    public static void CheckPurchaseView(Integer pReqID) {
         try {
             String fxmlFile = "/resources/CheckPurchaseView.fxml";
             FXMLLoader loader = new FXMLLoader();
             AnchorPane root = null;
             root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
-            Scene scene = new Scene(root, 600, 640);
+            CheckPurchaseController cpc = loader.getController();
+            cpc.setData(pReqID);
+            Scene scene = new Scene(root, 665, 550);
             stage.setScene(scene);
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }
