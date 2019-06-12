@@ -1,17 +1,17 @@
 package data;
 
+import model.Admin;
 import model.ClientRequest;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CReqsMapper extends DBinit {
 
     private static Set<ClientRequest> cash = new HashSet<>();
     private Connection connection;
+    PlantsMapper plantsBase = new PlantsMapper();
+    UsersMapper usersBase = new UsersMapper();
 
     public CReqsMapper() throws SQLException, ClassNotFoundException {
         super();
@@ -27,7 +27,7 @@ public class CReqsMapper extends DBinit {
         ArrayList<ClientRequest> filtered = new ArrayList<>();
         ClientRequest item = null;
         while (rs.next()) {
-            item = new ClientRequest(null, null, null, null, null,
+            item = new ClientRequest(null, null, null, null, null, null,
                     null, null);
             item.setCReqID(rs.getInt("creq_id"));
             String stringStatus = rs.getString("status");
@@ -44,6 +44,7 @@ public class CReqsMapper extends DBinit {
             item.setLandscaperID(landscaperID);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
             filtered.add(item);
         }
         return filtered;
@@ -58,7 +59,7 @@ public class CReqsMapper extends DBinit {
         ArrayList<ClientRequest> filtered = new ArrayList<>();
         ClientRequest item = null;
         while (rs.next()) {
-            item = new ClientRequest(null, null, null, null, null,
+            item = new ClientRequest(null, null, null, null, null, null,
                     null, null);
             item.setCReqID(rs.getInt("creq_id"));
             String stringStatus = rs.getString("status");
@@ -75,6 +76,7 @@ public class CReqsMapper extends DBinit {
             item.setLandscaperID(landscaperID);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
             filtered.add(item);
         }
         return filtered;
@@ -84,13 +86,13 @@ public class CReqsMapper extends DBinit {
     // by creating a new request, systems sets cReq`s status to 'newOne' by default
     // then admin or landscaper can update others fields according to generated cReqID
 
-    public ClientRequest addCReq(ClientRequest item) throws SQLException {
+    public ClientRequest addCReq(ClientRequest item) throws SQLException, ClassNotFoundException {
         ResultSet rs = null;
         Integer clientID = item.getClientID();
         ClientRequest.Status status = ClientRequest.Status.newOne;
         //getting from Client
         ClientRequest.Type type = item.getType();
-        int defaultAdmin = 1;
+        Integer defaultAdmin = assignAdmin();
         String request = "INSERT INTO cReq (client_id, type, status, admin_id) " + "VALUES (?, ?, ?, ?);";
         PreparedStatement res = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         res.setInt(1, clientID);
@@ -105,6 +107,19 @@ public class CReqsMapper extends DBinit {
             item.setCReqID(id);
         }
         return findItemByID(id);
+    }
+
+    private Integer assignAdmin() throws SQLException, ClassNotFoundException {
+        Integer adminID;
+        List<Integer> adminsIDS = new ArrayList<>();
+        List<Admin> allAdmins = usersBase.allAdmins();
+        for (Admin item:
+                allAdmins) {
+            adminsIDS.add(item.getUID());
+        }
+        Integer rnd = new Random().nextInt(adminsIDS.size());
+        adminID = adminsIDS.get(rnd);
+        return adminID;
     }
 
     public boolean updateStatus(Integer cReqID, ClientRequest.Status status) throws SQLException {
@@ -152,7 +167,7 @@ public class CReqsMapper extends DBinit {
         rs = statement.executeQuery();
 
         while (rs.next()) {
-            item = new ClientRequest(null, null, null, null, null,
+            item = new ClientRequest(null, null, null, null, null, null,
                     null, null);
             item.setCReqID(rs.getInt("creq_id"));
             String status = rs.getString("status");
@@ -169,6 +184,7 @@ public class CReqsMapper extends DBinit {
             item.setLandscaperID(landscaperID);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
             allCReqs.add(item);
         }
         return allCReqs;
@@ -177,13 +193,15 @@ public class CReqsMapper extends DBinit {
     public List<ClientRequest> filterByUID(Integer uid) throws SQLException {
         ResultSet rs = null;
         ClientRequest item = null;
+        Integer plantID = 0;
+        String plantName = "---";
         List<ClientRequest> allCReqs = new ArrayList<>();
         String select = "SELECT * FROM creq WHERE client_id='"+uid+"';";
         PreparedStatement statement = connection.prepareStatement(select);
         rs = statement.executeQuery();
 
         while (rs.next()) {
-            item = new ClientRequest(null, null, null, null, null,
+            item = new ClientRequest(null, null, null, null, null, null,
                     null, null);
             item.setCReqID(rs.getInt("creq_id"));
             String status = rs.getString("status");
@@ -198,8 +216,15 @@ public class CReqsMapper extends DBinit {
             item.setClientID(clientID);
             Integer landscaperID = rs.getInt("landscaper_id");
             item.setLandscaperID(landscaperID);
-            Integer plantID = rs.getInt("plant_id");
-            item.setPlantID(plantID);
+            if (rs.getInt("plant_id") != 0) {
+                plantID = rs.getInt("plant_id");
+                item.setPlantID(plantID);
+                item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            }
+            else {
+                item.setPlantID(plantID);
+                item.setPlantName(plantName);
+            }
             allCReqs.add(item);
         }
         return allCReqs;
@@ -208,13 +233,15 @@ public class CReqsMapper extends DBinit {
     public List<ClientRequest> filterByAdminID(Integer uid) throws SQLException {
         ResultSet rs = null;
         ClientRequest item = null;
+        Integer plantID = 0;
+        String plantName = "---";
         List<ClientRequest> allCReqs = new ArrayList<>();
         String select = "SELECT * FROM creq WHERE admin_id='"+uid+"';";
         PreparedStatement statement = connection.prepareStatement(select);
         rs = statement.executeQuery();
 
         while (rs.next()) {
-            item = new ClientRequest(null, null, null, null, null,
+            item = new ClientRequest(null, null, null, null, null, null,
                     null, null);
             item.setCReqID(rs.getInt("creq_id"));
             String status = rs.getString("status");
@@ -229,8 +256,15 @@ public class CReqsMapper extends DBinit {
             item.setClientID(clientID);
             Integer landscaperID = rs.getInt("landscaper_id");
             item.setLandscaperID(landscaperID);
-            Integer plantID = rs.getInt("plant_id");
-            item.setPlantID(plantID);
+            if (rs.getInt("plant_id") != 0) {
+                plantID = rs.getInt("plant_id");
+                item.setPlantID(plantID);
+                item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            }
+            else {
+                item.setPlantID(plantID);
+                item.setPlantName(plantName);
+            }
             allCReqs.add(item);
         }
         return allCReqs;
@@ -243,7 +277,9 @@ public class CReqsMapper extends DBinit {
                 return item;
         }
         ResultSet rs = null;
-        ClientRequest item = new ClientRequest(null, null, null, null, null,
+        Integer plantID = 0;
+        String plantName = "---";
+        ClientRequest item = new ClientRequest(null, null, null, null, null, null,
                 null, null);
         String select = "SELECT * FROM creq WHERE creq_id='"+cReqID+"'";
         PreparedStatement filter = connection.prepareStatement(select);
@@ -262,8 +298,15 @@ public class CReqsMapper extends DBinit {
             item.setClientID(clientID);
             Integer landscaperID = rs.getInt("landscaper_id");
             item.setLandscaperID(landscaperID);
-            Integer plantID = rs.getInt("plant_id");
-            item.setPlantID(plantID);
+            if (rs.getInt("plant_id") != 0) {
+                plantID = rs.getInt("plant_id");
+                item.setPlantID(plantID);
+                item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            }
+            else {
+                item.setPlantID(plantID);
+                item.setPlantName(plantName);
+            }
         }
         return item;
     }
@@ -310,5 +353,36 @@ public class CReqsMapper extends DBinit {
         update.setInt(2, itemByID.getCReqID());
         update.executeUpdate();
         return true;
+    }
+
+    public List<ClientRequest> filterByPlantID(Integer plantID) throws SQLException {
+        ResultSet rs = null;
+        ClientRequest item = null;
+        List<ClientRequest> allCReqs = new ArrayList<>();
+        String select = "SELECT * FROM creq WHERE plant_id='"+plantID+"';";
+        PreparedStatement statement = connection.prepareStatement(select);
+        rs = statement.executeQuery();
+
+        while (rs.next()) {
+            item = new ClientRequest(null, null, null, null, null, null,
+                    null, null);
+            item.setCReqID(rs.getInt("creq_id"));
+            String status = rs.getString("status");
+            ClientRequest.Status parsedStatus = parseStatusFromDB(status);
+            item.setStatus(parsedStatus);
+            String type = rs.getString("type");
+            ClientRequest.Type parsedType = parseTypeFromDB(type);
+            item.setType(parsedType);
+            Integer adminID = rs.getInt("admin_id");
+            item.setAdminID(adminID);
+            Integer clientID = rs.getInt("client_id");
+            item.setClientID(clientID);
+            Integer landscaperID = rs.getInt("landscaper_id");
+            item.setLandscaperID(landscaperID);
+            item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            allCReqs.add(item);
+        }
+        return allCReqs;
     }
 }

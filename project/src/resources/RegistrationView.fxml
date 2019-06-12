@@ -9,7 +9,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.RegistrationController">
   <children>
     <Label fx:id="mainLabel" layoutX="252.0" layoutY="21.0" text="Registration" />
-    <Label fx:id="toFillLabel" layoutX="29.0" layoutY="37.0" text="Please, fiil the fields below:" />
+    <Label fx:id="toFillLabel" layoutX="211.0" layoutY="48.0" text="Please, fill the fields below:" />
     <Label fx:id="firstNameLabel" layoutX="29.0" layoutY="85.0" text="First Name" />
     <Label fx:id="secondNameLabel" layoutX="29.0" layoutY="125.0" text="Second Name" />
     <Label fx:id="loginLabel" layoutX="29.0" layoutY="167.0" text="Username" />
@@ -24,5 +24,6 @@
     <TextField fx:id="loginField" layoutX="200.0" layoutY="158.0" prefWidth="200.0" />
     <TextField fx:id="passwordField" layoutX="200.0" layoutY="200.0" prefWidth="200.0" />
     <Label fx:id="errorMsg" layoutX="382.0" layoutY="290.0" prefWidth="200.0" text="" textFill="RED" />
+    <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Drop registration." />
   </children>
 </AnchorPane>

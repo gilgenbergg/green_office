@@ -9,6 +9,7 @@ public class PurchaseRequest {
     private Integer pReqID;
     private Integer cReqID;
     private Integer plantID;
+    private String plantName;
     private Integer adminID;
     private Integer landscaperID;
     private Status status;
@@ -17,12 +18,14 @@ public class PurchaseRequest {
     public PurchaseRequest(Integer pReqID,
                          Integer cReqID,
                          Integer plantID,
+                         String plantName,
                          Integer landscaperID,
                          Integer adminID,
                          Status status) {
         this.pReqID = pReqID;
         this.cReqID = cReqID;
         this.plantID = plantID;
+        this.plantName = plantName;
         this.landscaperID = landscaperID;
         this.adminID = adminID;
         this.status = status;
@@ -39,6 +42,10 @@ public class PurchaseRequest {
 
     public Integer getPlantID() {
         return plantID;
+    }
+
+    public String getPlantName() {
+        return plantName;
     }
 
     public Integer getAdminID() {
@@ -67,6 +74,10 @@ public class PurchaseRequest {
 
     public void setPlantID(Integer plantID) {
         this.plantID = plantID;
+    }
+
+    public void setPlantName(String plantName) {
+        this.plantName = plantName;
     }
 
     public void setAdminID(Integer adminID) {

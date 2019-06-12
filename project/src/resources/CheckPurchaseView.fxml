@@ -18,5 +18,6 @@
     <ListView fx:id="requiredResourcesList" layoutX="384.0" layoutY="122.0" prefHeight="200.0" prefWidth="200.0" />
     <Button fx:id="approvedPurchase" layoutX="415.0" layoutY="347.0" mnemonicParsing="false" onMouseClicked="#approvedOnClicked" text="Purchase is correct!" />
     <Button fx:id="nonApprovedPurchase" layoutX="17.0" layoutY="347.0" mnemonicParsing="false" onMouseClicked="#nonApprovedOnClicked" text="Needs additional purchase" />
+    <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />
   </children>
 </AnchorPane>

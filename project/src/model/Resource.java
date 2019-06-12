@@ -19,6 +19,10 @@ public class Resource {
         return resource;
     }
 
+    public Integer getPlantID() {
+        return plantID;
+    }
+
     public void setResourceID(Integer resourceID) {
         this.resourceID = resourceID;
     }

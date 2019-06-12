@@ -29,6 +29,7 @@ public class RegistrationController {
     public TextField loginField;
     public TextField passwordField;
     public Label errorMsg;
+    public Button backButton;
 
     AuthMapper authMapper = new AuthMapper();
     UsersMapper users = new UsersMapper();
@@ -89,5 +90,9 @@ public class RegistrationController {
         isClientRadio.setSelected(false);
         isAdminRadio.setSelected(false);
         this.chosenRole = isAdminRadio.getText();
+    }
+
+    public void backButtonOnCLicked(MouseEvent mouseEvent) {
+        Starter.showAuthView();
     }
 }

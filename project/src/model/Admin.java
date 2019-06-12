@@ -72,7 +72,8 @@ public class Admin extends User {
 
     public PurchaseRequest makePurchaseRequest(Plant plant, ClientRequest clientRequest, List<Resource> alreadyBought) throws SQLException, ClassNotFoundException {
         PurchaseRequest purchaseStart = new PurchaseRequest(null, clientRequest.getCReqID(),
-                plant.getPlantID(), null, adminID, null);
+                plant.getPlantID(), plantsBase.findItemByPlantID(plant.getPlantID()).getType(),
+                null, adminID, null);
         Integer pReqID = purchasesBase.addPReq(purchaseStart);
         //let`s for now we have just one landscaper
         Integer assignedLandscaper = 3;

@@ -1,6 +1,5 @@
 package data;
 
-import model.Plant;
 import model.Resource;
 
 import java.sql.Connection;
@@ -9,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ResourcesMapper extends DBinit {
@@ -71,5 +69,22 @@ public class ResourcesMapper extends DBinit {
             allResources.add(item);
         }
         return allResources;
+    }
+
+    public Resource addNewItem(Resource newResource) throws SQLException {
+        String resource = newResource.getResource();
+        Integer plantID = newResource.getPlantID();
+        ResultSet rs = null;
+        String insertion = "INSERT into resource (type, plant_id) VALUES (?, ?);";
+        PreparedStatement st = connection.prepareStatement(insertion);
+        st.setString(1, resource);
+        st.setInt(2, plantID);
+        st.executeUpdate();
+        rs = st.getGeneratedKeys();
+        if (rs.next()) {
+            Integer id = rs.getInt(1);
+            newResource.setResourceID(id);
+        }
+        return newResource;
     }
 }

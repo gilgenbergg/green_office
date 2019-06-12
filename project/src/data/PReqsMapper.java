@@ -1,18 +1,18 @@
 package data;
 
 import model.ClientRequest;
+import model.Landscaper;
 import model.PurchaseRequest;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class PReqsMapper extends DBinit {
 
     private static Set<PurchaseRequest> cash = new HashSet<>();
     private Connection connection;
+    private PlantsMapper plantsBase = new PlantsMapper();
+    private UsersMapper usersBase = new UsersMapper();
 
     public PReqsMapper() throws SQLException, ClassNotFoundException {
         super();
@@ -28,7 +28,7 @@ public class PReqsMapper extends DBinit {
         rs = statement.executeQuery();
 
         while (rs.next()) {
-            item = new PurchaseRequest(null, null, null, null, null,
+            item = new PurchaseRequest(null, null, null, null, null, null,
                     null);
             item.setPReqID(rs.getInt("preq_id"));
             String status = rs.getString("status");
@@ -40,6 +40,9 @@ public class PReqsMapper extends DBinit {
             item.setLandscaperID(landscaperID);
             Integer creqID = rs.getInt("creq_id");
             item.setCReqID(creqID);
+            Integer plantID = rs.getInt("plant_id");
+            item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
             allPReqs.add(item);
         }
         return allPReqs;
@@ -71,7 +74,7 @@ public class PReqsMapper extends DBinit {
         String select = "SELECT * FROM preq WHERE preq_id='" + pReqID + "'";
         PreparedStatement filter = connection.prepareStatement(select);
         rs = filter.executeQuery();
-        PurchaseRequest item = new PurchaseRequest(null, null, null, null,
+        PurchaseRequest item = new PurchaseRequest(null, null, null, null, null,
                 null, null);
         while (rs.next()) {
             item.setPReqID(rs.getInt("pReq_id"));
@@ -84,6 +87,7 @@ public class PReqsMapper extends DBinit {
             item.setLandscaperID(landscaperID);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
         }
         return item;
     }
@@ -99,7 +103,7 @@ public class PReqsMapper extends DBinit {
         ArrayList<PurchaseRequest> filtered = new ArrayList<>();
         PurchaseRequest item = null;
         while (rs.next()) {
-            item = new PurchaseRequest(null, null, null, null, null,
+            item = new PurchaseRequest(null, null, null, null, null, null,
                     null);
             item.setPReqID(rs.getInt("preq_id"));
             String statusFromDB = rs.getString("status");
@@ -112,6 +116,7 @@ public class PReqsMapper extends DBinit {
             Integer creqID = rs.getInt("creq_id");
             item.setCReqID(creqID);
             Integer plantID = rs.getInt("plant_id");
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
             item.setPlantID(plantID);
 
             filtered.add(item);
@@ -124,18 +129,20 @@ public class PReqsMapper extends DBinit {
     // in such status it goes to landscaper and after check is finished its status is changed by him
     // on inProgress(if it`s needed some more staff to buy) or on approved (if everything is fine)
 
-    public Integer addPReq(PurchaseRequest item) throws SQLException {
+    public Integer addPReq(PurchaseRequest item) throws SQLException, ClassNotFoundException {
         ResultSet rs = null;
         PurchaseRequest.Status status = PurchaseRequest.Status.inProgress;
         Integer adminID = item.getAdminID();
         Integer plantID = item.getPlantID();
         Integer cReqID = item.getCReqID();
-        String request = "INSERT INTO pReq (status, plant_id, admin_id, creq_id) " + "VALUES (?, ?, ?, ?)";
+        Integer landscaperID = assignLandscaper();
+        String request = "INSERT INTO pReq (status, plant_id, admin_id, creq_id, landscaper_id) " + "VALUES (?, ?, ?, ?, ?)";
         PreparedStatement res = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         res.setString(1, status.toString());
         res.setInt(2, plantID);
         res.setInt(3, adminID);
         res.setInt(4, cReqID);
+        res.setInt(5, landscaperID);
         res.executeUpdate();
         rs = res.getGeneratedKeys();
         Integer id = null;
@@ -174,6 +181,19 @@ public class PReqsMapper extends DBinit {
         return true;
     }
 
+    private Integer assignLandscaper() throws SQLException, ClassNotFoundException {
+        Integer landscaperID;
+        List<Integer> landscapersIDS = new ArrayList<>();
+        List<Landscaper> allLandscapers = usersBase.allLandscapers();
+        for (Landscaper item:
+                allLandscapers) {
+            landscapersIDS.add(item.getUID());
+        }
+        Integer rnd = new Random().nextInt(landscapersIDS.size());
+        landscaperID = landscapersIDS.get(rnd);
+        return landscaperID;
+    }
+
     public List<PurchaseRequest> filterByUserID(Integer uid) throws SQLException {
         ResultSet rs = null;
         PurchaseRequest item = null;
@@ -183,7 +203,7 @@ public class PReqsMapper extends DBinit {
         rs = statement.executeQuery();
 
         while (rs.next()) {
-            item = new PurchaseRequest(null, null, null, null, null,
+            item = new PurchaseRequest(null, null, null, null, null, null,
                     null);
             item.setPReqID(rs.getInt("preq_id"));
             String status = rs.getString("status");
@@ -191,6 +211,7 @@ public class PReqsMapper extends DBinit {
             item.setStatus(parsedStatus);
             Integer plantID = rs.getInt("plant_id");
             item.setPlantID(plantID);
+            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
             Integer adminID = rs.getInt("admin_id");
             item.setAdminID(adminID);
             Integer landscaperID = rs.getInt("landscaper_id");

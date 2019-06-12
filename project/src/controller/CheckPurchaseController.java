@@ -17,10 +17,15 @@ public class CheckPurchaseController {
     public ListView requiredResourcesList;
     public Button approvedPurchase;
     public Button nonApprovedPurchase;
+    public Button backButton;
 
     public void approvedOnClicked(MouseEvent mouseEvent) {
     }
 
     public void nonApprovedOnClicked(MouseEvent mouseEvent) {
+    }
+
+    public void backButtonOnCLicked(MouseEvent mouseEvent) {
+        //back to landscaper view
     }
 }

@@ -1,18 +1,19 @@
 package controller;
 
-import data.PReqsMapper;
-import data.ResourcesMapper;
-import data.UsersMapper;
+import data.*;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import model.PurchaseRequest;
-import model.Resource;
+import model.*;
 
 import java.sql.SQLException;
+import java.util.List;
+
+import static service.TheShop.checkItem;
 
 public class NewPurchaseController {
     public Label viewLabel;
@@ -20,9 +21,9 @@ public class NewPurchaseController {
     public Label plantIDLabel;
     public Label landscaperIDLabel;
     public Label boughtListLabel;
-    public TextField cReqIDField;
-    public TextField plantIDField;
-    public TextField landscaperIDField;
+    public ComboBox<Integer> cReqIDField;
+    public ComboBox<Integer> plantIDField;
+    public ComboBox<Integer> landscaperIDField;
     public TableView alreadyBoughtTable;
     public Label statusLabel;
     public RadioButton isInProgressRadio;
@@ -30,35 +31,42 @@ public class NewPurchaseController {
     public RadioButton isDoneRadio;
     public Button newPReqButton;
     public Button buyResourceButton;
-    public TextField toAssignResourceID;
+    public TextField toAssignResource;
     public Label errorMsg;
     public TableColumn resourceNameCol;
+    public Label plantLabel;
+    public Button backButton;
 
     PReqsMapper preqsBase = new PReqsMapper();
     UsersMapper usersBase = new UsersMapper();
     ResourcesMapper resourcesBase = new ResourcesMapper();
+    PlantsMapper plantsBase = new PlantsMapper();
+    CReqsMapper cReqsBase = new CReqsMapper();
+
 
     private String chosenStatus = "";
     private Integer adminID;
+    private Integer assignedcReqID;
+    private Integer assignedPlantID;
+    private Integer assignedLandscaperID;
     private ObservableList<Resource> boughtArray = FXCollections.observableArrayList();
 
     public NewPurchaseController() throws SQLException, ClassNotFoundException {
     }
 
     public void newPReqButtonOnClicked(MouseEvent mouseEvent) {
-        Integer assignedCReq = Integer.parseInt(cReqIDField.getText());
-        Integer plantID = Integer.parseInt(plantIDField.getText());
-        Integer landscaperID = Integer.parseInt(landscaperIDField.getText());
         PurchaseRequest.Status status = preqsBase.parseStatusFromDB(chosenStatus);
 
-        if ((cReqIDField.getText().isEmpty()) || (plantIDField.getText().isEmpty()) ||
-                (landscaperIDField.getText().isEmpty()) ||
+        if ((cReqIDField.getValue() == null) || (plantIDField.getValue() == null) ||
+                (landscaperIDField.getValue() == null) ||
                 ((!isInProgressRadio.isSelected()) && (!isInCheckRadio.isSelected()) && (!isDoneRadio.isSelected()))) {
                         errorMsg.setText("Please fill all the fields.");
                         return;
         }
         try{
-            PurchaseRequest pReq = new PurchaseRequest(null, assignedCReq, plantID, landscaperID, this.adminID, status);
+            PurchaseRequest pReq = new PurchaseRequest(null, assignedcReqID, assignedPlantID,
+                    plantsBase.findItemByPlantID(assignedPlantID).getType(), assignedLandscaperID,
+                    this.adminID, status);
             preqsBase.addPReq(pReq);
             Starter.showAdminView(usersBase.getAdminByUserID(adminID));
         } catch (Exception e) {
@@ -67,20 +75,47 @@ public class NewPurchaseController {
     }
 
     public void buyResourceOnClicked(MouseEvent mouseEvent) throws SQLException {
-        if (toAssignResourceID.getText().isEmpty()) {
-            errorMsg.setText("In order to buy the resource, specify its ID.");
+        if (toAssignResource.getText().isEmpty()) {
+            errorMsg.setText("Specify what do you want to buy.");
             return;
         }
-        Integer resourceToBuyID = Integer.parseInt(toAssignResourceID.getText());
-        Resource curRes = resourcesBase.getResourceByID(resourceToBuyID);
-        boughtArray.add(curRes);
+        String resource = toAssignResource.getText();
+        boolean available = checkItem(resource);
+        if (!available) {
+            errorMsg.setText("Item is not available in the shop.");
+            return;
+        }
+        if (plantIDField.getValue() == null) {
+            errorMsg.setText("Specify plantID.");
+            return;
+        }
+        Resource newResource = new Resource(null, resource, assignedPlantID);
+        Resource addedRes = resourcesBase.addNewItem(newResource);
+        boughtArray.add(addedRes);
         resourceNameCol.setCellValueFactory(new PropertyValueFactory<>("resource"));
         alreadyBoughtTable.setItems(boughtArray);
-        toAssignResourceID.setText("");
+        toAssignResource.setText("");
     }
 
-    public void setData(Integer adminID) {
+    public void setData(Integer adminID) throws SQLException, ClassNotFoundException {
         this.adminID = adminID;
+        ObservableList<Integer> plantsIDS = FXCollections.observableArrayList();
+        List<Plant> allPlants = plantsBase.allPlants();
+        for (Plant item:
+                allPlants) {
+            plantsIDS.add(item.getPlantID());
+        }
+        plantIDField.setItems(plantsIDS.sorted());
+
+        ObservableList<Integer> landscapersIDS = FXCollections.observableArrayList();
+        List<Landscaper> allLandscapers = usersBase.allLandscapers();
+        for (Landscaper item:
+             allLandscapers) {
+            landscapersIDS.add(item.getUID());
+        }
+        landscaperIDField.setItems(landscapersIDS.sorted());
+
+        cReqIDField.setItems(null);
     }
 
     public void isInProgressClicked(MouseEvent mouseEvent) {
@@ -102,5 +137,29 @@ public class NewPurchaseController {
         isInCheckRadio.setSelected(false);
         isDoneRadio.setSelected(true);
         this.chosenStatus = isDoneRadio.getText();
+    }
+
+    public void cReqChosen(ActionEvent actionEvent) {
+        assignedcReqID = cReqIDField.getValue();
+    }
+
+    public void plantIDChosen(ActionEvent actionEvent) throws SQLException {
+        assignedPlantID = plantIDField.getValue();
+        plantLabel.setText(plantsBase.findItemByPlantID(assignedPlantID).getType());
+        ObservableList<Integer> cReqsIDS = FXCollections.observableArrayList();
+        List<ClientRequest> allCReqs = cReqsBase.filterByPlantID(assignedPlantID);
+        for (ClientRequest item:
+                allCReqs) {
+            cReqsIDS.add(item.getCReqID());
+        }
+        cReqIDField.setItems(cReqsIDS.sorted());
+    }
+
+    public void landscaperIDChosen(ActionEvent actionEvent) {
+        assignedLandscaperID = landscaperIDField.getValue();
+    }
+
+    public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
+        Starter.showAdminView(usersBase.getAdminByUserID(adminID));
     }
 }

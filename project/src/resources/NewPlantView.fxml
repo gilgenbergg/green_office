@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.NewPlantController">
+  <children>
+    <Label layoutX="258.0" layoutY="21.0" text="New Plant" />
+    <Label layoutX="41.0" layoutY="61.0" text="ClientID:" />
+    <ComboBox fx:id="clientIDSelector" layoutX="115.0" layoutY="59.0" onAction="#clientIDChosen">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <Label fx:id="clientFirstNameLabel" layoutX="240.0" layoutY="62.0" prefWidth="144.0" text="" />
+    <Label fx:id="clientSecondNameLabel" layoutX="411.0" layoutY="61.0" prefWidth="175.0" text="" />
+    <Label fx:id="plantTypeLabel" layoutX="41.0" layoutY="124.0" text="Type:" />
+    <TextField fx:id="plantTypeTextField" layoutX="112.0" layoutY="124.0" prefWidth="286.0" />
+    <Button fx:id="newPlantAdded" layoutX="258.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#newPlantOnClicked" text="Done!" />
+    <Label fx:id="errorMsg" layoutX="189.0" layoutY="254.0" prefWidth="200.0" text="" textFill="RED" />
+      <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />
+  </children>
+</AnchorPane>

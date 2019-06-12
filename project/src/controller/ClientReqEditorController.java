@@ -1,16 +1,20 @@
 package controller;
 
 import data.CReqsMapper;
+import data.PlantsMapper;
 import data.UsersMapper;
 import facade.Starter;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import model.ClientRequest;
+import model.Landscaper;
+import model.Plant;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ClientReqEditorController {
     public TextField cReqIDField;
@@ -19,9 +23,9 @@ public class ClientReqEditorController {
     public RadioButton isPlannedRadio;
     public RadioButton isFirstRadio;
     public Label plantIDLabel;
-    public TextField plantIDField;
+    public ComboBox plantIDField;
     public Label landscaperIDLabel;
-    public TextField landscaperIDField;
+    public ComboBox landscaperIDField;
     public Label statusLabel;
     public RadioButton isNewOneRadio;
     public RadioButton isInPurchaseRadio;
@@ -30,24 +34,32 @@ public class ClientReqEditorController {
     public RadioButton isDoneRadio;
     public Button finishEditionButton;
     public Label errorMsg;
+    public Button backButton;
+    public Label clientIDLabel;
+    public Label clientIDField;
 
     private CReqsMapper cReqsBase = new CReqsMapper();
     private UsersMapper usersBase = new UsersMapper();
+    private PlantsMapper plantsBase = new PlantsMapper();
+
     String chosenStatus = "";
     String chosenType = "";
     Integer cReqIDSetup;
+    Integer adminID;
+    Integer chosenPlantID;
+    Integer chosenLandscaperID;
 
     public ClientReqEditorController() throws SQLException, ClassNotFoundException {
     }
 
     public void finishEditionClicked(MouseEvent mouseEvent) throws SQLException {
-        if ((landscaperIDField.getText().isEmpty()) || (plantIDField.getText().isEmpty())) {
+        if ((landscaperIDField.getValue() == null) || (plantIDField.getValue() == null)) {
             errorMsg.setText("Please fill empty fields.");
             return;
         }
         try {
-            cReqsBase.updatePlant(Integer.parseInt(plantIDField.getText()), cReqsBase.findItemByID(cReqIDSetup));
-            cReqsBase.updateLandscaperID(cReqIDSetup, Integer.parseInt(landscaperIDField.getText()));
+            cReqsBase.updatePlant(Integer.parseInt(plantIDField.getValue().toString()), cReqsBase.findItemByID(cReqIDSetup));
+            cReqsBase.updateLandscaperID(cReqIDSetup, Integer.parseInt(landscaperIDField.getValue().toString()));
             cReqsBase.updateStatus(cReqIDSetup, cReqsBase.parseStatusFromDB(chosenStatus));
             cReqsBase.updateType(cReqIDSetup, cReqsBase.parseTypeFromDB(chosenType));
             Integer adminID = (cReqsBase.findItemByID(cReqIDSetup)).getAdminID();
@@ -57,11 +69,31 @@ public class ClientReqEditorController {
         }
     }
 
-    public void setData(Integer cReqID) throws SQLException {
+    public void setData(Integer cReqID, Integer adminID) throws SQLException, ClassNotFoundException {
         cReqIDSetup = cReqID;
         cReqIDField.setText(cReqID.toString());
+        this.adminID = adminID;
+
         ClientRequest cReq = cReqsBase.findItemByID(cReqID);
-        landscaperIDField.setText(cReq.getLandscaperID().toString());
+        clientIDField.setText(cReq.getClientID().toString());
+        landscaperIDField.setValue(cReq.getLandscaperID().toString());
+
+        ObservableList<Integer> plantsIDS = FXCollections.observableArrayList();
+        List<Plant> allPlants= plantsBase.filterPlantsByUserID(cReq.getClientID());
+        for (Plant item:
+                allPlants) {
+            plantsIDS.add(item.getPlantID());
+        }
+        plantIDField.setItems(plantsIDS.sorted());
+
+        ObservableList<Integer> landscapersIDS = FXCollections.observableArrayList();
+        List<Landscaper> allLandscapers= usersBase.allLandscapers();
+        for (Landscaper item:
+                allLandscapers) {
+            landscapersIDS.add(item.getUID());
+        }
+        landscaperIDField.setItems(landscapersIDS.sorted());
+
         if (cReq.getType() == ClientRequest.Type.firstOne) {
             isFirstRadio.setSelected(true);
             this.chosenType = isFirstRadio.getText();
@@ -71,10 +103,10 @@ public class ClientReqEditorController {
             this.chosenType = isPlannedRadio.getText();
         }
         if (cReq.getLandscaperID() != null) {
-            landscaperIDField.setText(cReq.getLandscaperID().toString());
+            landscaperIDField.setValue(cReq.getLandscaperID().toString());
         }
         if (cReq.getPlantID() != null) {
-            plantIDField.setText(cReq.getPlantID().toString());
+            plantIDField.setValue(cReq.getPlantID().toString());
         }
         if (cReq.getStatus() == ClientRequest.Status.newOne) {
             isNewOneRadio.setSelected(true);
@@ -153,5 +185,17 @@ public class ClientReqEditorController {
         isInPurchaseRadio.setSelected(false);
         isGardeningRadio.setSelected(false);
         this.chosenStatus = isDoneRadio.getText();
+    }
+
+    public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
+        Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+    }
+
+    public void plantIDChosen(ActionEvent actionEvent) {
+        this.chosenPlantID = Integer.parseInt(plantIDField.getValue().toString());
+    }
+
+    public void landscaperIDChosen(ActionEvent actionEvent) {
+        this.chosenLandscaperID = Integer.parseInt(landscaperIDField.getValue().toString());
     }
 }

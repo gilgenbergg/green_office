@@ -1,5 +1,6 @@
 package controller;
 
+import facade.Starter;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import model.Landscaper;
@@ -11,7 +12,7 @@ public class LandscaperController {
     public Label cReqsLabel;
     public TableView cReqsTable;
     public TableColumn CREQS_reqIDCol;
-    public TableColumn CREQS_plantIDCol;
+    public TableColumn CREQS_plantCol;
     public TableColumn CREQS_typeCol;
     public TableColumn CREQS_statusCol;
     public Button gardeningButton;
@@ -22,6 +23,7 @@ public class LandscaperController {
     public TableColumn PREQS_plantID_Col;
     public TableColumn PREQS_statusIDCol;
     public Button checkPurchaseButton;
+    public Button signOutButton;
 
     User user;
 
@@ -33,5 +35,9 @@ public class LandscaperController {
 
     public void setData(Landscaper landscaperByUserID) {
         user = landscaperByUserID;
+    }
+
+    public void signOutButtonOnClicked(MouseEvent mouseEvent) {
+        Starter.showAuthView();
     }
 }

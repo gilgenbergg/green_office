@@ -15,5 +15,6 @@
     <TextField fx:id="lastInspectionField" layoutX="241.0" layoutY="64.0" prefWidth="200.0" />
     <TextField fx:id="nextInspectionField" layoutX="241.0" layoutY="119.0" prefWidth="200.0" />
     <Button fx:id="doneGardeningButton" layoutX="253.0" layoutY="190.0" mnemonicParsing="false" onMouseClicked="#doneButtonOnClicked" text="Done!" />
+    <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />
   </children>
 </AnchorPane>

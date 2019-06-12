@@ -2,13 +2,13 @@ package controller;
 
 import data.CReqsMapper;
 import data.PReqsMapper;
+import data.UsersMapper;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import model.Admin;
 import model.ClientRequest;
 import model.PurchaseRequest;
 import model.User;
@@ -17,11 +17,11 @@ import java.sql.SQLException;
 
 public class AdminController {
     public Label viewLabel;
-    public TextField uidField;
+    public Label uidField;
     public Label cReqsLabel;
     public TableView cReqsTable;
     public TableColumn CREQS_reqIDCol;
-    public TableColumn CREQS_plantIDCol;
+    public TableColumn CREQS_plantCol;
     public TableColumn CREQS_typeCol;
     public TableColumn CREQS_statusCol;
     public Button toCReqEditorButton;
@@ -29,17 +29,23 @@ public class AdminController {
     public TableView pReqsTable;
     public TableColumn PREQS_reqIDCol;
     public TableColumn PREQS_cReqID;
-    public TableColumn PREQS_plantIDCol;
+    public TableColumn PREQS_plantCol;
     public TableColumn PREQS_statusCol;
     public Button newPurchaseButton;
     public Label reqIDtoEditLabel;
     public TextField reqIDtoEditField;
     public Label errorMsg;
+    public Label firstNameLabel;
+    public Label secondNameLabel;
+    public Button newPlantButton;
+    public Button signOutButton;
 
-    Integer cReqIDToEdit;
-    User user;
+    private Integer cReqIDToEdit;
+    private User user;
+    private Integer uid;
     private CReqsMapper creqsBase = new CReqsMapper();
     private PReqsMapper preqsBase = new PReqsMapper();
+    private UsersMapper usersBase = new UsersMapper();
 
     public AdminController() throws SQLException, ClassNotFoundException {
     }
@@ -52,7 +58,7 @@ public class AdminController {
             return;
         }
         try{
-            Starter.CReqEditorView(cReqIDToEdit);
+            Starter.CReqEditorView(cReqIDToEdit, uid);
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
@@ -66,28 +72,42 @@ public class AdminController {
         }
     }
 
-    public void setData(Admin adminByUserID) {
-        user = adminByUserID;
+    public void setData(Integer adminID) throws SQLException {
+        user = usersBase.findItemByUID(adminID);
+        uid = adminID;
         try {
             uidField.setText(user.getUID().toString());
+            firstNameLabel.setText(user.getFirstName());
+            secondNameLabel.setText(user.getSecondName());
             ObservableList<ClientRequest> creqs = FXCollections.observableArrayList(creqsBase.filterByAdminID(user.getUID()));
             CREQS_statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
             CREQS_reqIDCol.setCellValueFactory(new PropertyValueFactory<> ("cReqID"));
             CREQS_typeCol.setCellValueFactory(new PropertyValueFactory<> ("type"));
-            CREQS_plantIDCol.setCellValueFactory(new PropertyValueFactory<> ("plantID"));
+            CREQS_plantCol.setCellValueFactory(new PropertyValueFactory<> ("plantName"));
             cReqsTable.setItems(creqs);
 
             ObservableList<PurchaseRequest> preqs = FXCollections.observableArrayList(preqsBase.filterByUserID(user.getUID()));
             PREQS_reqIDCol.setCellValueFactory(new PropertyValueFactory<>("pReqID"));
             PREQS_cReqID.setCellValueFactory(new PropertyValueFactory<> ("cReqID"));
-            PREQS_plantIDCol.setCellValueFactory(new PropertyValueFactory<>("plantID"));
+            PREQS_plantCol.setCellValueFactory(new PropertyValueFactory<>("plantName"));
             PREQS_statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
             pReqsTable.setItems(preqs);
+
+            firstNameLabel.setText(user.getFirstName());
+            secondNameLabel.setText(user.getSecondName());
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText(e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    public void newPlantOnClicked(MouseEvent mouseEvent) {
+        Starter.showNewPlantView(user.getUID());
+    }
+
+    public void signOutOnClicked(MouseEvent mouseEvent) {
+        Starter.showAuthView();
     }
 }

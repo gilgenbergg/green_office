@@ -29,7 +29,7 @@ public class Client extends User {
 
     // if a first one case, then plantID should be null else client need to pass a plantID
     public ClientRequest createClientReq(ClientRequest.Type type, Integer userID) throws SQLException, ClassNotFoundException {
-        ClientRequest cReq = new ClientRequest(null, null, userID, null, null,
+        ClientRequest cReq = new ClientRequest(null, null, null, userID, null, null,
                 null, type);
         cReq = clientsReqsBase.addCReq(cReq);
         return cReq;

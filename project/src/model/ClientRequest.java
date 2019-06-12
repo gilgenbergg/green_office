@@ -12,6 +12,7 @@ public class ClientRequest {
 
     private Integer cReqID;
     private Integer plantID;
+    private String plantName;
     private Integer clientID;
     private Integer landscaperID;
     private Integer adminID;
@@ -20,6 +21,7 @@ public class ClientRequest {
 
     public ClientRequest(Integer cReqID,
                          Integer plantID,
+                         String plantName,
                          Integer clientID,
                          Integer landscaperID,
                          Integer adminID,
@@ -27,6 +29,7 @@ public class ClientRequest {
                          Type type) {
         this.cReqID = cReqID;
         this.plantID = plantID;
+        this.plantName = plantName;
         this.clientID = clientID;
         this.landscaperID = landscaperID;
         this.adminID = adminID;
@@ -40,6 +43,10 @@ public class ClientRequest {
 
     public Integer getPlantID() {
         return plantID;
+    }
+
+    public String getPlantName() {
+        return plantName;
     }
 
     public Integer getClientID() {
@@ -72,6 +79,10 @@ public class ClientRequest {
 
     public void setPlantID(Integer plantID) {
         this.plantID = plantID;
+    }
+
+    public void setPlantName(String plantName) {
+        this.plantName = plantName;
     }
 
     public void setAdminID(Integer adminID) {

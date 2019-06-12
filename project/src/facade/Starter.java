@@ -23,9 +23,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static service.ConcurrentPlants.checkPlant;
-
-
 public class Starter extends Application {
 
     private static Stage stage;
@@ -59,16 +56,6 @@ public class Starter extends Application {
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        //checking if there is a specific plant in the plants shop catalogue
-
-        System.out.println("Checking info from external resource>>");
-        System.out.println("Does the GreenShop have camomiles?");
-        System.out.println(checkPlant("camomile"));
-        System.out.println("Does the GreenShop have indonesian hunt planter?");
-        System.out.println(checkPlant("indonesian hunt planter"));
-        System.out.println("Does the GreenShop have cactuses?");
-        System.out.println(checkPlant("cactus"));
-
         //for schecking REST API service which provides the information about plants GreenOffice works with
         int PORT = 27015;
         DBinit.initConection();
@@ -150,7 +137,7 @@ public class Starter extends Application {
                 root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
                 ClientViewController cvc = loader.getController();
                 cvc.setData(clientByUserID);
-                Scene scene = new Scene(root, 890, 600);
+                Scene scene = new Scene(root, 857, 642);
                 stage.setScene(scene);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -167,7 +154,7 @@ public class Starter extends Application {
                 ncreqControl.setData(uid);
                 Scene scene = new Scene(root, 800, 500);
                 stage.setScene(scene);
-            } catch (IOException e) {
+            } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -179,10 +166,25 @@ public class Starter extends Application {
                 AnchorPane root = null;
                 root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
                 AdminController avc = loader.getController();
-                avc.setData(adminByUserID);
-                Scene scene = new Scene(root, 600, 640);
+                avc.setData(adminByUserID.getUID());
+                Scene scene = new Scene(root, 762, 583);
                 stage.setScene(scene);
-            } catch (IOException e) {
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void showNewPlantView(Integer adminID) {
+            try {
+                String fxmlFile = "/resources/NewPlantView.fxml";
+                FXMLLoader loader = new FXMLLoader();
+                AnchorPane root = null;
+                root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
+                NewPlantController npc = loader.getController();
+                npc.setData(adminID);
+                Scene scene = new Scene(root, 762, 583);
+                stage.setScene(scene);
+            } catch (IOException | SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -228,17 +230,17 @@ public class Starter extends Application {
         }
     }
 
-    public static void CReqEditorView(Integer cReqID) {
+    public static void CReqEditorView(Integer cReqID, Integer adminID) {
         try {
             String fxmlFile = "/resources/CReqEditorView.fxml";
             FXMLLoader loader = new FXMLLoader();
             AnchorPane root = null;
             root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
             ClientReqEditorController crec = loader.getController();
-            crec.setData(cReqID);
+            crec.setData(cReqID, adminID);
             Scene scene = new Scene(root, 600, 640);
             stage.setScene(scene);
-        } catch (IOException | SQLException e) {
+        } catch (IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -251,9 +253,9 @@ public class Starter extends Application {
             root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
             NewPurchaseController npc = loader.getController();
             npc.setData(adminID);
-            Scene scene = new Scene(root, 600, 640);
+            Scene scene = new Scene(root, 640, 580);
             stage.setScene(scene);
-        } catch (IOException e) {
+        } catch (IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class ConcurrentPlants {
+public class TheShop {
 
-    public static boolean checkPlant(String plant) {
+    public static boolean checkItem(String plant) {
         String file = "../plantsExternalRes";
         try (BufferedReader br = Files.newBufferedReader(Paths.get(file))) {
             String line;

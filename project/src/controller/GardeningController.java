@@ -16,4 +16,8 @@ public class GardeningController {
 
     public void doneButtonOnClicked(MouseEvent mouseEvent) {
     }
+
+    public void backButtonOnCLicked(MouseEvent mouseEvent) {
+        //back to landscaper view
+    }
 }

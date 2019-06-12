@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 public class ClientViewController {
 
+    public Button signOutButton;
     private Facade facade = Starter.facade;
     User user;
     private PlantsMapper plantsBase = new PlantsMapper();
@@ -38,7 +39,7 @@ public class ClientViewController {
     public TableColumn<ClientRequest, Integer> CREQS_requestIDCol;
     public TableColumn<ClientRequest, String> CREQS_statusCol;
     public TableColumn<ClientRequest, String> CREQS_typeCol;
-    public TableColumn<ClientRequest, Integer> CREQS_plantIDCol;
+    public TableColumn<ClientRequest, String> CREQS_plantCol;
 
     public ClientViewController() throws SQLException, ClassNotFoundException {
     }
@@ -58,12 +59,11 @@ public class ClientViewController {
             PLANTS_lastInspectionCol.setCellValueFactory(new PropertyValueFactory<>("lastInspection"));
             PLANTS_nextInspectionCol.setCellValueFactory(new PropertyValueFactory<>("nextInspection"));
             plantsTable.setItems(plants);
-            //TODO: fix cReqID column
             ObservableList<ClientRequest> creqs = FXCollections.observableArrayList(creqsBase.filterByUID(user.getUID()));
             CREQS_statusCol.setCellValueFactory(new PropertyValueFactory<> ("status"));
             CREQS_requestIDCol.setCellValueFactory(new PropertyValueFactory<> ("cReqID"));
             CREQS_typeCol.setCellValueFactory(new PropertyValueFactory<> ("type"));
-            CREQS_plantIDCol.setCellValueFactory(new PropertyValueFactory<> ("plantID"));
+            CREQS_plantCol.setCellValueFactory(new PropertyValueFactory<> ("plantName"));
             cReqsTable.setItems(creqs);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -71,5 +71,9 @@ public class ClientViewController {
             alert.setHeaderText(e.getMessage());
             alert.showAndWait();
         }
+    }
+
+    public void signOutOnClicked(MouseEvent mouseEvent) {
+        Starter.showAuthView();
     }
 }
