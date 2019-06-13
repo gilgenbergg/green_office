@@ -137,7 +137,7 @@ public class Starter extends Application {
                 root = (AnchorPane) loader.load(Starter.class.getClass().getResourceAsStream(fxmlFile));
                 ClientViewController cvc = loader.getController();
                 cvc.setData(clientByUserID);
-                Scene scene = new Scene(root, 857, 642);
+                Scene scene = new Scene(root, 857, 635);
                 stage.setScene(scene);
             } catch (IOException e) {
                 e.printStackTrace();

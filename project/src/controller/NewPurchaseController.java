@@ -95,6 +95,7 @@ public class NewPurchaseController {
         resourceNameCol.setCellValueFactory(new PropertyValueFactory<>("resource"));
         alreadyBoughtTable.setItems(boughtArray);
         toAssignResource.setText("");
+        errorMsg.setText("");
     }
 
     public void setData(Integer adminID) throws SQLException, ClassNotFoundException {

@@ -1,9 +1,6 @@
 package controller;
 
-import data.PReqsMapper;
-import data.PlantsMapper;
-import data.ResourcesMapper;
-import data.UsersMapper;
+import data.*;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +30,7 @@ public class CheckPurchaseController {
     private PReqsMapper preqsBase = new PReqsMapper();
     private ResourcesMapper resourcesBase = new ResourcesMapper();
     private UsersMapper usersBase = new UsersMapper();
+    private RequiredResMapper requiredBase = new RequiredResMapper();
     private Integer preqID;
     private Integer plantID;
     private Integer landscaperID;
@@ -65,6 +63,8 @@ public class CheckPurchaseController {
         ObservableList<String> resources = FXCollections.observableArrayList(resourcesBase.getTypesByPlantID(plantID));
         alreadyBoughtList.setItems(resources.sorted());
 
-        //TODO: setting required resources, searching in specified table by plant type
+        String plantType = plantsBase.findItemByPlantID(plantID).getType();
+        ObservableList<String> requiredResources = FXCollections.observableArrayList(requiredBase.findRequiredByPlantType(plantType));
+        requiredResourcesList.setItems(requiredResources);
     }
 }

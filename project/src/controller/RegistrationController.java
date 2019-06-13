@@ -65,6 +65,10 @@ public class RegistrationController {
             errorMsg.setText("Please specify your role.");
             return;
         }
+        if (!isClientRadio.isSelected() && !isAdminRadio.isSelected() && !isLandscaperRadio.isSelected()) {
+            errorMsg.setText("Please specify your role.");
+            return;
+        }
         try{
             User user = new User(null, firstName, secondName, role, null, login, password);
             users.addUser(user);
@@ -89,7 +93,7 @@ public class RegistrationController {
     public void isLandscaper(MouseEvent mouseEvent) {
         isClientRadio.setSelected(false);
         isAdminRadio.setSelected(false);
-        this.chosenRole = isAdminRadio.getText();
+        this.chosenRole = isLandscaperRadio.getText();
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) {

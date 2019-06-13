@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import model.ClientRequest;
+import model.Plant;
 
 import java.sql.SQLException;
 
@@ -28,6 +29,7 @@ public class GardeningController {
     private PlantsMapper plantsBase = new PlantsMapper();
     private Integer landscaperID;
     private Integer creqID;
+    private Integer plantID;
 
     public GardeningController() throws SQLException, ClassNotFoundException {
     }
@@ -61,6 +63,14 @@ public class GardeningController {
         creqID = cReqID;
         cReqIDField.setText(cReqID.toString());
         ClientRequest cReq = creqsBase.findItemByID(cReqID);
+        plantID = cReq.getPlantID();
+        Plant plant = plantsBase.findItemByPlantID(plantID);
+        if (plant.getLastInspection() == null) {
+            lastInspectionField.setText(plant.getLastInspection());
+        }
+        if (plant.getNextInspection() == null) {
+            nextInspectionField.setText(plant.getNextInspection());
+        }
         landscaperID = cReq.getLandscaperID();
     }
 }

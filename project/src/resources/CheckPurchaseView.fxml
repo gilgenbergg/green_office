@@ -8,8 +8,8 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.CheckPurchaseController">
   <children>
-    <Label fx:id="viewLabel" layoutX="170.0" layoutY="18.0" text="Checking purchase request " />
-    <TextField id="pReqID" fx:id="pReqIDField" layoutX="353.0" layoutY="15.0" prefWidth="62.0" />
+    <Label fx:id="viewLabel" layoutX="201.0" layoutY="18.0" text="Checking purchase request " />
+    <TextField id="pReqID" fx:id="pReqIDField" layoutX="384.0" layoutY="15.0" prefWidth="62.0" />
     <Label fx:id="plantIDLabel" layoutX="46.0" layoutY="53.0" text="Plant ID:" />
     <TextField fx:id="plantIDField" layoutX="109.0" layoutY="50.0" prefWidth="56.0" />
     <Label fx:id="alreadyBoughtLabel" layoutX="46.0" layoutY="90.0" text="Already bought staff:" />

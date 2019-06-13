@@ -35,7 +35,7 @@
       </labelFor>
     </Label>
     <fx:reference source="reqIDtoEditField" />
-    <Label fx:id="errorMsg" layoutX="413.0" layoutY="184.0" prefWidth="177.0" text="" textFill="RED" />
+    <Label fx:id="errorMsg" layoutX="413.0" layoutY="209.0" prefHeight="67.00009999999747" prefWidth="177.0" text="" textFill="RED" />
     <Label fx:id="uidField" layoutX="275.0" layoutY="20.0" prefWidth="71.0" text="Label" />
     <Label fx:id="firstNameLabel" layoutX="346.0" layoutY="18.0" prefWidth="227.0" text="Label" />
     <Label fx:id="secondNameLabel" layoutX="346.0" layoutY="36.0" prefWidth="213.0" text="Label" />

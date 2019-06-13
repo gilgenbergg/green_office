@@ -26,7 +26,7 @@
     <Button id="addNewPReqButton" fx:id="newPReqButton" layoutX="501.0" layoutY="341.0" mnemonicParsing="false" onMouseClicked="#newPReqButtonOnClicked" text="Done!" />
     <Button id="addResource" fx:id="buyResourceButton" layoutX="438.0" layoutY="251.0" mnemonicParsing="false" onMouseClicked="#buyResourceOnClicked" prefWidth="139.0" text="Buy Resource" />
     <TextField id="toAssignResourceID" fx:id="toAssignResource" layoutX="285.0" layoutY="251.0" prefWidth="139.0" />
-    <Label fx:id="errorMsg" layoutX="374.0" layoutY="313.0" prefWidth="200.0" text="" textFill="RED" />
+    <Label fx:id="errorMsg" layoutX="285.0" layoutY="313.0" prefWidth="289.0" text="" textFill="RED" />
     <ComboBox fx:id="cReqIDField" layoutX="240.0" layoutY="144.0" onAction="#cReqChosen">
       <items>
         <FXCollections fx:factory="observableArrayList">
@@ -54,7 +54,7 @@
         </FXCollections>
       </items>
     </ComboBox>
-    <Label fx:id="plantLabel" layoutX="339.0" layoutY="53.0" prefHeight="19.0" prefWidth="235.0" text="" />
+    <Label fx:id="plantLabel" layoutX="285.0" layoutY="294.0" prefHeight="35.0" prefWidth="289.0" text="" />
     <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />
   </children>
 </AnchorPane>

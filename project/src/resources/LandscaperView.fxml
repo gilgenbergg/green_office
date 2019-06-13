@@ -45,6 +45,6 @@
     <TextField fx:id="creqToGarden" layoutX="485.0" layoutY="121.0" prefWidth="50.0" />
     <Label fx:id="checkPurchaseLabel" layoutX="453.0" layoutY="268.0" text="Purchase to check:" />
     <TextField id="preqToCheck" fx:id="preqToCheckField" layoutX="485.0" layoutY="297.0" prefWidth="50.0" />
-    <Label fx:id="errorMsg" layoutX="200.0" layoutY="240.0" prefWidth="200.0" text="" textFill="RED" />
+    <Label fx:id="errorMsg" layoutX="410.0" layoutY="200.0" prefHeight="43.0" prefWidth="207.0" text="" textFill="RED" />
   </children>
 </AnchorPane>

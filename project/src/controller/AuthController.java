@@ -46,6 +46,10 @@ public class AuthController {
             return;
         }
         AuthData searched = authMapper.findItemByLogin(loginField.getText());
+        if (searched == null) {
+            errorMsg.setText("No such user. Check login and password.");
+            return;
+        }
         if (!searched.getPassword().equals(passwordField.getText())) {
             errorMsg.setText("Incorrect input, try again.");
             return;

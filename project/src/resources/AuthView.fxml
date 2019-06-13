@@ -24,6 +24,6 @@
     <Button fx:id="signInButton" layoutX="280.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#signInClicked" text="Sign in" />
     <Label fx:id="registerMsg" labelFor="$registerMsg" layoutX="164.0" layoutY="317.0" text="Don`t have an account?" />
     <Button fx:id="registerButton" layoutX="347.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#registerClicked" text="Register!" />
-    <Label fx:id="errorMsg" layoutX="200.0" layoutY="240.0" prefWidth="200.0" text="" textFill="RED" />
+    <Label fx:id="errorMsg" layoutX="152.0" layoutY="240.0" prefWidth="340.0" text="" textFill="RED" />
   </children>
 </AnchorPane>

@@ -25,7 +25,7 @@
     <Label fx:id="plantTypeLabel" layoutX="41.0" layoutY="124.0" text="Type:" />
     <TextField fx:id="plantTypeTextField" layoutX="112.0" layoutY="124.0" prefWidth="286.0" />
     <Button fx:id="newPlantAdded" layoutX="258.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#newPlantOnClicked" text="Done!" />
-    <Label fx:id="errorMsg" layoutX="189.0" layoutY="254.0" prefWidth="200.0" text="" textFill="RED" />
-      <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />
+    <Label fx:id="errorMsg" layoutX="115.0" layoutY="254.0" prefWidth="321.0" text="" textFill="RED" />
+    <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />
   </children>
 </AnchorPane>
