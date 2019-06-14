@@ -10,11 +10,14 @@ public class CReqsMapper extends DBinit {
 
     private static Set<ClientRequest> cash = new HashSet<>();
     private Connection connection;
-    PlantsMapper plantsBase = new PlantsMapper();
-    UsersMapper usersBase = new UsersMapper();
+    private PlantsMapper plantsBase;
+    private UsersMapper usersBase;
 
-    public CReqsMapper() throws SQLException, ClassNotFoundException {
+    public CReqsMapper(PlantsMapper plantsMapper, UsersMapper usersMapper) throws SQLException, ClassNotFoundException {
         super();
+        plantsBase = plantsMapper;
+        usersBase = usersMapper;
+
         connection = getConnInst();
     }
 
@@ -93,12 +96,15 @@ public class CReqsMapper extends DBinit {
         //getting from Client
         ClientRequest.Type type = item.getType();
         Integer defaultAdmin = assignAdmin();
-        String request = "INSERT INTO cReq (client_id, type, status, admin_id) " + "VALUES (?, ?, ?, ?);";
+        String request = "INSERT INTO cReq (client_id, type, status, admin_id, plant_id) " + "VALUES (?, ?, ?, ?, ?);";
         PreparedStatement res = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);
         res.setInt(1, clientID);
         res.setString(2, type.toString());
         res.setString(3, status.toString());
         res.setInt(4, defaultAdmin);
+        if (item.getPlantID() != null) {
+            res.setInt(5, item.getPlantID());
+        }
         res.executeUpdate();
         rs = res.getGeneratedKeys();
         Integer id = null;

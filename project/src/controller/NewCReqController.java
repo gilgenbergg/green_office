@@ -1,13 +1,14 @@
 package controller;
 
-import data.CReqsMapper;
-import data.PlantsMapper;
-import data.UsersMapper;
+import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import model.ClientRequest;
 import model.Plant;
@@ -16,6 +17,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class NewCReqController {
+
+    private Facade facade = Starter.facade;
+
     public Label viewLabel;
     public Label typeLabel;
     public Label plantIDLabel;
@@ -31,10 +35,6 @@ public class NewCReqController {
     private Integer clientID;
     private Integer assignedPlantID;
 
-    CReqsMapper cReqsBase = new CReqsMapper();
-    PlantsMapper plantsBase = new PlantsMapper();
-    UsersMapper users  = new UsersMapper();
-
     public NewCReqController() throws SQLException, ClassNotFoundException {
     }
 
@@ -43,9 +43,9 @@ public class NewCReqController {
         String plantName = null;
         if (!(plantIDField.getValue() == null)) {
             plantID = Integer.parseInt(plantIDField.getValue().toString());
-            plantName = plantsBase.findItemByPlantID(plantID).getType();
+            plantName = facade.findItemByPlantID(plantID).getType();
         }
-        ClientRequest.Type type = cReqsBase.parseTypeFromDB(chosenType);
+        ClientRequest.Type type = facade.parseCReqTypeFromDB(chosenType);
         if (chosenType.isEmpty()) {
             errorMsg.setText("Please choose the type.");
             return;
@@ -57,8 +57,8 @@ public class NewCReqController {
         try{
            ClientRequest creq = new ClientRequest(null, plantID, plantName,
                    this.clientID, null, null, null, type);
-            ClientRequest added = cReqsBase.addCReq(creq);
-            Starter.showClientView(users.getClientByUserID(clientID));
+            ClientRequest added = facade.addCReq(creq);
+            Starter.showClientView(facade.getClientByUserID(clientID));
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
@@ -67,7 +67,7 @@ public class NewCReqController {
     public void setData(Integer uid) throws SQLException {
         this.clientID = uid;
         ObservableList<Integer> plantsIDS = FXCollections.observableArrayList();
-        List<Plant> allPlants = plantsBase.allPlants();
+        List<Plant> allPlants = facade.allPlants();
         for (Plant item:
                 allPlants) {
             plantsIDS.add(item.getPlantID());
@@ -87,9 +87,9 @@ public class NewCReqController {
 
     public void plantIDChosen(ActionEvent actionEvent) throws SQLException {
         assignedPlantID = plantIDField.getValue();
-        plantLabel.setText(plantsBase.findItemByPlantID(assignedPlantID).getType());
+        plantLabel.setText(facade.findItemByPlantID(assignedPlantID).getType());
         ObservableList<Integer> cReqsIDS = FXCollections.observableArrayList();
-        List<ClientRequest> allCReqs = cReqsBase.filterByPlantID(assignedPlantID);
+        List<ClientRequest> allCReqs = facade.filterCReqsByPlantID(assignedPlantID);
         for (ClientRequest item:
                 allCReqs) {
             cReqsIDS.add(item.getCReqID());
@@ -97,6 +97,6 @@ public class NewCReqController {
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        Starter.showClientView(users.getClientByUserID(clientID));
+        Starter.showClientView(facade.getClientByUserID(clientID));
     }
 }

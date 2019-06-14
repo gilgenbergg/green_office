@@ -11,12 +11,15 @@ public class PReqsMapper extends DBinit {
 
     private static Set<PurchaseRequest> cash = new HashSet<>();
     private Connection connection;
-    private PlantsMapper plantsBase = new PlantsMapper();
-    private UsersMapper usersBase = new UsersMapper();
+    private PlantsMapper plantsBase;
+    private UsersMapper usersBase;
 
-    public PReqsMapper() throws SQLException, ClassNotFoundException {
+    public PReqsMapper(PlantsMapper plantsMapper, UsersMapper usersMapper) throws SQLException, ClassNotFoundException {
         super();
+
         connection = DBinit.getInstance().getConnInst();
+        usersBase = usersMapper;
+        plantsBase = plantsMapper;
     }
 
     public ArrayList<PurchaseRequest> allItems() throws SQLException {

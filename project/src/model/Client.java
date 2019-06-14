@@ -1,21 +1,18 @@
 package model;
 
-import data.CReqsMapper;
-import data.PlantsMapper;
-import data.UsersMapper;
+import facade.Facade;
+import facade.Starter;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class Client extends User {
 
-    private CReqsMapper clientsReqsBase = new CReqsMapper();
-    private PlantsMapper plantsBase = new PlantsMapper();
-    private UsersMapper users = new UsersMapper();
+    private Facade facade = Starter.facade;
 
     public Client(List<Plant> plants, User user) throws SQLException, ClassNotFoundException {
         super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole(), user.getAuthDataID());
-        List<Plant> clientPlants = plantsBase.filterPlantsByUserID(user.getUID());
+        List<Plant> clientPlants = facade.filterPlantsByUserID(user.getUID());
     }
 
     @Override
@@ -31,7 +28,7 @@ public class Client extends User {
     public ClientRequest createClientReq(ClientRequest.Type type, Integer userID) throws SQLException, ClassNotFoundException {
         ClientRequest cReq = new ClientRequest(null, null, null, userID, null, null,
                 null, type);
-        cReq = clientsReqsBase.addCReq(cReq);
+        cReq = facade.addCReq(cReq);
         return cReq;
     }
 
@@ -46,16 +43,14 @@ public class Client extends User {
             else {
                 feedback.setText("I am not satisfied. Needs some more work to do here!");
                 feedback.setType(Feedback.Type.declined);
-                //clientRequest.setStatus(ClientRequest.Status.inProgress);
-                Integer plantID = clientsReqsBase.findItemByID(clientRequest.getCReqID()).getPlantID();
+                Integer plantID = facade.findCReqByID(clientRequest.getCReqID()).getPlantID();
                 ClientRequest cReq = this.createClientReq(ClientRequest.Type.planned, plantID);
             }
         }
         else {
             feedback.setText("Work is not finished, can`t be accepted!");
             feedback.setType(Feedback.Type.none);
-            //clientRequest.setStatus(ClientRequest.Status.inProgress);
-            Integer plantID = clientsReqsBase.findItemByID(clientRequest.getCReqID()).getPlantID();
+            Integer plantID = facade.findCReqByID(clientRequest.getCReqID()).getPlantID();
             ClientRequest cReq = this.createClientReq(ClientRequest.Type.planned, plantID);
         }
     return feedback;

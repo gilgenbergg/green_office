@@ -5,14 +5,16 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controller.*;
-import data.CReqsMapper;
-import data.DBinit;
+import data.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.*;
+import model.Admin;
+import model.Client;
+import model.ClientRequest;
+import model.Landscaper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -27,14 +29,6 @@ public class Starter extends Application {
 
     private static Stage stage;
     public static Facade facade;
-
-    static {
-        try {
-            facade = new FacadeImpl();
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     static {
         try {
@@ -71,7 +65,6 @@ public class Starter extends Application {
  }
 
     static class restHandler implements HttpHandler {
-        CReqsMapper creqsBase = new CReqsMapper();
 
         restHandler() throws SQLException, ClassNotFoundException {
         }
@@ -80,7 +73,7 @@ public class Starter extends Application {
         public void handle(HttpExchange httpExchange) throws IOException {
             List<ClientRequest> newCreqs = new ArrayList<>();
             try {
-                newCreqs = creqsBase.filterByType(ClientRequest.Type.planned);
+                newCreqs = facade.filterByType(ClientRequest.Type.planned);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -1,7 +1,5 @@
 package controller;
 
-import data.CReqsMapper;
-import data.PlantsMapper;
 import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
@@ -19,13 +17,12 @@ import java.sql.SQLException;
 
 public class ClientViewController {
 
+    private Facade facade = Starter.facade;
+
     public Button signOutButton;
     public Label firstNameLabel;
     public Label secondNameLabel;
-    private Facade facade = Starter.facade;
-    User user;
-    private PlantsMapper plantsBase = new PlantsMapper();
-    private CReqsMapper creqsBase = new CReqsMapper();
+    private User user;
 
     public Label viewLabel;
     public TextField uidField;
@@ -57,13 +54,13 @@ public class ClientViewController {
             uidField.setText(user.getUID().toString());
             firstNameLabel.setText(user.getFirstName());
             secondNameLabel.setText(user.getSecondName());
-            ObservableList<Plant> plants = FXCollections.observableArrayList(plantsBase.filterPlantsByUserID(user.getUID()));
+            ObservableList<Plant> plants = FXCollections.observableArrayList(facade.filterPlantsByUserID(user.getUID()));
             PLANTS_typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
             PLANTS_plantIDCol.setCellValueFactory(new PropertyValueFactory<> ("plantID"));
             PLANTS_lastInspectionCol.setCellValueFactory(new PropertyValueFactory<>("lastInspection"));
             PLANTS_nextInspectionCol.setCellValueFactory(new PropertyValueFactory<>("nextInspection"));
             plantsTable.setItems(plants);
-            ObservableList<ClientRequest> creqs = FXCollections.observableArrayList(creqsBase.filterByUID(user.getUID()));
+            ObservableList<ClientRequest> creqs = FXCollections.observableArrayList(facade.filterCReqsByUID(user.getUID()));
             CREQS_statusCol.setCellValueFactory(new PropertyValueFactory<> ("status"));
             CREQS_requestIDCol.setCellValueFactory(new PropertyValueFactory<> ("cReqID"));
             CREQS_typeCol.setCellValueFactory(new PropertyValueFactory<> ("type"));

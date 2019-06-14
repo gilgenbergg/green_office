@@ -1,8 +1,6 @@
 package controller;
 
-import data.CReqsMapper;
-import data.PlantsMapper;
-import data.UsersMapper;
+import facade.Facade;
 import facade.Starter;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,12 +22,10 @@ public class GardeningController {
     public Button backButton;
     public Label errorMsg;
 
-    private CReqsMapper creqsBase = new CReqsMapper();
-    private UsersMapper usersBase = new UsersMapper();
-    private PlantsMapper plantsBase = new PlantsMapper();
+    private Facade facade = Starter.facade;
+
     private Integer landscaperID;
     private Integer creqID;
-    private Integer plantID;
 
     public GardeningController() throws SQLException, ClassNotFoundException {
     }
@@ -46,29 +42,29 @@ public class GardeningController {
             return;
         }
         try{
-            Integer assignedPlant = creqsBase.findItemByID(creqID).getPlantID();
-            plantsBase.setDateOfLastVisit(assignedPlant, lastInspection);
-            plantsBase.setDateOfNextVisit(assignedPlant, nextInspection);
-            Starter.showLandscaperView(usersBase.getLandscaperByUserID(landscaperID));
+            Integer assignedPlant = facade.findCReqByID(creqID).getPlantID();
+            facade.setDateOfLastVisit(assignedPlant, lastInspection);
+            facade.setDateOfNextVisit(assignedPlant, nextInspection);
+            Starter.showLandscaperView(facade.getLandscaperByUserID(landscaperID));
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        Starter.showLandscaperView(usersBase.getLandscaperByUserID(landscaperID));
+        Starter.showLandscaperView(facade.getLandscaperByUserID(landscaperID));
     }
 
     public void setData(Integer cReqID) throws SQLException {
         creqID = cReqID;
         cReqIDField.setText(cReqID.toString());
-        ClientRequest cReq = creqsBase.findItemByID(cReqID);
-        plantID = cReq.getPlantID();
-        Plant plant = plantsBase.findItemByPlantID(plantID);
-        if (plant.getLastInspection() == null) {
+        ClientRequest cReq = facade.findCReqByID(cReqID);
+        Integer plantID = cReq.getPlantID();
+        Plant plant = facade.findItemByPlantID(plantID);
+        if (plant.getLastInspection() != null) {
             lastInspectionField.setText(plant.getLastInspection());
         }
-        if (plant.getNextInspection() == null) {
+        if (plant.getNextInspection() != null) {
             nextInspectionField.setText(plant.getNextInspection());
         }
         landscaperID = cReq.getLandscaperID();

@@ -1,8 +1,6 @@
 package tests;
 
-import data.AuthMapper;
-import data.DBinit;
-import data.UsersMapper;
+import data.*;
 import model.AuthData;
 import model.User;
 import org.junit.Test;
@@ -16,7 +14,9 @@ import static org.junit.Assert.*;
 public class AuthorizationTest {
 
     private AuthMapper authrepo = new AuthMapper();
-    private UsersMapper userRepo = new UsersMapper();
+    private ResourcesMapper resourcesBase = new ResourcesMapper();
+    private PlantsMapper plantsBase = new PlantsMapper(resourcesBase);
+    private UsersMapper userRepo = new UsersMapper(authrepo, plantsBase);
 
     public AuthorizationTest() throws ParseException, SQLException, ClassNotFoundException {}
 

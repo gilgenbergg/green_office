@@ -1,7 +1,6 @@
 package controller;
 
-import data.AuthMapper;
-import data.UsersMapper;
+import facade.Facade;
 import facade.Starter;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +12,9 @@ import model.User;
 import java.sql.SQLException;
 
 public class RegistrationController {
+
+    private Facade facade = Starter.facade;
+
     public Label mainLabel;
     public Label toFillLabel;
     public Label firstNameLabel;
@@ -31,9 +33,7 @@ public class RegistrationController {
     public Label errorMsg;
     public Button backButton;
 
-    AuthMapper authMapper = new AuthMapper();
-    UsersMapper users = new UsersMapper();
-    String chosenRole = "";
+    private String chosenRole = "";
 
     public RegistrationController() throws SQLException, ClassNotFoundException {
     }
@@ -43,7 +43,7 @@ public class RegistrationController {
         String secondName = secondNameField.getText();
         String login = loginField.getText();
         String password = passwordField.getText();
-        User.Role role = users.parseRole(chosenRole);
+        User.Role role = facade.parseRole(chosenRole);
 
         if (firstNameField.getText().isEmpty()) {
             errorMsg.setText("Please provide first name.");
@@ -71,7 +71,7 @@ public class RegistrationController {
         }
         try{
             User user = new User(null, firstName, secondName, role, null, login, password);
-            users.addUser(user);
+            facade.addUser(user);
             Starter.showAuthView();
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());

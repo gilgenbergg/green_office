@@ -6,15 +6,16 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BP extends DBinit {
 
-    private PlantsMapper plantsBase = new PlantsMapper();
-    private PReqsMapper purchasesBase = new PReqsMapper();
-    private UsersMapper users = new UsersMapper();
     private ResourcesMapper resources = new ResourcesMapper();
-    private CReqsMapper cReqs = new CReqsMapper();
+    private PlantsMapper plantsBase = new PlantsMapper(resources);
+    private AuthMapper authBase = new AuthMapper();
+    private UsersMapper users = new UsersMapper(authBase, plantsBase);
+    private PReqsMapper purchasesBase = new PReqsMapper(plantsBase, users);
+    private CReqsMapper cReqs = new CReqsMapper(plantsBase, users);
 
     public BP() throws SQLException, ClassNotFoundException {}
 

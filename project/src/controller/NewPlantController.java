@@ -1,7 +1,6 @@
 package controller;
 
-import data.PlantsMapper;
-import data.UsersMapper;
+import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +17,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class NewPlantController {
+
+    private Facade facade = Starter.facade;
+
     public ComboBox clientIDSelector;
     public Label clientFirstNameLabel;
     public Label clientSecondNameLabel;
@@ -29,8 +31,6 @@ public class NewPlantController {
 
     private Integer clientID;
     private Integer adminID;
-    private PlantsMapper plantsBase = new PlantsMapper();
-    private UsersMapper usersBase = new UsersMapper();
 
     public NewPlantController() throws SQLException, ClassNotFoundException {
     }
@@ -52,8 +52,8 @@ public class NewPlantController {
             String plantType = plantTypeTextField.getText();
             Plant plant = new Plant(null, plantType, null, null,
                     null, null, clientID);
-            plantsBase.addNewPlant(plant);
-            Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+            facade.addNewPlant(plant);
+            Starter.showAdminView(facade.getAdminByUserID(adminID));
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
@@ -62,7 +62,7 @@ public class NewPlantController {
     public void setData(Integer adminID) throws SQLException, ClassNotFoundException {
         this.adminID = adminID;
         ObservableList<Integer> clientsIDS = FXCollections.observableArrayList();
-        List<Client> allClients = usersBase.allClients();
+        List<Client> allClients = facade.allClients();
         for (Client item:
                 allClients) {
             clientsIDS.add(item.getUID());
@@ -71,6 +71,6 @@ public class NewPlantController {
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+        Starter.showAdminView(facade.getAdminByUserID(adminID));
     }
 }

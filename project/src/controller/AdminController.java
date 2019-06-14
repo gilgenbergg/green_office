@@ -1,8 +1,6 @@
 package controller;
 
-import data.CReqsMapper;
-import data.PReqsMapper;
-import data.UsersMapper;
+import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,9 +41,7 @@ public class AdminController {
     private Integer cReqIDToEdit;
     private User user;
     private Integer uid;
-    private CReqsMapper creqsBase = new CReqsMapper();
-    private PReqsMapper preqsBase = new PReqsMapper();
-    private UsersMapper usersBase = new UsersMapper();
+    Facade facade = Starter.facade;
 
     public AdminController() throws SQLException, ClassNotFoundException {
     }
@@ -73,20 +69,20 @@ public class AdminController {
     }
 
     public void setData(Integer adminID) throws SQLException {
-        user = usersBase.findItemByUID(adminID);
+        user = facade.findItemByUID(adminID);
         uid = adminID;
         try {
             uidField.setText(user.getUID().toString());
             firstNameLabel.setText(user.getFirstName());
             secondNameLabel.setText(user.getSecondName());
-            ObservableList<ClientRequest> creqs = FXCollections.observableArrayList(creqsBase.filterByAdminID(user.getUID()));
+            ObservableList<ClientRequest> creqs = FXCollections.observableArrayList(facade.filterByAdminID(user.getUID()));
             CREQS_statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
             CREQS_reqIDCol.setCellValueFactory(new PropertyValueFactory<> ("cReqID"));
             CREQS_typeCol.setCellValueFactory(new PropertyValueFactory<> ("type"));
             CREQS_plantCol.setCellValueFactory(new PropertyValueFactory<> ("plantName"));
             cReqsTable.setItems(creqs);
 
-            ObservableList<PurchaseRequest> preqs = FXCollections.observableArrayList(preqsBase.filterByUserID(user.getUID()));
+            ObservableList<PurchaseRequest> preqs = FXCollections.observableArrayList(facade.filterByUserID(user.getUID()));
             PREQS_reqIDCol.setCellValueFactory(new PropertyValueFactory<>("pReqID"));
             PREQS_cReqID.setCellValueFactory(new PropertyValueFactory<> ("cReqID"));
             PREQS_plantCol.setCellValueFactory(new PropertyValueFactory<>("plantName"));

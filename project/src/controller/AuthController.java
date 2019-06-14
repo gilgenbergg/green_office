@@ -1,7 +1,5 @@
 package controller;
 
-import data.AuthMapper;
-import data.UsersMapper;
 import facade.Facade;
 import facade.Starter;
 import javafx.scene.control.Button;
@@ -28,9 +26,6 @@ public class AuthController {
     public Button registerButton;
     public Label errorMsg;
 
-    AuthMapper authMapper = new AuthMapper();
-    UsersMapper users = new UsersMapper();
-
     public AuthController() throws SQLException, ClassNotFoundException {
     }
 
@@ -45,7 +40,7 @@ public class AuthController {
             errorMsg.setText("Please provide the password.");
             return;
         }
-        AuthData searched = authMapper.findItemByLogin(loginField.getText());
+        AuthData searched = facade.findItemByLogin(loginField.getText());
         if (searched == null) {
             errorMsg.setText("No such user. Check login and password.");
             return;
@@ -56,15 +51,15 @@ public class AuthController {
         }
         try{
                 Integer authDataID = searched.getUID();
-                User user = users.findItemByAuthID(authDataID);
+                User user = facade.findItemByAuthID(authDataID);
                 if (user.getRole() == User.Role.client) {
-                    Starter.showClientView(users.getClientByUserID(user.getUID()));
+                    Starter.showClientView(facade.getClientByUserID(user.getUID()));
                 }
                 if (user.getRole() == User.Role.admin) {
-                    Starter.showAdminView(users.getAdminByUserID(user.getUID()));
+                    Starter.showAdminView(facade.getAdminByUserID(user.getUID()));
                 }
                 if (user.getRole() == User.Role.landscaper) {
-                    Starter.showLandscaperView(users.getLandscaperByUserID(user.getUID()));
+                    Starter.showLandscaperView(facade.getLandscaperByUserID(user.getUID()));
                 }
                 else {
                     errorMsg.setText("error in finding authData");

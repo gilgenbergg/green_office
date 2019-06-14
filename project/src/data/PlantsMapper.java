@@ -5,35 +5,23 @@ import model.Plant;
 import model.Resource;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlantsMapper extends DBinit {
 
-    private static Set<Plant> cash = new HashSet<>();
+    //private static Set<Plant> cash = new HashSet<>();
     private Connection connection;
-    private ResourcesMapper resourcesMapper = new ResourcesMapper();
+    private ResourcesMapper resourcesMapper;
     private InstructionsMapper instructionsMapper = new InstructionsMapper();
 
-    private static PlantsMapper PLANT_TABLE;
-
-    static {
-        try {
-            PLANT_TABLE = new PlantsMapper();
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public PlantsMapper() throws SQLException, ClassNotFoundException {
+    public PlantsMapper(ResourcesMapper resourcesBase) throws SQLException, ClassNotFoundException {
         super();
         connection = DBinit.getInstance().getConnInst();
+        resourcesMapper = resourcesBase;
     }
 
     public Plant findItemByPlantID(Integer receivedPlantID) throws SQLException {
-        for (Plant item : cash) {
-            if (item.getPlantID().equals(receivedPlantID))
-                return item;
-        }
         //if in cash item wasn`t found, searching in database
         ResultSet rs = null;
         String select = "SELECT * FROM plant WHERE plant_id='"+receivedPlantID+"'";
@@ -49,7 +37,6 @@ public class PlantsMapper extends DBinit {
         Integer instructionID = rs.getInt("instruction_id");
         ArrayList resources = resourcesMapper.findResourcesByPlantID(receivedPlantID);
         Plant newPlantItem = new Plant(plantID, type, lastInspection, nextInspection, instructionID, resources, clientID);
-        cash.add(newPlantItem);
         return  newPlantItem;
     }
 

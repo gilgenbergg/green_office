@@ -1,6 +1,6 @@
 package controller;
 
-import data.*;
+import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,9 +13,13 @@ import model.*;
 import java.sql.SQLException;
 import java.util.List;
 
+import static facade.FacadeImpl.plantsBase;
 import static service.TheShop.checkItem;
 
 public class NewPurchaseController {
+
+    private Facade facade = Starter.facade;
+
     public Label viewLabel;
     public Label assignedCReqLabel;
     public Label plantIDLabel;
@@ -37,13 +41,6 @@ public class NewPurchaseController {
     public Label plantLabel;
     public Button backButton;
 
-    PReqsMapper preqsBase = new PReqsMapper();
-    UsersMapper usersBase = new UsersMapper();
-    ResourcesMapper resourcesBase = new ResourcesMapper();
-    PlantsMapper plantsBase = new PlantsMapper();
-    CReqsMapper cReqsBase = new CReqsMapper();
-
-
     private String chosenStatus = "";
     private Integer adminID;
     private Integer assignedcReqID;
@@ -55,7 +52,7 @@ public class NewPurchaseController {
     }
 
     public void newPReqButtonOnClicked(MouseEvent mouseEvent) {
-        PurchaseRequest.Status status = preqsBase.parseStatusFromDB(chosenStatus);
+        PurchaseRequest.Status status = facade.parsePReqStatusFromDB(chosenStatus);
 
         if ((cReqIDField.getValue() == null) || (plantIDField.getValue() == null) ||
                 (landscaperIDField.getValue() == null) ||
@@ -65,10 +62,10 @@ public class NewPurchaseController {
         }
         try{
             PurchaseRequest pReq = new PurchaseRequest(null, assignedcReqID, assignedPlantID,
-                    plantsBase.findItemByPlantID(assignedPlantID).getType(), assignedLandscaperID,
+                    facade.findItemByPlantID(assignedPlantID).getType(), assignedLandscaperID,
                     this.adminID, status);
-            preqsBase.addPReq(pReq);
-            Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+            facade.addPReq(pReq);
+            Starter.showAdminView(facade.getAdminByUserID(adminID));
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
@@ -90,7 +87,7 @@ public class NewPurchaseController {
             return;
         }
         Resource newResource = new Resource(null, resource, assignedPlantID);
-        Resource addedRes = resourcesBase.addNewItem(newResource);
+        Resource addedRes = facade.addNewResourceItem(newResource);
         boughtArray.add(addedRes);
         resourceNameCol.setCellValueFactory(new PropertyValueFactory<>("resource"));
         alreadyBoughtTable.setItems(boughtArray);
@@ -109,7 +106,7 @@ public class NewPurchaseController {
         plantIDField.setItems(plantsIDS.sorted());
 
         ObservableList<Integer> landscapersIDS = FXCollections.observableArrayList();
-        List<Landscaper> allLandscapers = usersBase.allLandscapers();
+        List<Landscaper> allLandscapers = facade.allLandscapers();
         for (Landscaper item:
              allLandscapers) {
             landscapersIDS.add(item.getUID());
@@ -148,7 +145,7 @@ public class NewPurchaseController {
         assignedPlantID = plantIDField.getValue();
         plantLabel.setText(plantsBase.findItemByPlantID(assignedPlantID).getType());
         ObservableList<Integer> cReqsIDS = FXCollections.observableArrayList();
-        List<ClientRequest> allCReqs = cReqsBase.filterByPlantID(assignedPlantID);
+        List<ClientRequest> allCReqs = facade.filterCReqsByPlantID(assignedPlantID);
         for (ClientRequest item:
                 allCReqs) {
             cReqsIDS.add(item.getCReqID());
@@ -161,6 +158,6 @@ public class NewPurchaseController {
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+        Starter.showAdminView(facade.getAdminByUserID(adminID));
     }
 }

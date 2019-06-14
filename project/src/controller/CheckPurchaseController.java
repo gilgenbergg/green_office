@@ -1,6 +1,6 @@
 package controller;
 
-import data.*;
+import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,9 @@ import model.PurchaseRequest;
 import java.sql.SQLException;
 
 public class CheckPurchaseController {
+
+    private Facade facade = Starter.facade;
+
     public Label viewLabel;
     public TextField pReqIDField;
     public Label plantIDLabel;
@@ -26,11 +29,6 @@ public class CheckPurchaseController {
     public Button nonApprovedPurchase;
     public Button backButton;
 
-    private PlantsMapper plantsBase = new PlantsMapper();
-    private PReqsMapper preqsBase = new PReqsMapper();
-    private ResourcesMapper resourcesBase = new ResourcesMapper();
-    private UsersMapper usersBase = new UsersMapper();
-    private RequiredResMapper requiredBase = new RequiredResMapper();
     private Integer preqID;
     private Integer plantID;
     private Integer landscaperID;
@@ -39,32 +37,32 @@ public class CheckPurchaseController {
     }
 
     public void approvedOnClicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        preqsBase.updateStatus(preqID, PurchaseRequest.Status.approved);
-        Starter.showLandscaperView(usersBase.getLandscaperByUserID(landscaperID));
+        facade.updatePReqStatus(preqID, PurchaseRequest.Status.approved);
+        Starter.showLandscaperView(facade.getLandscaperByUserID(landscaperID));
     }
 
     public void nonApprovedOnClicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        preqsBase.updateStatus(preqID, PurchaseRequest.Status.inProgress);
-        Starter.showLandscaperView(usersBase.getLandscaperByUserID(landscaperID));
+        facade.updatePReqStatus(preqID, PurchaseRequest.Status.inProgress);
+        Starter.showLandscaperView(facade.getLandscaperByUserID(landscaperID));
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        Starter.showLandscaperView(usersBase.getLandscaperByUserID(landscaperID));
+        Starter.showLandscaperView(facade.getLandscaperByUserID(landscaperID));
     }
 
     public void setData(Integer pReqID) throws SQLException {
         preqID = pReqID;
         pReqIDField.setText(pReqID.toString());
-        PurchaseRequest preq = preqsBase.findItemByID(preqID);
+        PurchaseRequest preq = facade.findPReqByID(preqID);
         landscaperID = preq.getLandscaperID();
         plantID = preq.getPlantID();
         plantIDField.setText(plantID.toString());
 
-        ObservableList<String> resources = FXCollections.observableArrayList(resourcesBase.getTypesByPlantID(plantID));
+        ObservableList<String> resources = FXCollections.observableArrayList(facade.getTypesByPlantID(plantID));
         alreadyBoughtList.setItems(resources.sorted());
 
-        String plantType = plantsBase.findItemByPlantID(plantID).getType();
-        ObservableList<String> requiredResources = FXCollections.observableArrayList(requiredBase.findRequiredByPlantType(plantType));
+        String plantType = facade.findItemByPlantID(plantID).getType();
+        ObservableList<String> requiredResources = FXCollections.observableArrayList(facade.findRequiredByPlantType(plantType));
         requiredResourcesList.setItems(requiredResources);
     }
 }

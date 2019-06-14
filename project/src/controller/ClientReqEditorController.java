@@ -1,8 +1,6 @@
 package controller;
 
-import data.CReqsMapper;
-import data.PlantsMapper;
-import data.UsersMapper;
+import facade.Facade;
 import facade.Starter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +15,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ClientReqEditorController {
+
+    private Facade facade = Starter.facade;
+
     public TextField cReqIDField;
     public Label viewLabel;
     public Label typeLabel;
@@ -38,16 +39,12 @@ public class ClientReqEditorController {
     public Label clientIDLabel;
     public Label clientIDField;
 
-    private CReqsMapper cReqsBase = new CReqsMapper();
-    private UsersMapper usersBase = new UsersMapper();
-    private PlantsMapper plantsBase = new PlantsMapper();
-
-    String chosenStatus = "";
-    String chosenType = "";
-    Integer cReqIDSetup;
-    Integer adminID;
-    Integer chosenPlantID;
-    Integer chosenLandscaperID;
+    private String chosenStatus = "";
+    private String chosenType = "";
+    private Integer cReqIDSetup;
+    private Integer adminID;
+    private Integer chosenPlantID;
+    private Integer chosenLandscaperID;
 
     public ClientReqEditorController() throws SQLException, ClassNotFoundException {
     }
@@ -58,12 +55,12 @@ public class ClientReqEditorController {
             return;
         }
         try {
-            cReqsBase.updatePlant(Integer.parseInt(plantIDField.getValue().toString()), cReqsBase.findItemByID(cReqIDSetup));
-            cReqsBase.updateLandscaperID(cReqIDSetup, Integer.parseInt(landscaperIDField.getValue().toString()));
-            cReqsBase.updateStatus(cReqIDSetup, cReqsBase.parseStatusFromDB(chosenStatus));
-            cReqsBase.updateType(cReqIDSetup, cReqsBase.parseTypeFromDB(chosenType));
-            Integer adminID = (cReqsBase.findItemByID(cReqIDSetup)).getAdminID();
-            Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+            facade.updatePlant(Integer.parseInt(plantIDField.getValue().toString()), facade.findCReqByID(cReqIDSetup));
+            facade.updateCReqLandscaperID(cReqIDSetup, Integer.parseInt(landscaperIDField.getValue().toString()));
+            facade.updateCReqStatus(cReqIDSetup, facade.parseCReqStatusFromDB(chosenStatus));
+            facade.updateCReqType(cReqIDSetup, facade.parseCReqTypeFromDB(chosenType));
+            Integer adminID = (facade.findCReqByID(cReqIDSetup)).getAdminID();
+            Starter.showAdminView(facade.getAdminByUserID(adminID));
         } catch (Exception e) {
             errorMsg.setText(e.getMessage());
         }
@@ -74,12 +71,12 @@ public class ClientReqEditorController {
         cReqIDField.setText(cReqID.toString());
         this.adminID = adminID;
 
-        ClientRequest cReq = cReqsBase.findItemByID(cReqID);
+        ClientRequest cReq = facade.findCReqByID(cReqID);
         clientIDField.setText(cReq.getClientID().toString());
         landscaperIDField.setValue(cReq.getLandscaperID().toString());
 
         ObservableList<Integer> plantsIDS = FXCollections.observableArrayList();
-        List<Plant> allPlants= plantsBase.filterPlantsByUserID(cReq.getClientID());
+        List<Plant> allPlants= facade.filterPlantsByUserID(cReq.getClientID());
         for (Plant item:
                 allPlants) {
             plantsIDS.add(item.getPlantID());
@@ -87,7 +84,7 @@ public class ClientReqEditorController {
         plantIDField.setItems(plantsIDS.sorted());
 
         ObservableList<Integer> landscapersIDS = FXCollections.observableArrayList();
-        List<Landscaper> allLandscapers= usersBase.allLandscapers();
+        List<Landscaper> allLandscapers= facade.allLandscapers();
         for (Landscaper item:
                 allLandscapers) {
             landscapersIDS.add(item.getUID());
@@ -188,7 +185,7 @@ public class ClientReqEditorController {
     }
 
     public void backButtonOnCLicked(MouseEvent mouseEvent) throws SQLException, ClassNotFoundException {
-        Starter.showAdminView(usersBase.getAdminByUserID(adminID));
+        Starter.showAdminView(facade.getAdminByUserID(adminID));
     }
 
     public void plantIDChosen(ActionEvent actionEvent) {

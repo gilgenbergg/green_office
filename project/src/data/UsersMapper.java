@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static facade.FacadeImpl.authBase;
+import static facade.FacadeImpl.plantsBase;
+
 @SuppressWarnings("ALL")
 public class UsersMapper extends DBinit {
 
@@ -18,7 +21,7 @@ public class UsersMapper extends DBinit {
 
     static {
         try {
-            USER_TABLE = new UsersMapper();
+            USER_TABLE = new UsersMapper(authBase, plantsBase);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -26,17 +29,10 @@ public class UsersMapper extends DBinit {
         }
     }
 
-    AuthMapper authMapper = new AuthMapper();
-    PlantsMapper plantsMapper = new PlantsMapper();
-
-    public UsersMapper() throws SQLException, ClassNotFoundException {
+    public UsersMapper(AuthMapper authBase, PlantsMapper plantsBase) throws SQLException, ClassNotFoundException {
         super();
         connection = DBinit.getInstance().getConnInst();
     }
-
-    //public static UsersMapper getInstance() {
-      //  return USER_TABLE;
-    //}
 
     public ArrayList<User> allItems() throws SQLException {
         ResultSet rs = null;
@@ -53,7 +49,7 @@ public class UsersMapper extends DBinit {
             item.setSecondName(rs.getString("second_name"));
             String roleFromBase = rs.getString("role");
             item.setRole(parseRole(roleFromBase));
-            AuthData authData = authMapper.findItemByUID(rs.getInt("auth_data_id"));
+            AuthData authData = authBase.findItemByUID(rs.getInt("auth_data_id"));
             item.setLogin(authData.getLogin());
             item.setPassword(authData.getPassword());
 
@@ -146,7 +142,7 @@ public class UsersMapper extends DBinit {
         ArrayList clients = new ArrayList();
         assert filtered != null;
         for (User item: filtered) {
-            Client client = new Client(plantsMapper.filterPlantsByUserID(item.getUID()), item);
+            Client client = new Client(plantsBase.filterPlantsByUserID(item.getUID()), item);
             clients.add(client);
         }
         return clients;
@@ -218,7 +214,7 @@ public class UsersMapper extends DBinit {
         String login = item.getLogin();
         String password = item.getPassword();
         AuthData authInfo = new AuthData(null, login, password);
-        authMapper.addAuthData(authInfo);
+        authBase.addAuthData(authInfo);
         String selectToGetAuthDataID = "SELECT auth_data_id from auth_data WHERE login = '"+login+"'";
         PreparedStatement authdata = connection.prepareStatement(selectToGetAuthDataID, Statement.RETURN_GENERATED_KEYS);
         rs = authdata.executeQuery();
