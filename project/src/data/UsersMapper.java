@@ -9,29 +9,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static facade.FacadeImpl.authBase;
-import static facade.FacadeImpl.plantsBase;
-
 @SuppressWarnings("ALL")
 public class UsersMapper extends DBinit {
 
     private static Set<User> cash = new HashSet<>();
     private Connection connection;
-    private static UsersMapper USER_TABLE;
+    private PlantsMapper plantsBase;
+    private AuthMapper authBase;
 
-    static {
-        try {
-            USER_TABLE = new UsersMapper(authBase, plantsBase);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public UsersMapper(AuthMapper authBase, PlantsMapper plantsBase) throws SQLException, ClassNotFoundException {
+    public UsersMapper(AuthMapper authMapper, PlantsMapper plantsMapper) throws SQLException, ClassNotFoundException {
         super();
         connection = DBinit.getInstance().getConnInst();
+        authBase = authMapper;
+        plantsBase = plantsMapper;
     }
 
     public ArrayList<User> allItems() throws SQLException {
