@@ -79,7 +79,7 @@ public class Plant {
         return resources;
     }
 
-    public void setClientID(int client_id) {
-        this.ownerID = client_id;
+    public void setClientID(int clientID) {
+        this.ownerID = clientID;
     }
 }

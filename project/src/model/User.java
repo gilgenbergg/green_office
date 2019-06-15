@@ -91,7 +91,6 @@ public class User {
     }
 
     public String getLogin() throws SQLException {
-        //return authMapper.findItemByUID(this.uID).getLogin();
         return login;
     }
 
@@ -100,7 +99,6 @@ public class User {
     }
 
     public String getPassword() throws SQLException {
-        //return authMapper.findItemByUID(this.uID).getPassword();
         return password;
     }
 

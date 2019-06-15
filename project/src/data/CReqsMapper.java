@@ -92,6 +92,10 @@ public class CReqsMapper extends DBinit {
     public ClientRequest addCReq(ClientRequest item) throws SQLException, ClassNotFoundException {
         ResultSet rs = null;
         Integer clientID = item.getClientID();
+        Integer plantID = 0;
+        if (item.getPlantID() != null) {
+            plantID = item.getPlantID();
+        }
         ClientRequest.Status status = ClientRequest.Status.newOne;
         //getting from Client
         ClientRequest.Type type = item.getType();
@@ -102,9 +106,7 @@ public class CReqsMapper extends DBinit {
         res.setString(2, type.toString());
         res.setString(3, status.toString());
         res.setInt(4, defaultAdmin);
-        if (item.getPlantID() != null) {
-            res.setInt(5, item.getPlantID());
-        }
+        res.setInt(5, plantID);
         res.executeUpdate();
         rs = res.getGeneratedKeys();
         Integer id = null;

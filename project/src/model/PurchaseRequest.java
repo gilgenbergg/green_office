@@ -60,10 +60,6 @@ public class PurchaseRequest {
         return status;
     }
 
-    //public List<Resource> getAlreadyBought() {
-    //    return alreadyBought;
-    //}
-
     public void setCReqID(Integer cReqID) {
         this.cReqID = cReqID;
     }

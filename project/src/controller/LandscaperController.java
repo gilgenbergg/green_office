@@ -52,12 +52,12 @@ public class LandscaperController {
     }
 
     public void gardeningButtonOnClicked(MouseEvent mouseEvent) {
-        String strcReqToGarden = creqToGarden.getText();
-        reqToGarden = Integer.parseInt(strcReqToGarden);
         if (creqToGarden.getText().isEmpty()) {
             errorMsg.setText("Specify client request ID.");
             return;
         }
+        String strcReqToGarden = creqToGarden.getText();
+        reqToGarden = Integer.parseInt(strcReqToGarden);
         try{
             Starter.showGardeningView(reqToGarden);
         } catch (Exception e) {
@@ -66,12 +66,12 @@ public class LandscaperController {
     }
 
     public void checkPurchaseButtonOnClicked(MouseEvent mouseEvent) {
-        String strpReqToCheck = preqToCheckField.getText();
-        preqToCheck = Integer.parseInt(strpReqToCheck);
         if (preqToCheckField.getText().isEmpty()) {
             errorMsg.setText("Specify purchase request ID.");
             return;
         }
+        String strpReqToCheck = preqToCheckField.getText();
+        preqToCheck = Integer.parseInt(strpReqToCheck);
         try{
             Starter.CheckPurchaseView(preqToCheck);
         } catch (Exception e) {

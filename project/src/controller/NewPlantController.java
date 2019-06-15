@@ -40,12 +40,12 @@ public class NewPlantController {
     }
 
     public void newPlantOnClicked(MouseEvent mouseEvent) {
-        if (plantTypeTextField.getText() == null) {
-            errorMsg.setText("Please, specify the plant type.");
-            return;
-        }
         if (clientIDSelector.getValue() == null) {
             errorMsg.setText("Select owner of a new plant.");
+            return;
+        }
+        if (plantTypeTextField.getText() == null) {
+            errorMsg.setText("Please, specify the plant type.");
             return;
         }
         try{
