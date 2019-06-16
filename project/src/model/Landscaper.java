@@ -65,7 +65,6 @@ public class Landscaper extends User {
 
     public void makeGardening(ClientRequest clientRequest) throws SQLException {
         if (clientRequest.getStatus().equals(ClientRequest.Status.gardening)) {
-            //cReqsMapper.updateLandscaperID(clientRequest.getCReqID(), this.getUID());
             facade.updateCReqStatus(clientRequest.getCReqID(), ClientRequest.Status.done);
             Plant plant = facade.findItemByPlantID(facade.findCReqByID(clientRequest.getCReqID()).getPlantID());
             //getting from landscapers ui
