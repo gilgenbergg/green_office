@@ -10,7 +10,7 @@ public interface Facade {
 
     void authorize(User user, String login, String password) throws Exception;
 
-    List<ClientRequest> filterByType(ClientRequest.Type planned) throws SQLException;
+    List<ClientRequest> filterByType(ClientRequest.Type type) throws SQLException;
 
     User findItemByUID(Integer userID) throws SQLException;
 

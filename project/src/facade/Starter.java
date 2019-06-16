@@ -84,6 +84,7 @@ public class Starter extends Application {
                 jsonObject.put("id", creq.getCReqID());
                 jsonObject.put("status", creq.getStatus());
                 jsonObject.put("clientID", creq.getClientID());
+                jsonObject.put("type", creq.getPlantName());
                 data.add(jsonObject);
             }
             String response = data.toString();

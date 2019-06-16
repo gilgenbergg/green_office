@@ -13,7 +13,7 @@
     <Label fx:id="plantIDLabel" layoutX="50.0" layoutY="100.0" text="Plant ID (if plannned):" />
     <RadioButton fx:id="isPlannedRadio" layoutX="225.0" layoutY="61.0" mnemonicParsing="false" onMouseClicked="#isPlanned" text="planned" />
     <RadioButton fx:id="isFirstRadio" layoutX="350.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#isFirst" text="firstOne" />
-    <ComboBox fx:id="plantIDField" layoutX="225.0" layoutY="97.0" prefWidth="60.0" onAction="#plantIDChosen" />
+    <ComboBox fx:id="plantIDField" layoutX="225.0" layoutY="97.0" onAction="#plantIDChosen" prefWidth="106.0" />
     <Button fx:id="createCReqButton" layoutX="269.0" layoutY="180.0" mnemonicParsing="false" onMouseClicked="#createCReqButtonOnClicked" text="Done!" />
     <Label fx:id="errorMsg" layoutX="122.0" layoutY="143.0" prefWidth="399.0" text="" textFill="RED" />
     <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Back without saving" />

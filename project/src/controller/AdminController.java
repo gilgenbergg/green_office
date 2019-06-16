@@ -47,12 +47,12 @@ public class AdminController {
     }
 
     public void toCreqEditorOnClicked(MouseEvent mouseEvent) {
-        String strcReqID = reqIDtoEditField.getText();
-        cReqIDToEdit = Integer.parseInt(strcReqID);
         if (reqIDtoEditField.getText().isEmpty()) {
             errorMsg.setText("Specify client request ID.");
             return;
         }
+        String strcReqID = reqIDtoEditField.getText();
+        cReqIDToEdit = Integer.parseInt(strcReqID);
         try{
             Starter.CReqEditorView(cReqIDToEdit, uid);
         } catch (Exception e) {

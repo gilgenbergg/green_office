@@ -44,7 +44,7 @@ public class NewPlantController {
             errorMsg.setText("Select owner of a new plant.");
             return;
         }
-        if (plantTypeTextField.getText() == null) {
+        if (plantTypeTextField.getText().isEmpty()) {
             errorMsg.setText("Please, specify the plant type.");
             return;
         }

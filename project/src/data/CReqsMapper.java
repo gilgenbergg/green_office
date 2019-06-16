@@ -58,6 +58,8 @@ public class CReqsMapper extends DBinit {
         String tp = type.toString();
         String select = "SELECT * FROM creq WHERE type='"+tp+"';";
         PreparedStatement st = connection.prepareStatement(select);
+        Integer plantID = 0;
+        String plantName = "---";
         rs = st.executeQuery();
         ArrayList<ClientRequest> filtered = new ArrayList<>();
         ClientRequest item = null;
@@ -77,9 +79,15 @@ public class CReqsMapper extends DBinit {
             item.setClientID(clientID);
             Integer landscaperID = rs.getInt("landscaper_id");
             item.setLandscaperID(landscaperID);
-            Integer plantID = rs.getInt("plant_id");
-            item.setPlantID(plantID);
-            item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            if (rs.getInt("plant_id") != 0) {
+                plantID = rs.getInt("plant_id");
+                item.setPlantID(plantID);
+                item.setPlantName(plantsBase.findItemByPlantID(plantID).getType());
+            }
+            else {
+                item.setPlantID(plantID);
+                item.setPlantName(plantName);
+            }
             filtered.add(item);
         }
         return filtered;

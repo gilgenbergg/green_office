@@ -19,9 +19,9 @@ public class FacadeImpl implements Facade {
     public FacadeImpl() throws SQLException, ClassNotFoundException {
         try {
             if (authBase == null) authBase = new AuthMapper();
-            if (userBase == null) userBase = new UsersMapper(authBase, plantsBase);
             if (resourcesBase == null) resourcesBase = new ResourcesMapper();
             if (plantsBase == null) plantsBase = new PlantsMapper(resourcesBase);
+            if (userBase == null) userBase = new UsersMapper(authBase, plantsBase);
             if (creqsBase == null) creqsBase = new CReqsMapper(plantsBase, userBase);
             if (requiresResBase == null) requiresResBase = new RequiredResMapper();
             if (preqsBase == null) preqsBase = new PReqsMapper(plantsBase, userBase);
@@ -36,8 +36,8 @@ public class FacadeImpl implements Facade {
     }
 
     @Override
-    public List<ClientRequest> filterByType(ClientRequest.Type planned) throws SQLException {
-        return  creqsBase.filterByType(planned);
+    public List<ClientRequest> filterByType(ClientRequest.Type type) throws SQLException {
+        return  creqsBase.filterByType(type);
     }
 
     @Override

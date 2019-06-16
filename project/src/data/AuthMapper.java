@@ -9,16 +9,11 @@ public class AuthMapper extends DBinit{
 
     private static Set<AuthData> cash = new HashSet<>();
     private Connection connection;
-    //private static final AuthMapper AUTH_TABLE = new AuthMapper();
 
     public AuthMapper() throws SQLException, ClassNotFoundException {
         super();
         connection = DBinit.getInstance().getConnInst();
     }
-
-    //public static AuthMapper getInstance() {
-    //    return AUTH_TABLE;
-    //}
 
     public ArrayList<AuthData> allItems() throws SQLException {
         ResultSet rs = null;

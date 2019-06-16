@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import model.AuthData;
 import model.User;
 
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class RegistrationController {
     public RegistrationController() throws SQLException, ClassNotFoundException {
     }
 
-    public void registerButtonOnClicked(MouseEvent mouseEvent) {
+    public void registerButtonOnClicked(MouseEvent mouseEvent) throws SQLException {
         String firstName = firstNameField.getText();
         String secondName = secondNameField.getText();
         String login = loginField.getText();
@@ -59,6 +60,11 @@ public class RegistrationController {
         }
         if (passwordField.getText().isEmpty()) {
             errorMsg.setText("Please provide a password.");
+            return;
+        }
+        AuthData searched = facade.findItemByLogin(loginField.getText());
+        if ((searched != null) && (searched.getLogin().equals(loginField.getText()))) {
+            errorMsg.setText("Login is already used.");
             return;
         }
         if (!isClientRadio.isSelected() && !isAdminRadio.isSelected() && !isLandscaperRadio.isSelected()) {

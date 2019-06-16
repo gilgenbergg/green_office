@@ -51,13 +51,14 @@ public class LandscaperController {
 
     }
 
-    public void gardeningButtonOnClicked(MouseEvent mouseEvent) {
+    public void gardeningButtonOnClicked(MouseEvent mouseEvent) throws SQLException {
         if (creqToGarden.getText().isEmpty()) {
             errorMsg.setText("Specify client request ID.");
             return;
         }
         String strcReqToGarden = creqToGarden.getText();
         reqToGarden = Integer.parseInt(strcReqToGarden);
+        facade.updateCReqStatus(reqToGarden, ClientRequest.Status.done);
         try{
             Starter.showGardeningView(reqToGarden);
         } catch (Exception e) {
