@@ -67,7 +67,7 @@ public class NewCReqController {
     public void setData(Integer uid) throws SQLException {
         this.clientID = uid;
         ObservableList<Integer> plantsIDS = FXCollections.observableArrayList();
-        List<Plant> allPlants = facade.allPlants();
+        List<Plant> allPlants = facade.filterPlantsByUserID(uid);
         for (Plant item:
                 allPlants) {
             plantsIDS.add(item.getPlantID());

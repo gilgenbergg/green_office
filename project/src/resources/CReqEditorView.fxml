@@ -45,5 +45,6 @@
         </FXCollections>
       </items>
     </ComboBox>
+    <Label fx:id="plantTypeLabel" layoutX="282.0" layoutY="133.0" text="" />
   </children>
 </AnchorPane>

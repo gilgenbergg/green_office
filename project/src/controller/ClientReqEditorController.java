@@ -16,6 +16,7 @@ import java.util.List;
 
 public class ClientReqEditorController {
 
+    public Label plantTypeLabel;
     private Facade facade = Starter.facade;
 
     public TextField cReqIDField;
@@ -188,8 +189,9 @@ public class ClientReqEditorController {
         Starter.showAdminView(facade.getAdminByUserID(adminID));
     }
 
-    public void plantIDChosen(ActionEvent actionEvent) {
+    public void plantIDChosen(ActionEvent actionEvent) throws SQLException {
         this.chosenPlantID = Integer.parseInt(plantIDField.getValue().toString());
+        plantTypeLabel.setText(facade.findItemByPlantID(chosenPlantID).getType());
     }
 
     public void landscaperIDChosen(ActionEvent actionEvent) {
