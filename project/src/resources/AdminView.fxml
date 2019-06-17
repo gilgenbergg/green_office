@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.AdminController">
+  <children>
+    <Label fx:id="viewLabel" layoutX="226.0" layoutY="20.0" text="Admin " />
+    <Label fx:id="cReqsLabel" layoutX="46.0" layoutY="63.0" text="Client Requests:" />
+    <TableView fx:id="cReqsTable" layoutX="16.0" layoutY="90.0" prefHeight="127.0" prefWidth="388.0">
+      <columns>
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="85.0" text="RequestID" fx:id="CREQS_reqIDCol" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="144.0" text="Plant" fx:id="CREQS_plantCol" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="62.0" text="Type" fx:id="CREQS_typeCol" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="96.0" text="Status" fx:id="CREQS_statusCol" />
+      </columns>
+    </TableView>
+    <Button fx:id="toCReqEditorButton" layoutX="434.0" layoutY="143.0" mnemonicParsing="false" onMouseClicked="#toCreqEditorOnClicked" prefWidth="139.0" text="Open editor" />
+    <Label fx:id="purchasesLabel" layoutX="46.0" layoutY="235.0" text="Your purchases:" />
+    <TableView fx:id="pReqsTable" layoutX="16.0" layoutY="259.0" prefHeight="127.0" prefWidth="388.0">
+      <columns>
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="84.0" text="RequestID" fx:id="PREQS_reqIDCol" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="105.0" text="ClientReqID" visible="true" fx:id="PREQS_cReqID" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="104.0" text="Plant" fx:id="PREQS_plantCol" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="98.0" text="Status" fx:id="PREQS_statusCol" />
+      </columns>
+    </TableView>
+    <Button fx:id="newPurchaseButton" layoutX="421.0" layoutY="302.0" mnemonicParsing="false" onMouseClicked="#newPurchaseOnClicked" text="Make new purchase" />
+    <Label fx:id="reqIDtoEditLabel" layoutX="413.0" layoutY="109.0" text="Request to edit:">
+      <labelFor>
+        <TextField id="reqIDtoEdit" fx:id="reqIDtoEditField" layoutX="524.0" layoutY="106.0" prefWidth="62.0" />
+      </labelFor>
+    </Label>
+    <fx:reference source="reqIDtoEditField" />
+    <Label fx:id="errorMsg" layoutX="413.0" layoutY="209.0" prefHeight="67.00009999999747" prefWidth="177.0" text="" textFill="RED" />
+    <Label fx:id="uidField" layoutX="275.0" layoutY="20.0" prefWidth="71.0" text="Label" />
+    <Label fx:id="firstNameLabel" layoutX="346.0" layoutY="18.0" prefWidth="227.0" text="Label" />
+    <Label fx:id="secondNameLabel" layoutX="346.0" layoutY="36.0" prefWidth="213.0" text="Label" />
+    <Button fx:id="newPlantButton" layoutX="439.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#newPlantOnClicked" text="Add new plant" />
+    <Button fx:id="signOutButton" layoutX="16.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#signOutOnClicked" text="Sign out" />
+  </children>
+</AnchorPane>

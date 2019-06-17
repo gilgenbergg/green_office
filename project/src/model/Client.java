@@ -1,21 +1,18 @@
 package model;
 
-import repo.ClientReqRepoImpl;
-import repo.PlantRepoImpl;
-import repo.UserRepoImpl;
+import facade.Facade;
+import facade.Starter;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Client extends User {
 
-    private List<Plant> clientPlants;
-    private ClientReqRepoImpl clientsReqsBase = ClientReqRepoImpl.getInstance();
-    private PlantRepoImpl plantsBase = PlantRepoImpl.getInstance();
-    private UserRepoImpl users = UserRepoImpl.getInstance();
+    private Facade facade = Starter.facade;
 
-    public Client(List<Plant> plants, User user) {
-        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole());
-        this.clientPlants = plantsBase.filterPlantsByUserID(user.getUID());
+    public Client(List<Plant> plants, User user) throws SQLException, ClassNotFoundException {
+        super(user.getUID(), user.getFirstName(), user.getSecondName(), user.getRole(), user.getAuthDataID());
+        List<Plant> clientPlants = facade.filterPlantsByUserID(user.getUID());
     }
 
     @Override
@@ -27,32 +24,17 @@ public class Client extends User {
         return this;
     }
 
-    public List<Plant> clientPlants (Integer clientID) {
-        this.clientPlants = plantsBase.filterPlantsByUserID(clientID);
-        return clientPlants;
-    }
-
     // if a first one case, then plantID should be null else client need to pass a plantID
-    public ClientRequest createClientReq(ClientRequest.Type type, Integer plantID) {
-        ClientRequest cReq = null;
-        if (type.equals(ClientRequest.Type.firstOne)) {
-            Integer cReqID = clientsReqsBase.getValidClientReqID();
-            plantID = plantsBase.getValidPlantID();
-            cReq = new ClientRequest(cReqID, plantID, getClient().getUID(), null, null,
-                    ClientRequest.Status.newOne, type);
-        }
-        else if (type.equals(ClientRequest.Type.planned)) {
-            Integer cReqID = clientsReqsBase.getValidClientReqID();
-            Plant plant = plantsBase.findItemByPlantID(plantID);
-            cReq = new ClientRequest(cReqID, plantID, getClient().getUID(), null, null,
-                    ClientRequest.Status.newOne, type);
-        }
+    public ClientRequest createClientReq(ClientRequest.Type type, Integer userID) throws SQLException, ClassNotFoundException {
+        ClientRequest cReq = new ClientRequest(null, null, null, userID, null, null,
+                null, type);
+        cReq = facade.addCReq(cReq);
         return cReq;
     }
 
     //opinion true if client accepts landscaper`s work or false if not (will come somehow outside)
-    public Feedback makeFeedback(ClientRequest clientRequest, boolean opinion) {
-        Feedback feedback = new Feedback(clientRequest.getcReqID(), Feedback.Type.none, "");
+    public Feedback makeFeedback(ClientRequest clientRequest, boolean opinion) throws SQLException, ClassNotFoundException {
+        Feedback feedback = new Feedback(clientRequest.getCReqID(), Feedback.Type.none, "");
         if (clientRequest.getStatus().equals(ClientRequest.Status.done)) {
             if (opinion) {
             feedback.setType(Feedback.Type.accepted);
@@ -61,13 +43,15 @@ public class Client extends User {
             else {
                 feedback.setText("I am not satisfied. Needs some more work to do here!");
                 feedback.setType(Feedback.Type.declined);
-                clientRequest.setStatus(ClientRequest.Status.inProgress);
+                Integer plantID = facade.findCReqByID(clientRequest.getCReqID()).getPlantID();
+                ClientRequest cReq = this.createClientReq(ClientRequest.Type.planned, plantID);
             }
         }
         else {
             feedback.setText("Work is not finished, can`t be accepted!");
             feedback.setType(Feedback.Type.none);
-            clientRequest.setStatus(ClientRequest.Status.inProgress);
+            Integer plantID = facade.findCReqByID(clientRequest.getCReqID()).getPlantID();
+            ClientRequest cReq = this.createClientReq(ClientRequest.Type.planned, plantID);
         }
     return feedback;
     }

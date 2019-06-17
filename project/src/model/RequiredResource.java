@@ -1,17 +1,17 @@
 package model;
 
-public class Resource {
+public class RequiredResource {
     private Integer resourceID;
     private String resource;
-    private Integer plantID;
+    private String plantType;
 
-    public Resource(Integer resourceID, String resource, Integer plantID) {
+    public RequiredResource(Integer resourceID, String resource, String plantType) {
         this.resourceID = resourceID;
         this.resource = resource;
-        this.plantID = plantID;
+        this.plantType = plantType;
     }
 
-    public Integer getresourceID() {
+    public Integer getResourceID() {
         return resourceID;
     }
 
@@ -19,16 +19,16 @@ public class Resource {
         return resource;
     }
 
-    public Integer getPlantID() {
-        return plantID;
+    public String getPlantType() {
+        return plantType;
     }
 
     public void setResourceID(Integer resourceID) {
         this.resourceID = resourceID;
     }
 
-    public void setPlantID(Integer plantID) {
-        this.plantID = plantID;
+    public void setPlantType(String plantType) {
+        this.plantType = plantType;
     }
 
     public void setResource(String resource) {

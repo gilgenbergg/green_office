@@ -1,7 +1,5 @@
 package model;
 
-import java.util.List;
-
 public class PurchaseRequest {
 
     public enum Status {
@@ -11,37 +9,43 @@ public class PurchaseRequest {
     private Integer pReqID;
     private Integer cReqID;
     private Integer plantID;
+    private String plantName;
     private Integer adminID;
     private Integer landscaperID;
     private Status status;
-    private List<Resource> alreadyBought;
+    //private List<Resource> alreadyBought;
 
     public PurchaseRequest(Integer pReqID,
                          Integer cReqID,
                          Integer plantID,
+                         String plantName,
                          Integer landscaperID,
                          Integer adminID,
-                         Status status,
-                           List<Resource> alreadyBought) {
+                         Status status) {
         this.pReqID = pReqID;
         this.cReqID = cReqID;
         this.plantID = plantID;
+        this.plantName = plantName;
         this.landscaperID = landscaperID;
         this.adminID = adminID;
         this.status = status;
-        this.alreadyBought = alreadyBought;
+        //this.alreadyBought = alreadyBought;
     }
 
-    public Integer getcReqID() {
+    public Integer getCReqID() {
         return cReqID;
     }
 
-    public Integer getpReqID() {
-        return cReqID;
+    public Integer getPReqID() {
+        return pReqID;
     }
 
     public Integer getPlantID() {
         return plantID;
+    }
+
+    public String getPlantName() {
+        return plantName;
     }
 
     public Integer getAdminID() {
@@ -56,20 +60,20 @@ public class PurchaseRequest {
         return status;
     }
 
-    public List<Resource> getAlreadyBought() {
-        return alreadyBought;
-    }
-
-    public void setcReqID(Integer cReqID) {
+    public void setCReqID(Integer cReqID) {
         this.cReqID = cReqID;
     }
 
-    public void setpReqID(Integer pReqID) {
+    public void setPReqID(Integer pReqID) {
         this.pReqID = pReqID;
     }
 
     public void setPlantID(Integer plantID) {
         this.plantID = plantID;
+    }
+
+    public void setPlantName(String plantName) {
+        this.plantName = plantName;
     }
 
     public void setAdminID(Integer adminID) {

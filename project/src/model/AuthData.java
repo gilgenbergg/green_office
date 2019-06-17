@@ -23,4 +23,17 @@ public class AuthData {
     public String getPassword() {
         return password;
     }
+
+    public void setuID(Integer uid) {
+        this.uID = uid;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

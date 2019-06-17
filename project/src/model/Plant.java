@@ -11,8 +11,6 @@ public class Plant {
     private List<Resource> resources;
     private Integer ownerID;
 
-//    private PlantRepoImpl repo = new PlantRepoImpl();
-
     public Plant(Integer plantID,
                  String type,
                  String lastInspection,
@@ -79,5 +77,9 @@ public class Plant {
 
     public List<Resource> getResources() {
         return resources;
+    }
+
+    public void setClientID(int clientID) {
+        this.ownerID = clientID;
     }
 }

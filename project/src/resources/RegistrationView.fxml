@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.RegistrationController">
+  <children>
+    <Label fx:id="mainLabel" layoutX="252.0" layoutY="21.0" text="Registration" />
+    <Label fx:id="toFillLabel" layoutX="211.0" layoutY="48.0" text="Please, fill the fields below:" />
+    <Label fx:id="firstNameLabel" layoutX="29.0" layoutY="85.0" text="First Name" />
+    <Label fx:id="secondNameLabel" layoutX="29.0" layoutY="125.0" text="Second Name" />
+    <Label fx:id="loginLabel" layoutX="29.0" layoutY="167.0" text="Username" />
+    <Label fx:id="passwordLabel" layoutX="29.0" layoutY="209.0" text="Create Password" />
+    <Label fx:id="roleLabel" layoutX="29.0" layoutY="250.0" text="You are:" />
+    <RadioButton fx:id="isClientRadio" focusTraversable="true" layoutX="198.0" layoutY="258.0" mnemonicParsing="false" onMouseClicked="#isClient" selected="false" text="client" />
+    <RadioButton fx:id="isAdminRadio" layoutX="198.0" layoutY="290.0" mnemonicParsing="false" onMouseClicked="#isAdmin" text="admin" />
+    <RadioButton fx:id="isLandscaperRadio" layoutX="198.0" layoutY="325.0" mnemonicParsing="false" onMouseClicked="#isLandscaper" text="landscaper" />
+    <Button fx:id="registerButton" layoutX="443.0" layoutY="351.0" mnemonicParsing="false" onMouseClicked="#registerButtonOnClicked" text="Register" />
+    <TextField fx:id="firstNameField" layoutX="200.0" layoutY="74.0" prefWidth="200.0" />
+    <TextField fx:id="secondNameField" layoutX="200.0" layoutY="116.0" prefWidth="200.0" />
+    <TextField fx:id="loginField" layoutX="200.0" layoutY="158.0" prefWidth="200.0" />
+    <TextField fx:id="passwordField" layoutX="200.0" layoutY="200.0" prefWidth="200.0" />
+    <Label fx:id="errorMsg" layoutX="382.0" layoutY="258.0" prefHeight="75.0" prefWidth="200.0" text="" textFill="RED" />
+    <Button fx:id="backButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#backButtonOnCLicked" text="Drop registration." />
+  </children>
+</AnchorPane>
