@@ -1,1 +1,2 @@
-# software_architecture_design
+# software architecture design project 
+Additional information provided in Wiki
